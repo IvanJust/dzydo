@@ -56,7 +56,7 @@ a {
 
 .header {
 	background: #3f3c4e;
-	min-height: 192px;
+	/* min-height: 192px; */
 	color: #fff;
 	/* overflow: hidden; */
 }
@@ -338,6 +338,7 @@ a {
 .content {
 	background: var(--bs-body-bg);
 	overflow:hidden;
+	height: 830px;
 	color: var(--bs-light-text-emphasis);
 }
 
@@ -741,22 +742,6 @@ a {
 	width: 100%;
 }
 
-.content-block4 {
-	background: #e5eef3;
-	min-height: 163px;
-	border-top: 1px solid #bbc3c7;
-		padding-bottom: 20px;
-}
-
-.content-block5 {
-	background: #fff;
-	border-top: 1px solid #bbc3c7;
-}
-
-.slider {
-	max-width:1600px;
-}
-
 .container {
 	max-width: 100%;
 	margin: 0 auto;
@@ -772,53 +757,6 @@ a {
 	background: #3f3c4e;
 	min-height: 66px;
 }
-
-.vi-btn {
-	float: left;
-	padding: 13px;
-	margin: 0px -3px;
-	background: #5c737f;
-	color: #f0eeee;
-	text-transform: uppercase;
-	-webkit-transition: all 0.5s ease;
-	-o-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-}
-
-.vi-btn:hover {
-	background: #f5f5f5;
-	color: #222;
-}
-
-.vi-btn-img {
-	float: left;	
-}
-
-.vi-btn-txt {
-	padding: 3px 0 0 10px;
-	display: inline-block;
-	float: left;
-}
-
-.wrp_soc_btn {
-	float: right;
-	margin-top: 10px;
-}
-
-.sbtn {
-	display: block; 
-	display: inline-block; 
-	width: 29px; 
-	height: 29px;
-}
-
-/* a.soc_btn1 {background:url('../images/ico/soc/ico_rss.png');}
-a.soc_btn2 {background:url('../images/ico/soc/ico_vk.png');}
-a.soc_btn3 {background:url('../images/ico/soc/ico_playmarket.png');}
-a.soc_btn4 {background:url('../images/ico/soc/ico_youtube.png');}
-a.soc_btn5 {background:url('../images/ico/soc/ico_twitter.png');}
-a.soc_btn6 {background:url('../images/ico/soc/ico_facebook.png');}
-a.soc_btn7 {background:url('../images/ico/soc/ico_ok.png');} */
 
 a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_btn5:hover, a.soc_btn6:hover, a.soc_btn7:hover  {background-position:0px -29px; box-shadow: 0 1px 3px 0 rgba(0,0,0,.4); margin-top: -20px;}
 

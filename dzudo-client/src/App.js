@@ -18,8 +18,7 @@ function App() {
       <>
         {/* <MuiThemeProvider> */}
         {/* <MuiThemeProvider> */}
-          <Socket/>
-          <RouterProvider router={router} />
+          <Socket children={<RouterProvider router={router} />} />
           {/* <Toaster position="bottom-center" /> */}
         {/* </MuiThemeProvider> */}
       </>

@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header/Header";
 
 import "./defaultPage-style.css";
+import Footer from "./Footer/Footer";
 
 function DefaultPage(){
     console.debug('ded');
@@ -17,7 +18,7 @@ function DefaultPage(){
                     </div>
                 </div>
             </div>
-            
+            <Footer/>
         </div>
     )
 }

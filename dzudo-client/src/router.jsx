@@ -26,6 +26,10 @@ const router = createBrowserRouter([
             //         },
             //     ]
             // },
+            {
+                path: '',
+                element: <views.Main/>
+            },
             //страница не найдена
             {
                 path: "*",
