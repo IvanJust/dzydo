@@ -5,6 +5,7 @@ import { Box, Grid } from '@mui/material';
 
 
 import logo from '../../../images/logo-dzudo.png';
+import Auth from "../../UIpack/Auth/Auth";
 // import Socket from "../../../components/Socket";
 // import logo from '/logo.svg';
 
@@ -43,7 +44,7 @@ function Header(){
                     {/* <div>{header}</div> */}
                 </Box>
                 <Box>
-                    <div className="btn-hidden-menu" onClick={toggleMenu}>Здесь отображение личного</div>
+                    <div className="btn-hidden-menu" onClick={toggleMenu}><Auth/></div>
                 </Box>
             </Grid>
         </div>

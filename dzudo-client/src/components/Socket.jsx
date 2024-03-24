@@ -4,7 +4,7 @@ import { socket } from "../socket/socket"
 import { useState } from "react";
 
 export default function Socket({...props}) {
-    console.debug('test2');
+    // console.debug('test2');
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [fooEvents, setFooEvents] = useState([]);
 

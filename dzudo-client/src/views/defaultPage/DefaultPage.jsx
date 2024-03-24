@@ -5,7 +5,7 @@ import "./defaultPage-style.css";
 import Footer from "./Footer/Footer";
 
 function DefaultPage(){
-    console.debug('ded');
+    // console.debug('ded');
     return(
         <div>
             <Header/>

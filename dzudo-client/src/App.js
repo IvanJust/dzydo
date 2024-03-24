@@ -3,7 +3,8 @@ import './App.css';
 import { RouterProvider } from "react-router-dom";
 import Socket from "./components/Socket";
 import router from "./router";
-import { MuiThemeProvider } from '@material-ui/core/styles/MuiThemeProvider';
+// import { MuiThemeProvider } from '@material-ui/core/styles/MuiThemeProvider';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   // const accessToken = getCurrentAccessToken();
@@ -13,13 +14,12 @@ function App() {
   //     const userData = processAccessToken(accessToken);
   //     dispatch(setUser(userData));
   // }
-  console.debug('test');
   return (
       <>
         {/* <MuiThemeProvider> */}
         {/* <MuiThemeProvider> */}
           <Socket children={<RouterProvider router={router} />} />
-          {/* <Toaster position="bottom-center" /> */}
+          <Toaster position="bottom-center" />
         {/* </MuiThemeProvider> */}
       </>
 

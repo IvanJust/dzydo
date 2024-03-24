@@ -1,7 +1,7 @@
 import { Outlet, createBrowserRouter } from "react-router-dom"
 
 import * as views from "./views"
-console.debug(views);
+// console.debug(views);
 const router = createBrowserRouter([
     //блок для отображения контента со всякой фигней вокруг
     {
