@@ -85,14 +85,18 @@ app.post('/api/token/check', (request, response) => {
 
 
 app.post('/api/user/set', (request, response) => {
-  const param = request.body;
+  const { lastname, firstname, patronymic, login, password } = request.body;
+  try {
+    if (!lastname || !firstname || !patronymic || !login || !password) throw "Error";
 
-  if (typeof param['lastname'] !== 'undefined' && typeof param['firstname'] !== 'undefined' && typeof param['patronymic'] !== 'undefined' && typeof param['login'] !== 'undefined' && typeof param['password'] !== 'undefined') {
-    pool.query("INSERT INTO " + '"user" ("lastname", "firstname", "patronymic", "login", "password")' + " VALUES ('" + param['lastname'] + "', '" + param['firstname'] + "', '" + param['patronymic'] + "', '" + param['login'] + "', '" + param['password'] + "')");
+    pool.query(`INSERT INTO "user" (lastname, firstname, patronymic, login, password) VALUES ($1, $2, $3, $4, $5)`, [lastname, firstname, patronymic, login, password]);
+
     response.send("Готово");
-  }
-  else {
-    response.send("Error");
+  } catch (e) {
+    response.send({
+      status: "500",
+      text: "an error occured when save user",
+    });
   }
 });
 
@@ -116,7 +120,7 @@ app.post('/api/event/set', (request, response) => {
   const param = request.body;
 
   if (typeof param['name'] !== 'undefined' && typeof param['place'] !== 'undefined' && typeof param['date'] !== 'undefined') {
-    pool.query("INSERT INTO " + '"event" ("name", "place", "date")' + " VALUES ('" + param['name'] + "', '" + param['place'] + "', '" + param['date'] + "')");
+    pool.query("INSERT INTO " + '"event" ("name", "place", "date")' + " VALUES (?, ?, ?)", [param['name'], param['place'], param['date']]);
     response.send("Готово");
   }
   else {
@@ -181,12 +185,20 @@ app.post('/api/event_user_role/set', (request, response) => {
 });
 
 app.post('/api/event_user_role/get', (request, response) => {
-  const param = request.body;
+  const {event_id, user_id, role_id} = request.body;
 
-  sql = 'SELECT * FROM "event_user_role"';
+  sql = 'SELECT * FROM "event_user_role" WHERE TRUE ';
 
-  if (typeof param['id'] !== 'undefined') {
-    sql += 'WHERE "id"=' + param['id'];
+  if (event_id) {
+    sql += ` AND event_id = ${event_id}`;
+  }
+
+  if (user_id) {
+    sql += ` AND user_id = ${user_id}`;
+  }
+
+  if (role_id) {
+    sql += ` AND role_id = ${role_id}`;
   }
 
   pool.query(sql).then(function (res) {
