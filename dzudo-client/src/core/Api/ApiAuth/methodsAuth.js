@@ -11,6 +11,7 @@ export function login(_login, password, event) {
         "token/get",
         { 'event_id': event, 'login': _login, 'password': password }
     ).then((response) => {
+        console.debug(response);
         if (response.data?.a_token) {
             setAccessTokens(response.data.a_token);
             setRefreshedTokens(response.data.r_token);

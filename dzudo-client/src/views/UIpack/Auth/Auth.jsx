@@ -64,7 +64,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             // onChange={handleChange}
                                             label="Мероприятие"
                                             >
-                                            <MenuItem value={10}>Карате</MenuItem>
+                                            <MenuItem value={1}>Карате</MenuItem>
                                             <MenuItem value={20}>Карате для мальчиков</MenuItem>
                                             <MenuItem value={30}>Туда-сюда</MenuItem>
                                         </Select>
@@ -113,8 +113,9 @@ function Auth() {
     function sendform() {
         login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
-                if(resp.data?.user){
-                    dispatch(setUser(resp.data?.user));
+                // console.debug(resp);
+                if(resp.data){
+                    // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");
                 }else{
                     toast.error("Неверный логин и/или пароль");

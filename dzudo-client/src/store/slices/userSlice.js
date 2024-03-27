@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
+        //сделать user и role объектами
         id: "517670535",
         firstname: "",
         // secondname: "",
