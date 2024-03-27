@@ -38,13 +38,12 @@ function Header(){
                    <div className="header-logo"><img src={logo}/></div>
                  </Box>
                 <Box item alignItems='center' justifyContent='center'>
-                    <span className="title-h-top">{header}</span>
-                    <br />
-                    <span className="title-h">{header2}</span>
+                    <div><span className="title-h-top">{header}</span></div>
+                    <div><span className="title-h">{header2}</span></div>
                     {/* <div>{header}</div> */}
                 </Box>
                 <Box>
-                    <div className="btn-hidden-menu" onClick={toggleMenu}><Auth/></div>
+                    <div className="btn-hidden-menu"><Auth/></div>
                 </Box>
             </Grid>
         </div>

@@ -1030,7 +1030,7 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 }
 
 .header {
-	min-height: 140px;
+	/* min-height: 140px; */
 }
 
 .header-logo img {
@@ -1039,8 +1039,8 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 
 .header-logo {
 	padding: 0px;
-	padding-top: 35px;
-	padding-left: 35px;
+	/* padding-top: 35px;
+	padding-left: 35px; */
 }
 
 .header-flag {
@@ -1059,8 +1059,8 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 .btn-hidden-menu {
 	display: block;
 	float: left;
-	margin-top: 50px;
-	margin-left: 20px;
+	/* margin-top: 50px;
+	margin-left: 20px; */
 	cursor: pointer;
 }
 
@@ -1442,7 +1442,7 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 
 .header {
 	min-width: 260px;
-	min-height: 80px;
+	/* min-height: 80px; */
 }
 
 .header-logo {
@@ -1467,9 +1467,9 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 }
 
 .btn-hidden-menu {
-	margin-top: 20px;
+	/* margin-top: 20px;
 	margin-right: 20px;
-	margin-left: 5px;
+	margin-left: 5px; */
 	float: right;
 }
 

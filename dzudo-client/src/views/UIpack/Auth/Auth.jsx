@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { Link } from "react-router-dom";
 import { setUser } from "../../../store/slices/userSlice";
-import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade } from "@mui/material";
+import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { Form } from "react-router-dom";
 
 // import axios from "axios";
@@ -20,9 +20,10 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
           open={props.open}
           keepMounted
           onClose={handleClose}
+        //   onChange={props.onChange}
           aria-describedby="alert-dialog-slide-description"
         >
-            <DialogTitle>
+            <DialogTitle sx={{borderBottom:'grey solid 1px'}}>
                 Авторизация
             </DialogTitle>
             <DialogContent>
@@ -32,6 +33,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                 <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                                     <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                     <TextField 
+                                        onChange={props.onChange}
                                         id="input-with-sx" 
                                         label="Логин" 
                                         name="login" 
@@ -41,18 +43,38 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                 </Box>
                                 <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                                     <TextField 
+                                        onChange={props.onChange}
                                         id="input-with-sx" 
                                         label="Пароль" 
                                         type="password" 
                                         name="password" 
                                         variant="standard" 
+                                        fullWidth
                                         />
+                                </Box>
+                                <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                    <FormControl variant="standard" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Мероприятие</InputLabel>
+                                        <Select
+                                            onChange={props.onChange}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            name="id_event"
+                                            // value={age}
+                                            // onChange={handleChange}
+                                            label="Мероприятие"
+                                            >
+                                            <MenuItem value={10}>Карате</MenuItem>
+                                            <MenuItem value={20}>Карате для мальчиков</MenuItem>
+                                            <MenuItem value={30}>Туда-сюда</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </Box>
                             </Grid>
                         </Form>
                 </DialogContentText>
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{justifyContent:'center'}}>
                 <Button  variant="outlined">
                     ЗАБЫЛИ ПАРОЛЬ?
                 </Button>
@@ -65,9 +87,9 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
 }
 function ButtonAuth(props) {
     return (
-        <div onClick={props.onClick}>
+        <Button variant="outlined" color="primary" disableElevation onClick={props.onClick}>
             {props.children}
-        </div>
+        </Button>
     );
 }
 function Auth() {
@@ -76,8 +98,10 @@ function Auth() {
     const handleClose = () => setModalShow(false);
 
     const [dataLogin, setDataLogin] = useState({});
+    // console.debug(dataLogin);
 
     const handleOnChangeLoginForm = (event) => {
+        console.debug(event.target.name);
         dataLogin[event.target.name] = event.target.value;
         setDataLogin(dataLogin)
     }
@@ -87,7 +111,7 @@ function Auth() {
     const isLogin = useSelector((state) => state.user.isLogin);
 
     function sendform() {
-        login(dataLogin.login, dataLogin.password)
+        login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
                 if(resp.data?.user){
                     dispatch(setUser(resp.data?.user));
@@ -117,7 +141,10 @@ function Auth() {
             {isLogin && <Button title='Выйти' onClick={logoutAcc} className="btn-auth">{shortName}</Button>}
             {!isLogin &&
                 <ButtonAuth onClick={handleOpen}>
-                    <div className="btn-auth">Личный кабинет</div>
+                    <div className="btn-auth">
+                        <AccountCircle sx={{ mr: 1 }} />
+                        <span>Личный кабинет</span>
+                    </div>
                 </ButtonAuth>
             }
         </>

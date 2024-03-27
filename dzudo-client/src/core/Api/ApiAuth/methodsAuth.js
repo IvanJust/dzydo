@@ -1,15 +1,15 @@
 import { clientAuth } from "./axiosClientAuth";
 
-import { getCurrentAccessToken, getCurrentRefreshToken, setAccessTokens, setRefreshedTokens, clearTokens } from "../ApiData/functions";
+import { getCurrentAccessToken, getCurrentRefreshToken, setAccessTokens, setRefreshedTokens, clearTokens } from "../functions";
 
 import store from "../../../store/store";
 import toast from "react-hot-toast";
 
-export function login(_login, password) {
+export function login(_login, password, event) {
 
     return clientAuth.post(
-        "auth",
-        { 'login': _login, 'password': password }
+        "token/get",
+        { 'event_id': event, 'login': _login, 'password': password }
     ).then((response) => {
         if (response.data?.a_token) {
             setAccessTokens(response.data.a_token);
