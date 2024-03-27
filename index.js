@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const { Pool } = require('pg');
 const http = require("http");
 const bodyParser = require('body-parser');
@@ -8,6 +9,11 @@ const jwt = require('jsonwebtoken');
 let app;
 
 const { Server } = require("socket.io");
+
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 // process.on('unhandledRejection', (error) => {
 //     console.log(`Error: ${error?.message}\nStack: ${error?.stack}`);
@@ -18,6 +24,7 @@ const { Server } = require("socket.io");
 
 app = express();
 
+app.use(cors(corsOptions));
 app.use(express.static(path.resolve(__dirname, 'dzudo-client/build')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
