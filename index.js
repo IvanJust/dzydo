@@ -15,6 +15,7 @@ var corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
+
 // process.on('unhandledRejection', (error) => {
 //     console.log(`Error: ${error?.message}\nStack: ${error?.stack}`);
 // });
@@ -57,20 +58,31 @@ app.post('/api/token/get', (request, response) => {
 
   if (typeof param['event_id'] !== 'undefined' && typeof param['login'] !== 'undefined' && typeof param['password'] !== 'undefined') {
     pool.query('SELECT * FROM "user" JOIN "event_user_role" ON "user_id"="user"."id" WHERE "event_id"=' + param['event_id'] + ' AND "login"=' + "'" + param['login'] + "'" + ' AND "password"=' + "'" + param['password'] + "'").then(function (res) {
-      if (res['rows'] != []) {
-        response.send(jwt.sign({
+      if (res['rows'].length > 0) {
+        const res = {
+          token: jwt.sign({
+            sub: res['rows']['id'],
+            ext: cdate(),
+            role: res['rows']['role_id'],
+          }, jwtSecretKey),
           sub: res['rows']['id'],
           ext: cdate(),
           role: res['rows']['role_id'],
-        }, jwtSecretKey));
+        }
+
+        // response.send(jwt.sign({
+        //   sub: res['rows']['id'],
+        //   ext: cdate(),
+        //   role: res['rows']['role_id'],
+        // }, jwtSecretKey));
       }
       else {
-        response.send("Error");
+        response.status(500).send(Error('User not found.'));
       }
     });
   }
   else {
-    response.send("Error");
+    response.status(500).send(Error('Param undefined.'));
   }
 });
 
@@ -239,6 +251,9 @@ function cdate() {
 
 // node --env-file .env dzudo-server/app.js 
 
+function Error(message){
+  return {"Error": message};
+}
 
 
 
