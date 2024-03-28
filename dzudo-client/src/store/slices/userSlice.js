@@ -1,16 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const roleName = [
+    [1, 'Администратор'],
+    [2, 'Главный Секретарь'],
+    [3, 'Супервайзер'],
+    [4, 'Судья']
+];
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
         //сделать user и role объектами
-        id: "517670535",
-        firstname: "",
+        // id: "517670535",
         // secondname: "",
-        lastname: "",
-        shortName: "",
+        user: {
+            id: 0,
+            firstname: "",
+            lastname: "",
+            shortName: "",
+        },
         // dateBirth: "",
-        role: "",
+        role: {
+            id: 0,
+            name: '',
+        },
+        isAdmin: false,
         isLogin: false,
 
     },
