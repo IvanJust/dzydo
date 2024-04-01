@@ -1,6 +1,7 @@
 import { clientAuth } from "./axiosClientAuth";
 
 import { getCurrentAccessToken, getCurrentRefreshToken, setAccessTokens, setRefreshedTokens, clearTokens } from "../functions";
+import { processAccessToken } from "../../../features/functions";
 
 import store from "../../../store/store";
 import toast from "react-hot-toast";
@@ -11,11 +12,13 @@ export function login(_login, password, event) {
         "token/get",
         { 'event_id': event, 'login': _login, 'password': password }
     ).then((response) => {
-        console.debug(response);
-        if (response.data?.a_token) {
-            setAccessTokens(response.data.a_token);
-            setRefreshedTokens(response.data.r_token);
+        
+        if (response.data?.token) {
+            response.data_token = processAccessToken(response.data.token);
+            setAccessTokens(response.data.token);
+            // setRefreshedTokens(response.data.r_token);
         }
+        console.debug(response);
         return response;
     })
 }

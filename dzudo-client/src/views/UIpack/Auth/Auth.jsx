@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { Link } from "react-router-dom";
-import { setUser } from "../../../store/slices/userSlice";
+import { getFIO, setUser, unsetUser } from "../../../store/slices/userSlice";
 import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { Form } from "react-router-dom";
 
@@ -12,6 +12,7 @@ import "./Auth.css"
 // import InputWithImage from "../Input/InputWithImage";
 import toast from "react-hot-toast";
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
     // console.debug(props, headerSendForm, handleClose);
@@ -107,16 +108,23 @@ function Auth() {
     }
 
     const dispatch = useDispatch();
-    const shortName = useSelector((state) => state.user.shortName);
+    const shortName = useSelector((state) => state.user.userInfo.shortName);
     const isLogin = useSelector((state) => state.user.isLogin);
 
     function sendform() {
         login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
                 // console.debug(resp);
-                if(resp.data){
+                if(resp.data_token){
                     // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");
+                    getProfile(resp.data_token.sub).then((response) =>{
+                            dispatch(getFIO(response.data[0]));
+                        }
+                    );
+                    dispatch(setUser(resp.data_token));
+                    
+                    setModalShow(false);
                 }else{
                     toast.error("Неверный логин и/или пароль");
                 }
@@ -128,6 +136,7 @@ function Auth() {
     // }
     const logoutAcc = () => {
         console.debug('logout');
+        dispatch(unsetUser());
     }
     //TODO сделать окошко авторизации
     return (

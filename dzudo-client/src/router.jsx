@@ -27,6 +27,10 @@ const router = createBrowserRouter([
             //     ]
             // },
             {
+                path: 'registration',
+                element: <views.Registration/>
+            },
+            {
                 path: '',
                 element: <views.Main/>
             },
