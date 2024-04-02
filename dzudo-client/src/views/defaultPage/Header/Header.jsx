@@ -9,6 +9,7 @@ import logo from '../../../images/logo-dzudo.png';
 import Auth from "../../UIpack/Auth/Auth";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 // import Socket from "../../../components/Socket";
 // import logo from '/logo.svg';
 
@@ -40,13 +41,22 @@ import { useSelector } from "react-redux";
 
 // }
 
-const pages = ['Соревнования', 'Результаты'];
+const pages = [
+    {
+        name: 'Соревнования',
+        nav: '',
+    }, 
+    {
+        name: 'Результаты',
+        nav: 'writing',
+    }];
 
 function Header() {
 
     const isAdmin = useSelector((state) => state.user.isAdmin);
     console.debug(isAdmin);
     const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -56,8 +66,13 @@ function Header() {
         setAnchorElNav(null);
     };
 
+    function goTo(nav){
+        navigate("/"+nav, {replace: true});
+        // console.debug(nav);
+    }
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="transparent">
         <Container maxWidth="xl">
             <Toolbar disableGutters>
                 {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
@@ -71,7 +86,7 @@ function Header() {
                     onClick={handleOpenNavMenu}
                     color="inherit"
                     >
-                    <MenuIcon />
+                    <MenuIcon color="primary" />
                     </IconButton>
                     <Menu
                     id="menu-appbar"
@@ -92,8 +107,8 @@ function Header() {
                     }}
                     >
                     {pages.map((page) => (
-                        <MenuItem key={page} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">{page}</Typography>
+                        <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                        <Typography textAlign="center">{page.name}</Typography>
                         </MenuItem>
                     ))}
                     {isAdmin && 
@@ -102,10 +117,13 @@ function Header() {
                         </MenuItem>
                     }
                     </Menu>
+                    <Box item className="header-logo" sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, ml: 1}}>
+                        <img src={logo}/>
+                    </Box>
                 </Box>
                 {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-                <Box item>
-                    <div className="header-logo"><img src={logo}/></div>
+                <Box item className="header-logo" sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+                    <img src={logo}/>
                 </Box>
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -138,8 +156,8 @@ function Header() {
                     }}
                     >
                     {pages.map((page) => (
-                        <MenuItem key={page}>
-                        <Typography textAlign="center">{page}</Typography>
+                        <MenuItem key={page.name}>
+                        <Typography textAlign="center" onClick={()=>goTo(page.nav)}>{page.name}</Typography>
                         </MenuItem>
                     ))}
                     </Menu>
@@ -147,18 +165,20 @@ function Header() {
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     {pages.map((page) => (
                     <Button
-                        key={page}
+                        key={page.name}
                         // onClick={handleCloseNavMenu}s
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                        sx={{ my: 2, color: 'white', display: 'block' }} 
+                        onClick={()=>goTo(page.nav)}
                     >
-                        {page}
+                        {page.name}
                     </Button>
                     ))}
                     {isAdmin && 
                         <Button 
                             variant="contained" 
                             color="warning"
-                            sx={{ my: 2, color: 'white', display: 'block' }}>
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                        >
                             Административное меню
                         </Button>
                     }

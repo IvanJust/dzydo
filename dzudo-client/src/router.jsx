@@ -8,27 +8,13 @@ const router = createBrowserRouter([
         path: "/",
         element: <views.DefaultPage />,
         children: [
-            // {
-            //     path: "/card",
-            //     element: <views.Card />
-            // },
-            // {
-            //     path: "/portfolio",
-            //     children:[
-            //         //TODO добавить переход на 404 ???
-            //         {
-            //             path:"my",
-            //             element: <views.Portfolio />
-            //         },
-            //         {
-            //             path:":portfolioId",
-            //             element: <views.Portfolio />
-            //         },
-            //     ]
-            // },
             {
                 path: 'registration',
                 element: <views.Registration/>
+            },
+            {
+                path: 'writing',
+                element: <views.TableExs/>
             },
             {
                 path: '',

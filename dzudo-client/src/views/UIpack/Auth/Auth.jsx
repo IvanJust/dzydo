@@ -13,6 +13,7 @@ import "./Auth.css"
 import toast from "react-hot-toast";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Logout from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
 import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
@@ -25,8 +26,9 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
         //   onChange={props.onChange}
           aria-describedby="alert-dialog-slide-description"
         >
-            <DialogTitle sx={{borderBottom:'grey solid 1px'}}>
-                Авторизация
+            <DialogTitle sx={{borderBottom:'grey solid 1px', display: 'flex', justifyContent:'space-between'}}>
+                <Box>Авторизация</Box>
+                <CloseIcon onClick={handleClose} fontSize="large"/>
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
@@ -62,8 +64,6 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             name="id_event"
-                                            // value={age}
-                                            // onChange={handleChange}
                                             label="Мероприятие"
                                             >
                                             <MenuItem value={1}>Карате</MenuItem>
@@ -171,10 +171,13 @@ function Auth() {
             
             {isLogin && <>
                 <Tooltip title={shortName}>
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                        <AccountCircle sx={{ color: 'action.active'}} />
-                    </IconButton>
+                    <Button variant="outlined" onClick={handleOpenUserMenu}>
+                        <IconButton sx={{ p: 0 }}>
+                            {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                            <AccountCircle fontSize="large"  color="primary" />
+                        </IconButton>
+                        <Typography fontSize='small' sx={{ my: 2, color: 'white',  display: { xs: 'none', md: 'flex' }}}>{shortName}</Typography>
+                    </Button>
                 </Tooltip>
                 <Menu
                     sx={{ mt: '45px' }}
