@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { Link } from "react-router-dom";
 import { getFIO, setUser, unsetUser } from "../../../store/slices/userSlice";
-import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem, Tooltip, IconButton, Menu, Typography, ListItemIcon, Divider } from "@mui/material";
 import { Form } from "react-router-dom";
 
 // import axios from "axios";
@@ -12,6 +12,7 @@ import "./Auth.css"
 // import InputWithImage from "../Input/InputWithImage";
 import toast from "react-hot-toast";
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Logout from '@mui/icons-material/Logout';
 import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
@@ -88,15 +89,25 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
 }
 function ButtonAuth(props) {
     return (
-        <Button variant="outlined" color="primary" disableElevation onClick={props.onClick}>
+        <Button variant="contained" color="primary" disableElevation onClick={props.onClick}>
             {props.children}
         </Button>
     );
 }
+const settings = ['Профиль', 'Выйти'];
 function Auth() {
     const [modalShow, setModalShow] = useState(false);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
     const handleOpen = () => setModalShow(true);
     const handleClose = () => setModalShow(false);
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+      };
+
+    const handleCloseUserMenu = () => {
+      setAnchorElUser(null);
+    };
 
     const [dataLogin, setDataLogin] = useState({});
     // console.debug(dataLogin);
@@ -148,7 +159,7 @@ function Auth() {
                 onChange={handleOnChangeLoginForm}
             />
 
-            {isLogin && <Button title='Выйти' onClick={logoutAcc} className="btn-auth">{shortName}</Button>}
+            {/* {isLogin && <Button title='Выйти' onClick={logoutAcc} className="btn-auth">{shortName}</Button>} */}
             {!isLogin &&
                 <ButtonAuth onClick={handleOpen}>
                     <div className="btn-auth">
@@ -157,6 +168,47 @@ function Auth() {
                     </div>
                 </ButtonAuth>
             }
+            
+            {isLogin && <>
+                <Tooltip title={shortName}>
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                        <AccountCircle sx={{ color: 'action.active'}} />
+                    </IconButton>
+                </Tooltip>
+                <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+                >
+                {/* {settings.map((setting) => ( */}
+                
+                    <MenuItem onClick={handleCloseUserMenu}>
+                        <Typography textAlign="center" title="Профиль">{shortName}</Typography>
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleCloseUserMenu}>
+                        <ListItemIcon>
+                            <Logout fontSize="medium" />
+                        </ListItemIcon>
+                        <Typography onClick={logoutAcc}>
+                            Выйти
+                        </Typography>
+                    </MenuItem>
+                {/* ))} */}
+                </Menu>
+            </>}
         </>
 
     )
