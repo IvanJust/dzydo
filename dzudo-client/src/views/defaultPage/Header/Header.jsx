@@ -49,12 +49,12 @@ const pages = [
     {
         name: 'Результаты',
         nav: 'writing',
-    }];
+    }
+];
 
 function Header() {
 
     const isAdmin = useSelector((state) => state.user.isAdmin);
-    console.debug(isAdmin);
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const navigate = useNavigate();
 
@@ -79,14 +79,14 @@ function Header() {
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleOpenNavMenu}
-                    color="inherit"
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleOpenNavMenu}
+                        color="inherit"
                     >
-                    <MenuIcon color="primary" />
+                        <MenuIcon color="primary" />
                     </IconButton>
                     <Menu
                     id="menu-appbar"
@@ -108,12 +108,22 @@ function Header() {
                     >
                     {pages.map((page) => (
                         <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">{page.name}</Typography>
+                            <Typography 
+                                textAlign="center"
+                                onClick={()=>goTo(page.nav)}
+                            >
+                                {page.name}
+                            </Typography>
                         </MenuItem>
                     ))}
                     {isAdmin && 
                         <MenuItem onClick={handleCloseNavMenu}>
-                            <Typography textAlign="center">Административное меню</Typography>
+                            <Typography 
+                                textAlign="center"
+                                onClick={()=>goTo('admin')}
+                            >
+                                Административное меню
+                            </Typography>
                         </MenuItem>
                     }
                     </Menu>
@@ -126,42 +136,6 @@ function Header() {
                     <img src={logo}/>
                 </Box>
 
-                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                    <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    //   onClick={handleOpenNavMenu}
-                    color="inherit"
-                    >
-                    {/* <MenuIcon /> */}
-                    </IconButton>
-                    <Menu
-                    id="menu-appbar"
-                    //   anchorEl={anchorElNav}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
-                    //   open={Boolean(anchorElNav)}
-                    //   onClose={handleCloseNavMenu}
-                    sx={{
-                        display: { xs: 'block', md: 'none' },
-                    }}
-                    >
-                    {pages.map((page) => (
-                        <MenuItem key={page.name}>
-                        <Typography textAlign="center" onClick={()=>goTo(page.nav)}>{page.name}</Typography>
-                        </MenuItem>
-                    ))}
-                    </Menu>
-                </Box>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     {pages.map((page) => (
                     <Button
@@ -178,6 +152,7 @@ function Header() {
                             variant="contained" 
                             color="warning"
                             sx={{ my: 2, color: 'white', display: 'block' }}
+                            onClick={()=>goTo('admin')}
                         >
                             Административное меню
                         </Button>

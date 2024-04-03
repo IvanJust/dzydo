@@ -26,29 +26,13 @@ export function login(_login, password, event) {
 export function logout() {
     return clientAuth.post(
         "logout",
-        { 'a_token': getCurrentAccessToken(), 'r_token': getCurrentRefreshToken() }
+        { 'a_token': getCurrentAccessToken()}
     ).then((resp)=>{
         clearTokens();
         toast.error("Ваша сессия истекла. Пожалуйста, авторизуйтесь повторно");
         return resp;
     }).finally((resp)=>{
-        if(!getCurrentRefreshToken()){
-            store.dispatch({type: 'user/unsetUser'});
-        }
-    });
-}
-
-export function updateRefreshToken() {
-    return clientAuth.post(
-        "updatetoken",
-        { 'a_token': getCurrentAccessToken(), 'r_token': getCurrentRefreshToken() }
-    ).then((response)=>{
-        if (response.data.a_token) {
-            setAccessTokens(response.data.a_token);
-            setRefreshedTokens(response.data.r_token);
-            toast("Выполнено обновление токена");
-        }
-        return response;
+        store.dispatch({type: 'user/unsetUser'});
     });
 }
 

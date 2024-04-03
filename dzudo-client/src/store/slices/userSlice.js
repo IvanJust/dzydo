@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const roleName = new Map([
-    ['1', 'Администратор'],
-    ['2', 'Главный Секретарь'],
-    ['3', 'Супервайзер'],
-    ['4', 'Судья']
+    [1, 'Администратор'],
+    [2, 'Главный Секретарь'],
+    [3, 'Супервайзер'],
+    [4, 'Судья']
 ]);
 
 export const userSlice = createSlice({
@@ -39,9 +39,9 @@ export const userSlice = createSlice({
             // // state.secondname = action.payload.secondname;
             // state.userInfo.lastname = action.payload.lastname;
             // state.userInfo.shortName = `${action.payload.lastname} ${action.payload.firstname.substr(0, 1)}.`;
-
+            
             state.role.id = action.payload.role;
-            state.role.name = roleName[action.payload.role];
+            state.role.name = roleName.get(action.payload.role);
 
             if(action.payload.role == '1'){
                 state.isAdmin = true;
@@ -51,7 +51,7 @@ export const userSlice = createSlice({
 
         },
         unsetUser: (state)=>{
-            state.userInfo.id = "";
+            state.userInfo.id = 0;
             state.isLogin = false;
             state.isAdmin = false;
 

@@ -15,6 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Logout from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
+import { clearTokens } from "../../../core/Api/functions";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
     // console.debug(props, headerSendForm, handleClose);
@@ -120,6 +121,7 @@ function Auth() {
 
     const dispatch = useDispatch();
     const shortName = useSelector((state) => state.user.userInfo.shortName);
+    const roleName = useSelector((state) => state.user.role.name);
     const isLogin = useSelector((state) => state.user.isLogin);
 
     function sendform() {
@@ -146,10 +148,11 @@ function Auth() {
     //     setModalShow(true);
     // }
     const logoutAcc = () => {
-        console.debug('logout');
+        clearTokens();
         dispatch(unsetUser());
+        toast.error('Вы вышли из аккаунта');
+        handleCloseUserMenu();
     }
-    //TODO сделать окошко авторизации
     return (
         <>
             <AuthModal
@@ -176,7 +179,7 @@ function Auth() {
                             {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
                             <AccountCircle fontSize="large"  color="primary" />
                         </IconButton>
-                        <Typography fontSize='small' sx={{ my: 2, color: 'white',  display: { xs: 'none', md: 'flex' }}}>{shortName}</Typography>
+                        <Typography fontSize='small' sx={{ my: 2, color: 'white',  display: { xs: 'none', md: 'flex' }}}>{roleName}</Typography>
                     </Button>
                 </Tooltip>
                 <Menu
@@ -195,21 +198,19 @@ function Auth() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
                 >
-                {/* {settings.map((setting) => ( */}
                 
                     <MenuItem onClick={handleCloseUserMenu}>
                         <Typography textAlign="center" title="Профиль">{shortName}</Typography>
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={handleCloseUserMenu}>
+                    <MenuItem onClick={logoutAcc}>
                         <ListItemIcon>
                             <Logout fontSize="medium" />
                         </ListItemIcon>
-                        <Typography onClick={logoutAcc}>
+                        <Typography>
                             Выйти
                         </Typography>
                     </MenuItem>
-                {/* ))} */}
                 </Menu>
             </>}
         </>

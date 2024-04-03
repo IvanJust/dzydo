@@ -17,6 +17,10 @@ const router = createBrowserRouter([
                 element: <views.TableExs/>
             },
             {
+                path: 'admin',
+                element: <views.AdminMenu/>
+            },
+            {
                 path: '',
                 element: <views.Main/>
             },
@@ -32,45 +36,6 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Outlet/>,
-        // children: [
-            // {
-            //     path: "/card2",
-            //     element: <views.Card />
-            // },
-            // {
-            //     path: "/calendar",
-            //     // element: <views.Calendar />,
-            //     children:[
-            //         {
-            //             path: "headschedule",
-            //             children:[
-            //                 {
-            //                     path: "add",
-            //                     element: <views.AddHeadschedule />,
-            //                 },
-            //                 {
-            //                     path: "list",
-            //                     element: <views.ListHeadschedule />
-            //                 }
-            //             ]
-            //         },
-            //         {
-            //             path: "lesson",
-            //             children:[
-            //                 {
-            //                     path: ":id",
-            //                     element: <views.RouteSchedule />,
-            //                 }
-            //             ]
-            //         },
-            //         {
-            //             path: "",
-            //             element: <views.ListHeadschedule />,
-            //         }
-            //     ]
-            // },
-        // ]
-        
     },
     
 

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { processAccessToken } from "../../../features/functions";
 
-import { updateRefreshToken } from "../ApiAuth/methodsAuth";
 
 import { INVALID_SIGNATURE, TIMEOUT_ACCESS } from "../../config/config";
 import toast from "react-hot-toast";
@@ -56,14 +55,15 @@ export function createAxiosClient({
         }
         isRefreshing = true;
         originalRequest._retry = true;
-        return updateRefreshToken()
-            .then((resp) => {
-                processQueue(null);
-                return client(originalRequest);
-            }, handleError)
-            .finally(() => {
-                isRefreshing = false;
-            });
+        return false;
+        // updateRefreshToken()
+        //     .then((resp) => {
+        //         processQueue(null);
+        //         return client(originalRequest);
+        //     }, handleError)
+        //     .finally(() => {
+        //         isRefreshing = false;
+        //     });
     }
 
     client.interceptors.request.use(
