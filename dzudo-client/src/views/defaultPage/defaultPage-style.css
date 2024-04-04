@@ -1,3 +1,7 @@
+html{
+    position: relative;
+    min-height: 100%;
+  }
 .container {
     display: flex;
     flex-direction: column;
@@ -10,6 +14,9 @@
 .page{
     background: linear-gradient(0.5turn, #3f87a6, #ebf8e1, #44683f);
 }
+body{
+    height: 100%;
+}
 /* #header, #footer {
     height: 100px;
     width: 100%;
@@ -20,14 +27,18 @@
     width: 100%;
     background: blue;
 } */
-/* .content {
-    width: 980px;
-    background: yellow;
-} */
+.content {
+    /* height: 100%; */
+    overflow-y: auto;
+    height: 78vh;
+    /* width: 980px; */
+    /* background: yellow; */
+}
 .content-block1{
     /* background: linear-gradient(to bottom, rgba(222, 222, 222, 0.5)); */
 }
 .content-page{
+    min-height: 35rem;
     display: flex;
     justify-content: center;
     box-shadow: 1px;

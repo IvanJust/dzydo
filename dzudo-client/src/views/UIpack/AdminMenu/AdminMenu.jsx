@@ -80,7 +80,7 @@ export default function AdminMenu(){
     }
 
     return(
-        <Grid>
+        <Grid mt={2}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
                 <Tabs 
                     value={value} 

@@ -22,7 +22,7 @@ function DefaultPage(){
                     </div>
                 </div>
             </div>
-            <Footer/>
+            {/* <Footer/> */}
         </div>
     )
 }

@@ -84,65 +84,6 @@ a {
 	font-size: 20px;
 }
 
-/* .btn-hidden-menu {
-	overflow: hidden;
-	background: url(../../../../public/menu.png) no-repeat center center;
-	text-indent: -9999%;
-	width: 42px;
-	height: 42px;
-	display: none;
-} */
-
-.open-menu {
-	display: block !important;
-}
-
-.header-menu {
-	float: right;
-	padding-top: 18px;
-	padding-right: 1.5%;
-	padding-left: 50px;
-}
-
-.header-menu-lk {
-	float: right;
-	padding-top: 63px;
-	padding-right: 1.5%;
-	padding-bottom: 35px;
-	min-width: 189px;
-}
-
-.link-btn-lk {
-	padding: 13px;	
-	margin: 0px -3px;
-	background: #444a51;
-	-webkit-transition: all 0.3s linear;
-    -moz-transition: all 0.3s linear;
-    -o-transition: all 0.3s linear;	
-}
-
-.link-btn-lk:hover {
-	background: #1f6210;	
-}
- 
-/* Стили поля ввода текста */
- 
-.form-wrapper input {
-    width: 150px;
-    height: 40px;
-    padding: 20px 5px;  
-    border: 0;
-    background: #eee;   
-	-webkit-transition: all 0.3s linear;
-    -moz-transition: all 0.3s linear;
-    -o-transition: all 0.3s linear;		
-}
- 
-.form-wrapper input:focus {
-    outline: 0;
-    background: #fff;
-}  
- 
 /* Кнопка отправки формы */
 .form-wrapper button {
     overflow: visible;
@@ -157,38 +98,6 @@ a {
     text-transform: uppercase;   
 }   
    
-.form-wrapper button:hover{     
-    background: #177305;
-}   
-   
-.form-wrapper button:active,
-.form-wrapper button:focus{   
-    background: #177305;
-    outline: 0;   
-}
- 
-.form-wrapper button:hover:before{
-    border-right-color: #177305;
-}
-
-.header-flag {
-	text-align: right;
-	margin-right: -2%;
-}
-
-.header-flag img {
-	padding: 17px 5px 47px 5px;
-}
-
-.header-flag img:hover {
-	opacity: 0.3;
-}
-
-.header-nav-menu {
-	float: left;
-	margin: 0px;
-}
-
 .header-nav-menu-link{
 	color: #fff;
 	text-transform: uppercase;
@@ -970,7 +879,7 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 @media screen and (max-width:1400px) {
 
 .content{
-	margin-top: 1rem;
+	/* margin-top: 1rem; */
 }
 
 .header-nav-menu-link-left {
