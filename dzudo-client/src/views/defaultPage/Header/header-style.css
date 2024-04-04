@@ -900,10 +900,6 @@ a.soc_btn1:hover, a.soc_btn2:hover, a.soc_btn3:hover, a.soc_btn4:hover, a.soc_bt
 
 @media screen and (max-width:1200px) {
 
-.content{
-	margin-top: 0;
-}
-
 .container{
 	width: 100%;
 	padding: 0;

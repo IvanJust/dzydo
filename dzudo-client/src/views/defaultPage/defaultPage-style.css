@@ -34,6 +34,12 @@ body{
     /* width: 980px; */
     /* background: yellow; */
 }
+@media screen and (max-width: 1200px){
+.content {
+    margin-top: 0;
+    height: 90vh;
+}
+}
 .content-block1{
     /* background: linear-gradient(to bottom, rgba(222, 222, 222, 0.5)); */
 }
