@@ -8,10 +8,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <views.DefaultPage />,
         children: [
-            {
-                path: 'registration',
-                element: <views.Registration/>
-            },
+            // {
+            //     path: 'registration',
+            //     element: <views.Registration/>
+            // },
             {
                 path: 'writing',
                 element: <views.TableExs/>

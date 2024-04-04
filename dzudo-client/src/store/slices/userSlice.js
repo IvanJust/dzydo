@@ -25,6 +25,11 @@ export const userSlice = createSlice({
             id: 0,
             name: '',
         },
+        eventInfo: {
+            id: 0,
+            name: '',
+            place: '',
+        },
         isAdmin: false,
         isLogin: false,
 
@@ -43,7 +48,7 @@ export const userSlice = createSlice({
             state.role.id = action.payload.role;
             state.role.name = roleName.get(action.payload.role);
 
-            if(action.payload.role == '1'){
+            if(action.payload.role == 1){
                 state.isAdmin = true;
             }
 
@@ -75,9 +80,12 @@ export const userSlice = createSlice({
             state.userInfo.secondname = action.payload.patronymic;
             state.userInfo.lastname = action.payload.lastname;
             state.userInfo.shortName = `${action.payload.lastname} ${action.payload.firstname.substr(0, 1)}. ${action.payload.patronymic.substr(0, 1)}.`;
+        },
+        setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
+            state.eventInfo = action.payload;
         }
     },
-})
-
-export const {setRole, setUser, unsetUser, getFIO } = userSlice.actions
+});
+export { roleName };
+export const {setRole, setUser, unsetUser, getFIO, setEventInfo } = userSlice.actions
 export default userSlice.reducer

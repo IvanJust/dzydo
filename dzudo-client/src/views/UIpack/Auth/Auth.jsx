@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { Link } from "react-router-dom";
-import { getFIO, setUser, unsetUser } from "../../../store/slices/userSlice";
+import { getFIO, setEventInfo, setUser, unsetUser } from "../../../store/slices/userSlice";
 import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem, Tooltip, IconButton, Menu, Typography, ListItemIcon, Divider } from "@mui/material";
 import { Form } from "react-router-dom";
 
@@ -16,9 +16,16 @@ import Logout from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 import { clearTokens } from "../../../core/Api/functions";
+import { getEvent, getEvents } from "../../../core/Api/ApiData/methods/event";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
     // console.debug(props, headerSendForm, handleClose);
+    const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
+    getEvents().then((resp) => {
+        if(resp.data){
+            // setEvents(resp.data);
+        }
+    });
     return (
         <Dialog
           open={props.open}
@@ -35,16 +42,18 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                 <DialogContentText id="alert-dialog-slide-description">
                         <Form id="authform">
                             <Grid>
-                                <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
                                     <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    <TextField 
-                                        onChange={props.onChange}
-                                        id="input-with-sx" 
-                                        label="Логин" 
-                                        name="login" 
-                                        autoFocus 
-                                        variant="standard" 
-                                        />
+                                    <Box  sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                        <TextField 
+                                            onChange={props.onChange}
+                                            id="input-with-sx" 
+                                            label="Логин" 
+                                            name="login" 
+                                            autoFocus 
+                                            variant="standard" 
+                                            />
+                                    </Box>
                                 </Box>
                                 <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                                     <TextField 
@@ -67,9 +76,9 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             name="id_event"
                                             label="Мероприятие"
                                             >
-                                            <MenuItem value={1}>Карате</MenuItem>
-                                            <MenuItem value={20}>Карате для мальчиков</MenuItem>
-                                            <MenuItem value={30}>Туда-сюда</MenuItem>
+                                                {events.map((event) => (
+                                                    <MenuItem value={event.id}>{event.name}{console.debug('test')}</MenuItem>
+                                                ))}
                                         </Select>
                                     </FormControl>
                                 </Box>
@@ -127,14 +136,17 @@ function Auth() {
     function sendform() {
         login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
-                // console.debug(resp);
+                // console.debug('user:', resp);
                 if(resp.data_token){
                     // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");
                     getProfile(resp.data_token.sub).then((response) =>{
-                            dispatch(getFIO(response.data[0]));
-                        }
-                    );
+                        // console.debug('user:', response);
+                        dispatch(getFIO(response.data[0]));
+                        getEvent(dataLogin.id_event).then((resp) => {
+                            setEventInfo(resp.data[0]);
+                        })
+                    });
                     dispatch(setUser(resp.data_token));
                     
                     setModalShow(false);
