@@ -146,12 +146,12 @@ app.post('/api/user/get', (request, response) => {
 
 
 app.post('/api/event/set', (request, response) => {
-  const { name, place, date } = request.body;
+  const { name, place, date_begin, date_end } = request.body;
 
   try {
-      if (!name || !place || !date) throw "Error";
+      if (!name || !place || !date_begin || !date_end) throw "Error";
 
-      pool.query('INSERT INTO "event" (name, place, date) VALUES ($1, $2, $3)', [name, place, date]);
+      pool.query('INSERT INTO "event" (name, place, date) VALUES ($1, $2, $3, $4)', [name, place, date_begin, date_end]);
       
       response.send(Successfully('The event was saved successfully.'));
   
