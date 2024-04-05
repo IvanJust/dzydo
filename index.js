@@ -151,7 +151,7 @@ app.post('/api/event/set', (request, response) => {
   try {
       if (!name || !place || !date_begin || !date_end) throw "Error";
 
-      pool.query('INSERT INTO "event" (name, place, date) VALUES ($1, $2, $3, $4)', [name, place, date_begin, date_end]);
+      pool.query('INSERT INTO "event" (name, place, date_begin, date_end) VALUES ($1, $2, $3, $4)', [name, place, date_begin, date_end]);
       
       response.send(Successfully('The event was saved successfully.'));
   
