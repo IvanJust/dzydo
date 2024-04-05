@@ -5,6 +5,8 @@ import { setUser } from "../../../core/Api/ApiData/methods/portfolio";
 import toast from "react-hot-toast";
 import RegistrationEvent from "./Registration/RegistrationEvent";
 import { setEvent } from "../../../core/Api/ApiData/methods/event";
+import TableUsers from "./Tables/TableUser";
+import TableEvents from "./Tables/TableEvent";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -48,6 +50,7 @@ export default function AdminMenu(){
             .then((resp) => {
                 if(resp.data){
                     toast.success("Вы успешно зарегистрировали пользователя!");
+                    document.getElementById("registrationUser").reset();
                     setDataLoginUser({});
                 }else{
                     toast.error("Произошла ошибка регистрации");
@@ -61,6 +64,7 @@ export default function AdminMenu(){
             .then((resp) => {
                 if(resp.data){
                     toast.success("Вы успешно организовали соревнование!");
+                    document.getElementById("registrationEvent").reset();
                     setDataLoginEvent({});
                 }else{
                     toast.error("Произошла ошибка организации");
@@ -102,10 +106,10 @@ export default function AdminMenu(){
                 <RegistrationEvent onChange={handleOnChangeLoginFormEvent} onClick={registrationEvent} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                Item Three
+                <TableUsers />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-                Item Two
+                <TableEvents />
             </CustomTabPanel>
         </Grid>
     )

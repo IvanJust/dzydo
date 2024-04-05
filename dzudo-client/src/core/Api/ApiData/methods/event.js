@@ -25,3 +25,15 @@ export function setEvent(name, place, date) {
         }
     );
 }
+
+export function getEvaletionCriteria(){
+    return client.post(
+        'evaluation_criteria/get'
+    );
+}
+
+export function getEvaletionGroup(){
+    return client.post(
+        'evaluation_group/get'
+    );
+}

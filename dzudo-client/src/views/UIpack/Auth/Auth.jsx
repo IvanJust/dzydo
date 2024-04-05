@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { Link } from "react-router-dom";
 import { getFIO, setEventInfo, setUser, unsetUser } from "../../../store/slices/userSlice";
 import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem, Tooltip, IconButton, Menu, Typography, ListItemIcon, Divider } from "@mui/material";
 import { Form } from "react-router-dom";
 
-// import axios from "axios";
 
 import { login } from "../../../core/Api/ApiAuth/methodsAuth";
 import "./Auth.css"
-// import InputWithImage from "../Input/InputWithImage";
 import toast from "react-hot-toast";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Logout from '@mui/icons-material/Logout';
@@ -19,13 +16,14 @@ import { clearTokens } from "../../../core/Api/functions";
 import { getEvent, getEvents } from "../../../core/Api/ApiData/methods/event";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
-    // console.debug(props, headerSendForm, handleClose);
     const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
-    getEvents().then((resp) => {
-        if(resp.data){
-            // setEvents(resp.data);
-        }
-    });
+    useEffect(() => {
+        getEvents().then((resp) => {
+            if(resp.data){
+                setEvents(resp.data);
+            }
+        });
+    }, []); 
     return (
         <Dialog
           open={props.open}
@@ -77,7 +75,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             label="Мероприятие"
                                             >
                                                 {events.map((event) => (
-                                                    <MenuItem value={event.id}>{event.name}{console.debug('test')}</MenuItem>
+                                                    <MenuItem value={event.id}>{event.name}</MenuItem>
                                                 ))}
                                         </Select>
                                     </FormControl>

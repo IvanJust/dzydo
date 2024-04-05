@@ -1,12 +1,22 @@
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import { getEvaletionCriteria } from "../../../core/Api/ApiData/methods/event";
 
 
 
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
-  
+    const [evaletionCriteries, setEvaletionCriteries] = useState([]);
+
+    console.debug('criteries', evaletionCriteries);
+    useEffect(() => {
+      getEvaletionCriteria().then((resp) => {
+        setEvaletionCriteries(resp.data);
+      });
+
+    }, []);
+
     return (
       <div
         role="tabpanel"
@@ -16,9 +26,12 @@ function CustomTabPanel(props) {
         {...other}
       >
         {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
+          <Grid>
+
+            <Box sx={{ p: 3 }}>
+              <Typography>test</Typography>
+            </Box>
+          </Grid>
         )}
       </div>
     );
@@ -61,21 +74,11 @@ function TableExs(){
                     <Tab label="Судья 5" {...a11yProps(4)} />
                 </Tabs>
             </Box>
-            <CustomTabPanel value={value} index={0}>
-                Item One
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                Item Two
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                Item Three
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-                Item Two
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={4}>
-                Item Three
-            </CustomTabPanel>
+            <CustomTabPanel value={value} index={0} />
+            <CustomTabPanel value={value} index={1} />
+            <CustomTabPanel value={value} index={2} />
+            <CustomTabPanel value={value} index={3} />
+            <CustomTabPanel value={value} index={4} />
         </Grid>
     )
 

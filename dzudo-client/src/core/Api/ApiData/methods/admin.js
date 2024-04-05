@@ -34,3 +34,9 @@ export function getRoles() {
         'role/get'
     );
 }
+
+export function getUsers() {
+    return client.post(
+        'user/get'
+    );
+}
