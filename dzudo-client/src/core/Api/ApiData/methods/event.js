@@ -15,13 +15,14 @@ export function getEvents() {
     );
 }
 
-export function setEvent(name, place, date) {
+export function setEvent(name, place, date_begin, date_end) {
     return client.post(
         'event/set', 
         { 
             'name': name,
             'place': place,
-            'date': date
+            'date_begin': date_begin,
+            'date_end': date_end
         }
     );
 }

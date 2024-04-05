@@ -10,9 +10,10 @@ export default function TableEvents(){
     const [events, setEvents] = React.useState([]); 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
     const navigate = useNavigate();
     function ToEvent(event){
-        navigate("/games", {game: event});
+        navigate("/games/"+event, {replace: true});
     }
 
     const emptyRows =

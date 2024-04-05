@@ -10,7 +10,15 @@ const router = createBrowserRouter([
         children: [
             {
                 path: 'games',
-                element: <views.Games/>
+                element: <views.Games/>,
+                children: [
+                    {
+                        path: ':id',
+                    },
+                    {
+                        path: "*",
+                    }
+                ]
             },
             {
                 path: 'writing',
