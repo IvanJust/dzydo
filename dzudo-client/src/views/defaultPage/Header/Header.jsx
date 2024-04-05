@@ -44,7 +44,7 @@ import { useNavigate } from "react-router-dom";
 const pages = [
     {
         name: 'Соревнования',
-        nav: '',
+        nav: 'games',
     }, 
     {
         name: 'Результаты',
@@ -128,15 +128,15 @@ function Header() {
                     }
                     </Menu>
                     <Box item className="header-logo" sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, ml: 1}}>
-                        <img src={logo}/>
+                        <img onClick={() => goTo('')} title="Дзюдо-Ката" src={logo}/>
                     </Box>
                 </Box>
                 {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-                <Box item className="header-logo" sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                    <img src={logo}/>
+                <Box item className="header-logo" sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, cursor: 'pointer' }}>
+                    <img onClick={() => goTo('')} title="Дзюдо-Ката" src={logo}/>
                 </Box>
 
-                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}>
                     {pages.map((page) => (
                     <Button
                         key={page.name}

@@ -3,13 +3,18 @@ import * as React from "react";
 import { } from "../../../../core/Api/ApiData/methods/admin";
 import { getEvents } from "../../../../core/Api/ApiData/methods/event";
 import { getDateFromSQL } from "../../../../features/functions";
+import { useNavigate } from "react-router-dom";
 
 
 export default function TableEvents(){
     const [events, setEvents] = React.useState([]); 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
+    const navigate = useNavigate();
+    function ToEvent(event){
+        navigate("/games", {game: event});
+    }
+
     const emptyRows =
       page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
   
@@ -50,7 +55,7 @@ export default function TableEvents(){
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                         <TableCell component="th" scope="row" align="center">{event.id}</TableCell>
-                        <TableCell>{event.name}</TableCell>
+                        <TableCell onClick={() => ToEvent(event.id)} sx={{cursor:'pointer'}} title="Перейти на данное соревнование">{event.name}</TableCell>
                         <TableCell>{event.place}</TableCell>
                         <TableCell>{getDateFromSQL(event.date_begin)}</TableCell>
                         <TableCell>{getDateFromSQL(event.date_end)}</TableCell>
