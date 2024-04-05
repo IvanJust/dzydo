@@ -57,7 +57,7 @@ app.use((request, response, next) => {
   try {
       exception = [
           '/api/token/get',
-          '/api/event/set',
+          '/api/event/get',
       ];
        
       if(exception.indexOf(request.originalUrl) != -1) return next();
