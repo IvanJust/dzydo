@@ -394,12 +394,12 @@ app.post('/api/evaluations/set', (request, response) => {
 
       
       var role = '', param = '', params = [pair_id, evaluation_criteria_id, mark_id];
-      if(role_id == 3) {
+      if(request.role_id == 3) {
           role = ',supervisor_id';
           param = ', $4';
           params.push(request.user_id);
       }
-      else if(role_id == 4){
+      else if(request.role_id == 4){
           role = ',referee_id';
           param = ', $4';
           params.push(request.role_id);
