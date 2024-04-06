@@ -1,10 +1,10 @@
-import React, { useEffect } from "react"
+import React, { Children, useEffect } from "react"
 import { socket } from "../socket/socket"
 
 import { useState } from "react";
 
-export default function Socket() {
-
+export default function Socket({...props}) {
+    // console.debug('test2');
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [fooEvents, setFooEvents] = useState([]);
 
@@ -32,8 +32,9 @@ export default function Socket() {
         };
     }, [])
     return (
-        <div>
-            <div>
+        <>
+            {props.children}
+            {/* <div>
                 Connection state: 
                 {isConnected && "TRUE"}
                 {!isConnected && "FALSE"}
@@ -45,7 +46,7 @@ export default function Socket() {
                 {fooEvents.map((event, index) => {
                     <li key={ index }>{ event }</li>
                 })}
-            </div>
-        </div>
+            </div> */}
+        </>
     )
 }
