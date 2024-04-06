@@ -1,16 +1,45 @@
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getEvaletionCriteria } from "../../../core/Api/ApiData/methods/event";
+import { getEvaletionCriteria, getMarks } from "../../../core/Api/ApiData/methods/event";
 
 
-
+function RowTab({marks, name, id, ...props}){
+  const length = marks.length
+  return(
+    <Box my={1}  sx={{ flexGrow: 1 }}>
+      <Grid container  rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={6} md={1}>
+          {id}
+        </Grid>
+        <Grid item xs={6} md={4}>
+          {name}
+        </Grid>
+        {marks.map((mark) => (
+          <Grid item xs={6} md={1}>
+            {props.isName && mark.name}
+            {props.isScore && mark.score}
+          </Grid>
+        ))}
+        <Grid item xs={6} md={1}>
+          {props.isName && 'Score'}
+          {props.isScore && '10'}
+        </Grid>
+      </Grid>
+    </Box>
+  )
+}
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
     const [evaletionCriteries, setEvaletionCriteries] = useState([]);
+    const [marks, setMarks] =useState([]);
 
+    console.debug('marks', marks);
     console.debug('criteries', evaletionCriteries);
     useEffect(() => {
+      getMarks().then((resp) => {
+        setMarks(resp.data);
+      });
       getEvaletionCriteria().then((resp) => {
         setEvaletionCriteries(resp.data);
       });
@@ -27,22 +56,16 @@ function CustomTabPanel(props) {
       >
         {value === index && (
           <Grid>
-
-            <Box sx={{ p: 3 }}>
-              <Typography>test</Typography>
-            </Box>
+            <RowTab name='Предварительные встречи' isName={true} marks={marks} id='№' />
+            {evaletionCriteries.map((criteria) => (
+              <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} id={criteria.id} />
+            ))}
           </Grid>
         )}
       </div>
     );
   }
 
-// CustomTabPanel.propTypes = {
-//     children: PropTypes.node,
-//     index: PropTypes.number.isRequired,
-//     value: PropTypes.number.isRequired,
-//   };
-  
 function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,

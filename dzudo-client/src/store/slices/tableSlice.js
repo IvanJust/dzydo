@@ -8,8 +8,13 @@ export const tableSlice = createSlice({
         // id: "517670535",
         idSub: 0,
         idEvent: 0,
+        nameEvent: '',
+        placeEvent: '',
         dateBegin: 0,
         dateEnd: 0,
+        modalData: {
+
+        },
         mistakes: {
             id: 0,
             name: '',
@@ -21,8 +26,6 @@ export const tableSlice = createSlice({
                 idsMistakes: [],
             }
         ],
-        isAdmin: false,
-        isLogin: false,
 
     },
     reducers: {

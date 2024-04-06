@@ -38,3 +38,9 @@ export function getEvaletionGroup(){
         'evaluation_group/get'
     );
 }
+
+export function getMarks(){
+    return client.post(
+        'mark/get'
+    );
+}
