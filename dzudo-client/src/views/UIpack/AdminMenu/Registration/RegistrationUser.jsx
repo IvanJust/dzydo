@@ -5,10 +5,12 @@ import { Form } from "react-router-dom";
 
 function RegistrationUser({...props}){
     const [roles, setRoles] = useState([]);
-    getRoles().then((resp) => {
-        if(resp.data){
-            setRoles(resp.data);
-        }
+    React.useEffect(() => {
+        getRoles().then((resp) => {
+            if(resp.data){
+                setRoles(resp.data);
+            }
+        });
     });
     return(
         <Grid>
