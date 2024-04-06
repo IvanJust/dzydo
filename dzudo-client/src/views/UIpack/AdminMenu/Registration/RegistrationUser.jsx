@@ -11,7 +11,7 @@ function RegistrationUser({...props}){
                 setRoles(resp.data);
             }
         });
-    });
+    }, []);
     return(
         <Grid>
             <Box sx={{display: 'flex', justifyContent: 'center'}}>
