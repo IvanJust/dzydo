@@ -58,6 +58,7 @@ app.use((request, response, next) => {
       exception = [
           '/api/token/get',
           '/api/event/get',
+          '/api/table/get',
       ];
        
       if(exception.indexOf(request.originalUrl) != -1) return next();
@@ -368,9 +369,11 @@ app.post('/api/pair/get', (request, response) => {
   const { id } = request.body;
 
   try {
-      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id ';
+      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id ';
 
       if (id) sql += 'WHERE "pair".id=' + id;
+      
+      sql += 'ORDER BY "pair".round, "pair".id ASC';
       
       pool.query(sql).then(function (res) {
           response.send(res['rows']);
@@ -381,6 +384,43 @@ app.post('/api/pair/get', (request, response) => {
   }
 });
 
+app.post('/api/pair/update', (request, response) => {
+  pairs = request.body['pair'];
+
+  try{
+    if( !pairs ) throw 'Error';
+
+    pairs.forEach(element => {
+      const id = element['id'], round = element['round'];
+      
+      if( !id || !round ) throw 'Error';
+      
+      pool.query('UPDATE "pair" SET round = $1 WHERE id = $2', [round, id]);
+    });
+    
+    response.send(Successfully('Pairs have been successfully updated'));
+  }
+  catch (e) {
+    response.status(500).send(Error('Error receiving the pair.'));
+  }
+
+});
+
+
+
+
+app.post('/api/table/get', (request, response) => {
+  try {
+      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id ORDER BY "pair".round, "pair".id DESC';
+      
+      pool.query(sql).then(function (res) {
+          response.send(res['rows']);
+      });
+
+  } catch (e) {
+      response.status(500).send(Error('Error receiving the pair.'));
+  }
+});
 
 
 
@@ -419,7 +459,8 @@ app.post('/api/evaluations/get', (request, response) => {
   
   try {
       sql = 'SELECT row_to_json(p.*) AS pair, row_to_json(u1.*) AS referee, row_to_json(u2.*) AS supervisor, row_to_json(ec.*) AS evaluation_criteria, row_to_json(m.*) AS mark, date '
-      + 'FROM "evaluations" JOIN "pair" AS p ON p.id = pair_id '
+      + 'FROM "evaluations" '
+      + 'JOIN "pair" AS p ON p.id = pair_id '
       + 'LEFT JOIN "user" AS u1 ON u1.id = referee_id '
       + 'LEFT JOIN "user" AS u2 ON u2.id = supervisor_id '
       + 'JOIN "evaluation_criteria" AS ec ON ec.id = evaluation_criteria_id '
@@ -446,10 +487,9 @@ app.get('*', (req, res) => {
 
 const server = http.createServer(app).listen(port);
 
-// server.setTimeout(300000, function (socket) {
-// });
+
 console.log(`HTTP Listening on port ${port}`);
-//});
+
 
 
 const getTokenFromHeader = (req) => {
@@ -492,6 +532,8 @@ function Error(message){
 }
 
 // node --env-file .env dzudo-server/app.js 
+// pm2 start ecosystem.config.js
+// pm2 logs
 
 
 
