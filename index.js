@@ -411,7 +411,7 @@ app.post('/api/pair/update', (request, response) => {
 
 app.post('/api/table/get', (request, response) => {
   try {
-      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id ORDER BY "pair".round, "pair".id DESC';
+      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id WHERE condition > 1 ORDER BY "pair".round, "pair".id DESC';
       
       pool.query(sql).then(function (res) {
           response.send(res['rows']);
