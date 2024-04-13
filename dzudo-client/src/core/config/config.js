@@ -1,6 +1,6 @@
 // export const BASE_URL_AUTH = 'https://lk.pnzgu.ru/ajax/cloud/'
 
-export const BASE_URL_SOCKET = 'http://79.174.84.7:3000'
+export const BASE_URL_SOCKET = 'http://79.174.84.7:3001'
 
 export const BASE_URL_DATA = 'http://79.174.84.7:3000/api/'
 

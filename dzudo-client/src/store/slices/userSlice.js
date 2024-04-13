@@ -26,7 +26,7 @@ export const userSlice = createSlice({
             name: '',
         },
         eventInfo: {
-            id: 0,
+            id: 1,
             name: '',
             place: '',
         },
