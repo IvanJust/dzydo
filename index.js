@@ -116,6 +116,8 @@ socketIO.on('connection', (socket) => {
     });
   });
 
+
+
   socket.on('next-round', (message, ack) => {
     try {
       // console.log("user_id=" + socket.user_id);
@@ -130,16 +132,39 @@ socketIO.on('connection', (socket) => {
           curr_pair = res1['rows'][0];
           //ack(curr_pair);
           
+          pool.query('UPDATE "pair" SET condition = 1 WHERE id = $1', [curr_pair['id']]);
+          
+          curr_pair['condition'] = 1;
           pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res2) {
             res2['rows'].forEach((value) => {
               socketIO.to(value.socket_id).emit('next-round', curr_pair);
             });
           });
-
-          pool.query('UPDATE "pair" SET condition = 1 WHERE id = $1', [curr_pair['id']]);
-
         });
       });
+
+    } catch (error) {
+      ack(Error('Socket operation error next-round.'));
+    }
+  });
+  
+  socket.on('skip-round', (message, ack) => {
+    try {
+      
+      pool.query('SELECT * FROM "pair" WHERE event_id = $1 AND condition IN (0, 1) ORDER BY round, id LIMIT 1', [socket.event_id]).then(function (res1) {
+        if(res1['rows'].length == 0) ack(Error('Socket operation error next-round.'));
+        curr_pair = res1['rows'][0];
+        
+        pool.query('UPDATE "pair" SET condition = 3 WHERE id = $1', [curr_pair['id']]);
+        
+        curr_pair['condition'] = 3;
+        pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res2) {
+          res2['rows'].forEach((value) => {
+            socketIO.to(value.socket_id).emit('skip-round', curr_pair);
+          });
+        });
+      });
+      
 
     } catch (error) {
       ack(Error('Socket operation error next-round.'));
