@@ -44,14 +44,100 @@ const socketIO = new Server({
 });
 
 socketIO.on('connection', (socket) => {
-  console.log('a user connected');
+  try {
+    const token = socket.handshake.auth?.token || socket.handshake.headers?.token;
+    
+    let verified = jwt.verify(token, jwtSecretKey);
+    if(verified) verified = jwt.decode(token);
+    else throw 'Error';
+    
+    pool.query('UPDATE "event_user_role" SET socket_id = $1 WHERE event_id = $2 AND user_id = $3 AND role_id = $4', [socket.id, verified.event_id, verified.sub, verified.role]);
+  } catch (error) {
+    console.log('Токена нет');
+  }
+  
+  socket.on('disconnecting', (message) => {
+    try {
+      const token = socket.handshake.auth?.token || socket.handshake.headers?.token;
+
+      let verified = jwt.verify(token, jwtSecretKey);
+      if(verified) verified = jwt.decode(token);
+      else throw 'Error';
+
+      pool.query('UPDATE "event_user_role" SET socket_id = NULL WHERE event_id = $1 AND user_id = $2 AND role_id = $3', [verified.event_id, verified.sub, verified.role]);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.use(([event_name, message, Ack], next) => {
+      try {
+        const token = socket.handshake.auth?.token || socket.handshake.headers?.token;
+        exception = [
+          'table-get-2',
+        ];
+        
+        if(exception.indexOf(event_name) != -1) return next();
+
+        let verified = jwt.verify(token, jwtSecretKey);
+        if(verified) verified = jwt.decode(token);
+        else throw 'Error';
+
+        socket.user_id = verified['sub'];
+        socket.role_id = verified['role'];
+        socket.event_id = verified['event_id'];
+
+        next();
+
+    } catch (error) {
+        Ack(Error('Token verification error in socket.'));
+    }
+  });
+
+
+
+
+  socket.on('table-get-1', (message, ack) => {
+    console.log("user_id=" + socket.user_id);
+    console.log("role_id=" + socket.role_id);
+
+    ack({ 
+        someProperty: 'some value', 
+        otherProperty: 'other value',
+        'message': message
+    });
+  });
+
+  socket.on('table-get-2', (message, ack) => {
+    ack({ 
+        someProperty: 'some value', 
+        otherProperty: 'other value',
+        'message': message
+    });
+  });
+
+
+  socket.on('next-round', (message, ack) => {
+    try {
+      console.log("user_id=" + socket.user_id);
+      console.log("role_id=" + socket.role_id);
+      console.log("event_id=" + socket.event_id);
+      
+      pool.query('SELECT * FROM "pair" WHERE event_id = $1 AND condition = 1', [socket.event_id]).then(function (res) {
+        response.send(res['rows']);
+      });
+
+    } catch (error) {
+      ack(Error('Socket operation error next-round.'));
+    }
+  });
 });
+
+
 
 socketIO.listen(socket_port);
 
-app.get('/api', (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+
 
 app.use((request, response, next) => {  
   try {
@@ -73,11 +159,14 @@ app.use((request, response, next) => {
       return next();
 
   } catch (error) {
-      return response.status(500).send(Error('Token verification error.'));
+     response.status(500).send(Error('Token verification error.'));
   }
 });
 
 
+app.get('/api', (req, res) => {
+  res.json({ message: "Hello from server!" });
+});
 
 app.post('/api/token/get', (request, response) => {
   const { event_id, login, password } = request.body;
@@ -92,6 +181,7 @@ app.post('/api/token/get', (request, response) => {
                   sub: res['rows'][0]['id'],
                   ext: cdate(),
                   role: res['rows'][0]['role_id'],
+                  event_id: event_id,
               }, jwtSecretKey),
               sub: res['rows'][0]['id'],
               ext: cdate(),
@@ -509,7 +599,7 @@ function cdate(){
 function check(request, response){
   try{
       const token = getTokenFromHeader(request);
-      const verified = jwt.verify(token, jwtSecretKey);
+      let verified = jwt.verify(token, jwtSecretKey);
 
       if(verified) return jwt.decode(token);
       else throw 'Error';
@@ -534,11 +624,4 @@ function Error(message){
 // node --env-file .env dzudo-server/app.js 
 // pm2 start ecosystem.config.js
 // pm2 logs
-
-
-
-
-
-
-
-
+// pm2 delete all
