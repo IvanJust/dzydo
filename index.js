@@ -97,26 +97,6 @@ socketIO.on('connection', (socket) => {
 
 
 
-  socket.on('table-get-1', (message, ack) => {
-    console.log("user_id=" + socket.user_id);
-    console.log("role_id=" + socket.role_id);
-
-    ack({ 
-        someProperty: 'some value', 
-        otherProperty: 'other value',
-        'message': message
-    });
-  });
-
-  socket.on('table-get-2', (message, ack) => {
-    ack({ 
-        someProperty: 'some value', 
-        otherProperty: 'other value',
-        'message': message
-    });
-  });
-
-
 
   socket.on('next-round', (message, ack) => {
     try {
@@ -137,7 +117,7 @@ socketIO.on('connection', (socket) => {
           curr_pair['condition'] = 1;
           pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res2) {
             res2['rows'].forEach((value) => {
-              socketIO.to(value.socket_id).emit('next-round', curr_pair);
+              socketIO.to(value.socket_id).emit('change-round', curr_pair);
             });
           });
         });
@@ -160,7 +140,7 @@ socketIO.on('connection', (socket) => {
         curr_pair['condition'] = 3;
         pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res2) {
           res2['rows'].forEach((value) => {
-            socketIO.to(value.socket_id).emit('skip-round', curr_pair);
+            socketIO.to(value.socket_id).emit('change-round', curr_pair);
           });
         });
       });
@@ -564,11 +544,10 @@ app.post('/api/table/get', (request, response) => {
 
 app.post('/api/evaluations/set', (request, response) => {
   //const { pair_id , evaluation_criteria_id , mark_id} = request.body;
-  evaluations = request.body['evaluations'];
+  const { pair_id , evaluations } = request.body;
+
   try {
-
-
-      if ( !evaluations /*!pair_id || !evaluation_criteria_id || !mark_id*/) throw "Error";
+      if ( !evaluations || !pair_id ) throw "Error";
 
       evaluations.forEach(items => {
         var role = '', param = '', params = [items.pair_id, items.evaluation_criteria_id, items.mark_id];
@@ -589,9 +568,13 @@ app.post('/api/evaluations/set', (request, response) => {
       request.role_id = 3;
         
       if(request.role_id == 3) {
-        pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id=2').then(function (res) {
-          res['rows'].forEach((value) => {
-            socketIO.to(value.socket_id).emit('save-evaluations-supervisor', evaluations);
+        pool.query('SELECT * FROM "pair" WHERE id = $1', [pair_id]).then(function (res1) {
+          pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res) {
+            res['rows'].forEach((value) => {
+              socketIO.to(value.socket_id).emit('save-evaluations-supervisor', evaluations);
+              pool.query('UPDATE "pair" SET condition = 2 WHERE id = $1', [pair_id]);
+              socketIO.to(value.socket_id).emit('change-round', res1['rows']);
+            }); 
           });
         });
       }
