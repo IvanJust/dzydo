@@ -34,15 +34,15 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
         >
             <DialogTitle sx={{borderBottom:'grey solid 1px', display: 'flex', justifyContent:'space-between'}}>
                 <Box>Авторизация</Box>
-                <CloseIcon onClick={handleClose} fontSize="large"/>
+                <CloseIcon onClick={handleClose} fontSize="large" sx={{ cursor:'pointer' }}/>
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
                         <Form id="authform">
                             <Grid>
-                                <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
+                                <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                     <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    <Box  sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                    <Box  sx={{ display: 'flex', alignItems: 'flex-end', width: '100%' }}>
                                         <TextField 
                                             onChange={props.onChange}
                                             id="input-with-sx" 
@@ -50,6 +50,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             name="login" 
                                             autoFocus 
                                             variant="standard" 
+                                            fullWidth
                                             />
                                     </Box>
                                 </Box>

@@ -1,12 +1,14 @@
-import { Box, Grid, Tab, Tabs, Typography } from "@mui/material"
+import { Box, Grid, Tab, Tabs, Typography, Breadcrumbs } from "@mui/material"
 import React, { useState } from "react"
 import RegistrationUser from "./Registration/RegistrationUser";
 import { setUser } from "../../../core/Api/ApiData/methods/portfolio";
 import toast from "react-hot-toast";
 import RegistrationEvent from "./Registration/RegistrationEvent";
 import { setEvent } from "../../../core/Api/ApiData/methods/event";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import TableUsers from "./Tables/TableUser";
 import TableEvents from "./Tables/TableEvent";
+import { Link } from "react-router-dom";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -35,11 +37,19 @@ function a11yProps(index) {
     };
   }
 
-
 export default function AdminMenu(){
     const [value, setValue] = React.useState(0);
     const [dataLoginUser, setDataLoginUser] = useState({});
     const [dataLoginEvent, setDataLoginEvent] = useState({});
+  
+  const breadcrumbs = [
+    <Link underline="hover" key="1" color="inherit" href="/">
+      Главная
+    </Link>,
+    <Typography key="2" color="text.primary">
+      Административное меню
+    </Typography>,
+  ];
   
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -85,6 +95,12 @@ export default function AdminMenu(){
 
     return(
         <Grid mt={2}>
+            <Breadcrumbs
+                separator={<NavigateNextIcon fontSize="small" />}
+                aria-label="Административное меню"
+            >
+                {breadcrumbs}
+            </Breadcrumbs>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
                 <Tabs 
                     value={value} 

@@ -4,7 +4,7 @@ import Header from "./Header/Header";
 import "./defaultPage-style.css";
 import Footer from "./Footer/Footer";
 import { useSelector } from "react-redux";
-import { Alert } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 
 function DefaultPage(){
     const isLogin = useSelector((state) => state.user.isLogin);
@@ -17,7 +17,7 @@ function DefaultPage(){
                     <div className="container">
                         <div className="content-page">
                             {isLogin && <Outlet/>}
-                            {!isLogin && <Alert severity="info">Необходимо авторизоваться для дальнейших действий!</Alert>}
+                            {!isLogin && <Box mt={3} sx={{ display: 'flex', alignItems: 'flex-start' }}><Alert severity="info">Необходимо авторизоваться для дальнейших действий!</Alert></Box>}
                         </div>
                     </div>
                 </div>
