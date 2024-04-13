@@ -28,6 +28,7 @@ function RegistrationUser({...props}){
                                     label="Логин" 
                                     name="login" 
                                     autoFocus 
+                                    required
                                     variant="filled" 
                                     fullWidth
                                     />
@@ -39,6 +40,7 @@ function RegistrationUser({...props}){
                                     label="Пароль" 
                                     type="password" 
                                     name="password" 
+                                    required
                                     variant="filled" 
                                     fullWidth
                                     />
@@ -50,6 +52,7 @@ function RegistrationUser({...props}){
                                     label="Фамилия" 
                                     type='text'
                                     name="lastname" 
+                                    required
                                     variant="filled" 
                                     fullWidth
                                     />
@@ -61,6 +64,7 @@ function RegistrationUser({...props}){
                                     label="Имя" 
                                     type="text" 
                                     name="firstname" 
+                                    required
                                     variant="filled" 
                                     fullWidth
                                     />

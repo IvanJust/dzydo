@@ -44,3 +44,12 @@ export function getMarks(){
         'mark/get'
     );
 }
+
+export function getTable(id){
+    return client.post(
+        'table/get',
+        {
+            'event_id': id,
+        }
+    );
+}

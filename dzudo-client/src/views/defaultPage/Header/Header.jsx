@@ -49,6 +49,10 @@ const pages = [
     {
         name: 'Результаты',
         nav: 'writing',
+    }, 
+    {
+        name: 'Таблица',
+        nav: 'table',
     }
 ];
 

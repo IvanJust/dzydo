@@ -27,6 +27,7 @@ function RegistrationEvent({...props}){
                                     type="text"
                                     autoFocus 
                                     variant="filled" 
+                                    required
                                     fullWidth
                                     />
                             </Box>
@@ -38,6 +39,7 @@ function RegistrationEvent({...props}){
                                     type="text"
                                     name="place" 
                                     variant="filled" 
+                                    required
                                     fullWidth
                                     />
                             </Box>
@@ -50,6 +52,7 @@ function RegistrationEvent({...props}){
                                     type='date'
                                     name="date_begin" 
                                     variant="filled" 
+                                    required
                                     fullWidth
                                     />
                                 {/* <DateField 
@@ -71,6 +74,7 @@ function RegistrationEvent({...props}){
                                     // label
                                     type='date'
                                     name="date_end" 
+                                    required
                                     variant="filled" 
                                     fullWidth
                                     />

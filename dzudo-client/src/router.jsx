@@ -26,7 +26,12 @@ const router = createBrowserRouter([
             },
             {
                 path: 'admin',
-                element: <views.AdminMenu/>
+                element: <views.AdminMenu bread={
+                    [
+                        {title: 'Главная', link: '/', key: 1},
+                        {title: 'Административное меню', key: 2}
+                    ]
+                } />
             },
             {
                 path: '',
@@ -44,6 +49,12 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Outlet/>,
+        children: [
+            {
+                path: 'table',
+                element: <views.TableResult />
+            }
+        ]
     },
     
 
