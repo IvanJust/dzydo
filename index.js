@@ -116,15 +116,29 @@ socketIO.on('connection', (socket) => {
     });
   });
 
-
   socket.on('next-round', (message, ack) => {
     try {
-      console.log("user_id=" + socket.user_id);
-      console.log("role_id=" + socket.role_id);
-      console.log("event_id=" + socket.event_id);
+      // console.log("user_id=" + socket.user_id);
+      // console.log("role_id=" + socket.role_id);
+      // console.log("event_id=" + socket.event_id);
       
       pool.query('SELECT * FROM "pair" WHERE event_id = $1 AND condition = 1', [socket.event_id]).then(function (res) {
-        response.send(res['rows']);
+        if(res['rows'].length > 0) ack(Error('Socket operation error next-round.'));
+
+        pool.query('SELECT * FROM "pair" WHERE event_id = $1 AND condition = 0 ORDER BY round,id LIMIT 1', [socket.event_id]).then(function (res1) {
+          if(res1['rows'].length == 0) ack(Error('Socket operation error next-round.'));
+          curr_pair = res1['rows'][0];
+          //ack(curr_pair);
+          
+          pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res2) {
+            res2['rows'].forEach((value) => {
+              socketIO.to(value.socket_id).emit('next-round', curr_pair);
+            });
+          });
+
+          pool.query('UPDATE "pair" SET condition = 1 WHERE id = $1', [curr_pair['id']]);
+
+        });
       });
 
     } catch (error) {
@@ -155,6 +169,7 @@ app.use((request, response, next) => {
       
       request.user_id = verified['sub'];
       request.role_id = verified['role'];
+      request.event_id = verified['event_id'];
 
       return next();
 
@@ -164,7 +179,7 @@ app.use((request, response, next) => {
 });
 
 
-app.get('/api', (req, res) => {
+app.get('/api', (request, response) => {
   res.json({ message: "Hello from server!" });
 });
 
@@ -321,7 +336,7 @@ app.post('/api/event_user_role/set', (request, response) => {
 app.post('/api/event_user_role/get', (request, response) => {
   const {event_id, user_id, role_id} = request.body;
 
-  sql = 'SELECT row_to_json(e.*) AS event, row_to_json(u.*) AS user, row_to_json(r.*) AS role FROM "event_user_role" JOIN "event" AS e ON e.id = event_id JOIN "user" AS u ON u.id = user_id JOIN "role" AS r ON r.id = role_id WHERE TRUE';
+  sql = 'SELECT "event_user_role".id, row_to_json(e.*) AS event, row_to_json(u.*) AS user, row_to_json(r.*) AS role FROM "event_user_role" JOIN "event" AS e ON e.id = event_id JOIN "user" AS u ON u.id = user_id JOIN "role" AS r ON r.id = role_id WHERE TRUE';
 
   try {
       if (event_id) sql += ` AND event_id = ${event_id}`;
@@ -342,12 +357,12 @@ app.post('/api/event_user_role/get', (request, response) => {
 
 
 app.post('/api/evaluation_criteria/set', (request, response) => {
-  const { group_id , title } = request.body;
+  const { group_id , title , init_value } = request.body;
 
   try {
-      if (!group_id || !title) throw "Error";
+      if (!group_id || !title || !init_value) throw "Error";
   
-      pool.query('INSERT INTO "evaluation_criteria" (group_id, title) VALUES ($1, $2)', [group_id, title]);
+      pool.query('INSERT INTO "evaluation_criteria" (group_id, title, init_value) VALUES ($1, $2, $3)', [group_id, title, init_value]);
       response.send(Successfully('The evaluation_criteria was saved successfully.'));
   
   } catch (e) {
@@ -360,7 +375,7 @@ app.post('/api/evaluation_criteria/get', (request, response) => {
   const { id } = request.body;
 
   try {
-      sql = 'SELECT "evaluation_criteria".id, "evaluation_criteria".title AS evaluation_criteria, row_to_json("evaluation_group".*) AS evaluation_group FROM "evaluation_criteria" JOIN "evaluation_group" ON "evaluation_group".id = "evaluation_criteria".group_id ';
+      sql = 'SELECT "evaluation_criteria".id, "evaluation_criteria".id, "evaluation_criteria".title AS evaluation_criteria, row_to_json("evaluation_group".*) AS evaluation_group, init_value FROM "evaluation_criteria" JOIN "evaluation_group" ON "evaluation_group".id = "evaluation_criteria".group_id ';
 
       if (id) sql += 'WHERE "evaluation_criteria".id=' + id;
 
@@ -456,12 +471,14 @@ app.post('/api/pair/set', (request, response) => {
 });
 
 app.post('/api/pair/get', (request, response) => {
-  const { id } = request.body;
+  const { id , event_id } = request.body;
 
   try {
-      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id ';
+      sql = 'SELECT "pair".id, row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id ';
 
       if (id) sql += 'WHERE "pair".id=' + id;
+
+      if (event_id) sql += 'WHERE "pair".event_id=' + event_id;
       
       sql += 'ORDER BY "pair".round, "pair".id ASC';
       
@@ -500,15 +517,19 @@ app.post('/api/pair/update', (request, response) => {
 
 
 app.post('/api/table/get', (request, response) => {
+  const { event_id } = request.body;
+  
   try {
-      sql = 'SELECT row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id WHERE condition > 1 ORDER BY "pair".round, "pair".id DESC';
-      
-      pool.query(sql).then(function (res) {
-          response.send(res['rows']);
-      });
+    if ( !event_id ) throw "Error";
+
+    sql = 'SELECT "pair".id, row_to_json(u1.*) AS tori, row_to_json(u2.*) AS uke, region, row_to_json("event".*) AS event, round, condition  FROM "pair" JOIN "user" AS u1 ON u1.id = tori JOIN "user" AS u2 ON u2.id = uke JOIN "event" ON "event".id = event_id WHERE condition > 1 AND "event".id = $1 ORDER BY "pair".round, "pair".id DESC';
+    
+    pool.query(sql, [event_id]).then(function (res) {
+        response.send(res['rows']);
+    });
 
   } catch (e) {
-      response.status(500).send(Error('Error receiving the pair.'));
+    response.status(500).send(Error('Error receiving the pair.'));
   }
 });
 
@@ -517,25 +538,47 @@ app.post('/api/table/get', (request, response) => {
 
 
 app.post('/api/evaluations/set', (request, response) => {
-  const { pair_id , evaluation_criteria_id , mark_id} = request.body;
-
+  //const { pair_id , evaluation_criteria_id , mark_id} = request.body;
+  evaluations = request.body['evaluations'];
   try {
-      if (!pair_id || !evaluation_criteria_id || !mark_id) throw "Error";
 
-      
-      var role = '', param = '', params = [pair_id, evaluation_criteria_id, mark_id];
+
+      if ( !evaluations /*!pair_id || !evaluation_criteria_id || !mark_id*/) throw "Error";
+
+      evaluations.forEach(items => {
+        var role = '', param = '', params = [items.pair_id, items.evaluation_criteria_id, items.mark_id];
+        if(request.role_id == 3) {
+            role = ',supervisor_id';
+            param = ', $4';
+            params.push(request.user_id);
+        }
+        else if(request.role_id == 4){
+            role = ',referee_id';
+            param = ', $4';
+            params.push(request.role_id);
+        }
+    
+        pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id ${role}) VALUES ($1, $2, $3 ${param})`, params);
+      });
+
+      request.role_id = 3;
+        
       if(request.role_id == 3) {
-          role = ',supervisor_id';
-          param = ', $4';
-          params.push(request.user_id);
+        pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id=2').then(function (res) {
+          res['rows'].forEach((value) => {
+            socketIO.to(value.socket_id).emit('save-evaluations-supervisor', evaluations);
+          });
+        });
       }
       else if(request.role_id == 4){
-          role = ',referee_id';
-          param = ', $4';
-          params.push(request.role_id);
+        pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id=3').then(function (res) {
+          res['rows'].forEach((value) => {
+            socketIO.to(value.socket_id).emit('save-evaluations-referee', evaluations);
+          });
+        });
       }
-  
-      pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id ${role}) VALUES ($1, $2, $3 ${param})`, params);
+
+
       response.send(Successfully('The evaluations was saved successfully.'));
   
   } catch (e) {
@@ -548,7 +591,7 @@ app.post('/api/evaluations/get', (request, response) => {
   const { id } = request.body;
   
   try {
-      sql = 'SELECT row_to_json(p.*) AS pair, row_to_json(u1.*) AS referee, row_to_json(u2.*) AS supervisor, row_to_json(ec.*) AS evaluation_criteria, row_to_json(m.*) AS mark, date '
+      sql = 'SELECT "evaluations".id, row_to_json(p.*) AS pair, row_to_json(u1.*) AS referee, row_to_json(u2.*) AS supervisor, row_to_json(ec.*) AS evaluation_criteria, row_to_json(m.*) AS mark, date '
       + 'FROM "evaluations" '
       + 'JOIN "pair" AS p ON p.id = pair_id '
       + 'LEFT JOIN "user" AS u1 ON u1.id = referee_id '
