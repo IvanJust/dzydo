@@ -29,6 +29,8 @@ export const userSlice = createSlice({
             id: 0,
             name: '',
             place: '',
+            date_begin: 0,
+            date_end: 0,
         },
         isAdmin: false,
         isLogin: false,

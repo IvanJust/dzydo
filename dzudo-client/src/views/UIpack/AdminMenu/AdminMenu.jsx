@@ -9,6 +9,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import TableUsers from "./Tables/TableUser";
 import TableEvents from "./Tables/TableEvent";
 import { Link } from "react-router-dom";
+import Bread from "../../UIpack v2/Bread/Bread";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -37,19 +38,10 @@ function a11yProps(index) {
     };
   }
 
-export default function AdminMenu(){
+export default function AdminMenu({bread}){
     const [value, setValue] = React.useState(0);
     const [dataLoginUser, setDataLoginUser] = useState({});
     const [dataLoginEvent, setDataLoginEvent] = useState({});
-  
-  const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/">
-      Главная
-    </Link>,
-    <Typography key="2" color="text.primary">
-      Административное меню
-    </Typography>,
-  ];
   
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -99,7 +91,7 @@ export default function AdminMenu(){
                 separator={<NavigateNextIcon fontSize="small" />}
                 aria-label="Административное меню"
             >
-                {breadcrumbs}
+                {<Bread bread={bread} />}
             </Breadcrumbs>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
                 <Tabs 
@@ -108,6 +100,7 @@ export default function AdminMenu(){
                     textColor="secondary"
                     indicatorColor="secondary"
                     aria-label="secondary tabs example"
+                    sx={{overflowX: 'auto'}}
                 >
                     <Tab label="Регистрация пользователя" {...a11yProps(0)} />
                     <Tab label="Создать мероприятие" {...a11yProps(1)} />
