@@ -26,7 +26,7 @@ export const userSlice = createSlice({
             name: '',
         },
         eventInfo: {
-            id: 0,
+            id: 1,
             name: '',
             place: '',
             date_begin: 0,
@@ -34,6 +34,9 @@ export const userSlice = createSlice({
         },
         isAdmin: false,
         isLogin: false,
+        currentPair: {
+            id: 0,
+        },
 
     },
     reducers: {
@@ -85,9 +88,12 @@ export const userSlice = createSlice({
         },
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
             state.eventInfo = action.payload;
+        },
+        setCurrentPair: (state, action) => {
+            state.currentPair = action.payload
         }
     },
 });
 export { roleName };
-export const {setRole, setUser, unsetUser, getFIO, setEventInfo } = userSlice.actions
+export const {setRole, setUser, unsetUser, getFIO, setEventInfo, setCurrentPair } = userSlice.actions
 export default userSlice.reducer

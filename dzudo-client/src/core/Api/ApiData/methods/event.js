@@ -45,6 +45,15 @@ export function getMarks(){
     );
 }
 
+export function saveEvaluations(data, pair_id){
+    return client.post(
+        'evaluations/set',
+        {
+            evaluations: data,
+            pair_id: pair_id
+        }
+    );
+}
 export function getTable(id){
     return client.post(
         'table/get',
