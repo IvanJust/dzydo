@@ -1,26 +1,29 @@
-import { io } from 'socket.io-client';
-import { createContext, useEffect, useState } from "react";
-import { BASE_URL_SOCKET } from '../core/config/config';
-import { getCurrentAccessToken } from '../core/Api/functions';
+import React, { createContext, useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { BASE_URL_SOCKET } from "../core/config/config";
+import { getCurrentAccessToken } from "../core/Api/functions";
 
-
-export const SocketContext = createContext({});
+export const SocketContext = createContext()
 
 export default function SocketProvider({ children }) {
-    //TODO по идее - неверно. он обновляется только благодаря вложенности в App
     const accessToken = getCurrentAccessToken();
-
-    const [socketAuth, setSocketAuth] = useState(
-        io(BASE_URL_SOCKET, {
-            auth: {
-                token: accessToken
-            }
-        })
-    )
+    const [socketAuth, setSocketAuth] = useState(io(BASE_URL_SOCKET));
 
     const [isConnected, setIsConnected] = useState(false);
 
-    useEffect(()=>{
+    useEffect(() => {
+        setSocketAuth(io(BASE_URL_SOCKET, {
+            auth: {
+                token: accessToken
+            }
+        }))
+
+        return ()=>{
+            socketAuth.disconnect();
+        }
+    }, [accessToken]);
+
+    useEffect(() => {
 
         function onConnect() {
             setIsConnected(true);
@@ -30,18 +33,23 @@ export default function SocketProvider({ children }) {
             setIsConnected(false);
         }
 
-        socketAuth.on('connect', onConnect);
-        socketAuth.on('disconnect', onDisconnect);
 
-        return ()=>{
-            socketAuth.off('connect', onConnect);
-            socketAuth.off('disconnect', onDisconnect);
-        };
-    })
+        if (socketAuth != null) {
+            socketAuth.on('connect', onConnect);
+            socketAuth.on('disconnect', onDisconnect);
+        }
 
+
+        return () => {
+            if (socketAuth != null) {
+                socketAuth.off('connect', onConnect);
+                socketAuth.off('disconnect', onDisconnect);
+            }
+        }
+    }, [socketAuth])
 
     return (
-        <SocketContext.Provider value={{socketAuth, setSocketAuth, isConnected}}>
+        <SocketContext.Provider value={{ socketAuth, isConnected }}>
             {children}
         </SocketContext.Provider>
     )

@@ -14,16 +14,17 @@ export default function ListPair() {
     const event = useSelector(state => state.user.eventInfo)
     const role_id = useSelector(state => state.user.role.id);
 
-    useEffect(() => {
 
+    useEffect(()=>{
         getPairs(event.id, "").then(resp => {
             setPairs(resp.data);
-        })
+        });
+    }, [event.id])
 
 
+    useEffect(() => {
         function onChangeRound(value) {
-            console.debug('onChangeRound ', value);
-            pairs.map(it => {
+            setPairs(pairs.map(it => {
                 if (it.id == value.id)
                     return {
                         ...it,
@@ -31,10 +32,9 @@ export default function ListPair() {
                     }
                 else
                     return it;
-
-            })
+    
+            }))
         }
-
 
         socketAuth.on('change-round', onChangeRound);
 
@@ -42,7 +42,7 @@ export default function ListPair() {
         return () => {
             socketAuth.off('change-round', onChangeRound);
         }
-    }, [])
+    }, [socketAuth, pairs])
 
     function nextRound(event) {
         socketAuth.emit('next-round');
