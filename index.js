@@ -550,19 +550,16 @@ app.post('/api/evaluations/set', (request, response) => {
       if ( !evaluations || !pair_id ) throw "Error";
 
       evaluations.forEach(items => {
-        var role = '', param = '', params = [items.pair_id, items.evaluation_criteria_id, items.mark_id];
+        var params = [items.pair_id, items.evaluation_criteria_id, items.mark_id, request.user_id];
         if(request.role_id == 3) {
-            role = ',supervisor_id';
-            param = ', $4';
-            params.push(request.user_id);
+          params.push(items.referee_id);
+          items['supervisor_id'] = request.user_id;
+          pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, supervisor_id, referee_id) VALUES ($1, $2, $3 $4, $5)`, params);
         }
         else if(request.role_id == 4){
-            role = ',referee_id';
-            param = ', $4';
-            params.push(request.role_id);
-        }
-    
-        pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id ${role}) VALUES ($1, $2, $3 ${param})`, params);
+          items['referee_id'] = request.user_id;
+          pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, referee_id) VALUES ($1, $2, $3 $4)`, params);
+        }  
       });
 
       request.role_id = 3;
