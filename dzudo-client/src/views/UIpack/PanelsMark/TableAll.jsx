@@ -28,6 +28,7 @@ export default function TableAll() {
 
     useEffect(() => {
         function onSaveReferee(value) {
+            console.debug("referee", value)
             if(gradesGiven1.length == 0){
                 setGradesGiven1(value);
             }else if(gradesGiven2.length == 0){

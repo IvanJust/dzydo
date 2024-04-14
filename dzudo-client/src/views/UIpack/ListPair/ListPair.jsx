@@ -29,6 +29,7 @@ export default function ListPair() {
 
     useEffect(() => {
         function onChangeRound(value) {
+            console.debug('change pair', value);
             if(value.condition == 1){
                 dispatch(setCurrentPair(value));
             }else{
