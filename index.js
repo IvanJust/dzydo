@@ -543,7 +543,6 @@ app.post('/api/table/get', (request, response) => {
 
 
 app.post('/api/evaluations/set', async (request, response) => {
-  //const { pair_id , evaluation_criteria_id , mark_id} = request.body;
   const { pair_id , evaluations } = request.body;
 
   try {
@@ -554,11 +553,11 @@ app.post('/api/evaluations/set', async (request, response) => {
         if(request.role_id == 3) {
           params.push(items.referee_id);
           items['supervisor_id'] = request.user_id;
-          pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, supervisor_id, referee_id) VALUES ($1, $2, $3 $4, $5)', params);
+          pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, supervisor_id, referee_id) VALUES ($1, $2, $3, $4, $5)', params);
         }
         else if(request.role_id == 4){
           items['referee_id'] = request.user_id;
-          pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, referee_id) VALUES ($1, $2, $3 $4)', params);
+          pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, referee_id) VALUES ($1, $2, $3, $4)', params);
         }  
       });
         
