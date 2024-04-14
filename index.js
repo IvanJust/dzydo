@@ -542,7 +542,7 @@ app.post('/api/table/get', (request, response) => {
 
 
 
-app.post('/api/evaluations/set', (request, response) => {
+app.post('/api/evaluations/set', async (request, response) => {
   //const { pair_id , evaluation_criteria_id , mark_id} = request.body;
   const { pair_id , evaluations } = request.body;
 
@@ -561,11 +561,9 @@ app.post('/api/evaluations/set', (request, response) => {
           pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, referee_id) VALUES ($1, $2, $3 $4)', params);
         }  
       });
-
-      request.role_id = 3;
         
       if(request.role_id == 3) {
-        pool.query('UPDATE "pair" SET condition = 2 WHERE id = $1', [pair_id]);
+        await pool.query('UPDATE "pair" SET condition = 2 WHERE id = $1', [pair_id]);
         pool.query('SELECT * FROM "pair" WHERE id = $1', [pair_id]).then(function (res1) {
           pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res) {
             res['rows'].forEach((value) => {
