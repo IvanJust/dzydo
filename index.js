@@ -554,22 +554,22 @@ app.post('/api/evaluations/set', (request, response) => {
         if(request.role_id == 3) {
           params.push(items.referee_id);
           items['supervisor_id'] = request.user_id;
-          pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, supervisor_id, referee_id) VALUES ($1, $2, $3 $4, $5)`, params);
+          pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, supervisor_id, referee_id) VALUES ($1, $2, $3 $4, $5)', params);
         }
         else if(request.role_id == 4){
           items['referee_id'] = request.user_id;
-          pool.query(`INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, referee_id) VALUES ($1, $2, $3 $4)`, params);
+          pool.query('INSERT INTO "evaluations" (pair_id, evaluation_criteria_id, mark_id, referee_id) VALUES ($1, $2, $3 $4)', params);
         }  
       });
 
       request.role_id = 3;
         
       if(request.role_id == 3) {
+        pool.query('UPDATE "pair" SET condition = 2 WHERE id = $1', [pair_id]);
         pool.query('SELECT * FROM "pair" WHERE id = $1', [pair_id]).then(function (res1) {
           pool.query('SELECT socket_id FROM "event_user_role" WHERE role_id < 5').then(function (res) {
             res['rows'].forEach((value) => {
               socketIO.to(value.socket_id).emit('save-evaluations-supervisor', evaluations);
-              pool.query('UPDATE "pair" SET condition = 2 WHERE id = $1', [pair_id]);
               socketIO.to(value.socket_id).emit('change-round', res1['rows']);
             }); 
           });
