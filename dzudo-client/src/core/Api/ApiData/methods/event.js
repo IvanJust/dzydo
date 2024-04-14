@@ -44,3 +44,13 @@ export function getMarks(){
         'mark/get'
     );
 }
+
+export function saveEvaluations(data, pair_id){
+    return client.post(
+        'evaluations/set',
+        {
+            evaluations: data,
+            pair_id: pair_id
+        }
+    );
+}

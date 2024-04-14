@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Checkbox, Grid, Tab, Tabs, Typography } from "@mui/material";
-import { getEvaletionCriteria, getMarks } from "../../../core/Api/ApiData/methods/event";
+import { Box, Button, Checkbox, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { getEvaletionCriteria, getMarks, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
 
 function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
 
@@ -13,7 +13,8 @@ function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
     const renderButtons = (count) => {
         const btns = [];
         for (let index = 0; index < count; index++) {
-            btns.push(<Checkbox key={index} checked={index < countChecked} onChange={(event)=>funSetMark(mark.id, criteriaId, event.target.checked)}/>)
+            //TODO добавить проверки на клик
+            btns.push(<Checkbox key={index} checked={index < countChecked} onChange={(event) => funSetMark(mark, criteriaId, event.target.checked)} />)
         }
         return btns;
     }
@@ -21,11 +22,11 @@ function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
 
 }
 
-function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, ...props }) {
-    console.debug(gradesGiven)
+function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...props }) {
+    // console.debug(gradesGiven)
 
     const gradesOnRow = gradesGiven.filter(it => it.evaluation_criteria_id == criteriaId);
-
+    const credit = gradesOnRow.reduce((partialSum, it) => partialSum + it.score, 0);
     return (
         <Box my={1} sx={{ flexGrow: 1 }}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -36,11 +37,11 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, ...props }) 
                     {name}
                 </Grid>
                 {marks.map((mark) => (
-                    <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} />
+                    <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
                 ))}
                 <Grid item xs={6} md={1}>
                     {props.isName && 'Score'}
-                    {props.isScore && '10'}
+                    {props.isScore && score - credit}
                 </Grid>
             </Grid>
         </Box>
@@ -54,6 +55,11 @@ export default function CustomTabPanel(props) {
 
     const [gradesGiven, setGradesGiven] = useState([]);
 
+    const allCredit = gradesGiven.reduce((partialSum, it) => partialSum + it.score, 0);
+    const allDebet = evaletionCriteries.reduce((partialSum, it) => partialSum + it.init_value, 0);
+
+    const pair_id = 2;
+
     useEffect(() => {
         getMarks().then((resp) => {
             setMarks(resp.data);
@@ -64,20 +70,21 @@ export default function CustomTabPanel(props) {
     }, []);
 
 
-    function setGiveMark(mark_id, criteria_id, isAdd) {
-        const findMark = gradesGiven.findIndex(it => 
-            it.evaluation_criteria_id == criteria_id && it.mark_id == mark_id
+    function setGiveMark(mark, criteria_id, isAdd) {
+        const findMark = gradesGiven.findIndex(it =>
+            it.evaluation_criteria_id == criteria_id && it.mark_id == mark.id
         )
 
-        if(isAdd){
+        if (isAdd) {
             setGradesGiven(
                 gradesGiven.concat({
-                    pair_id: 2,
+                    pair_id: pair_id,
                     evaluation_criteria_id: criteria_id,
-                    mark_id: mark_id
+                    mark_id: mark.id,
+                    score: mark.score,      //нужно тока для фронта, беку не нужно
                 })
             )
-        }else{
+        } else {
             setGradesGiven(
                 gradesGiven.filter((it, ind) =>
                     ind != findMark
@@ -86,24 +93,35 @@ export default function CustomTabPanel(props) {
         }
     }
 
+    const saveData = () => {
+        saveEvaluations(gradesGiven, pair_id).then(resp => {
+            console.debug(resp);
+        })
+    }
+
 
     return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Grid>
-                    {/* <RowTab name='Предварительные встречи' isName={true} marks={marks} id='№' /> */}
-                    {evaletionCriteries.map((criteria) => (
-                        <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} criteriaId={criteria.id} funSetMark={setGiveMark} gradesGiven={gradesGiven} />
-                    ))}
-                </Grid>
-            )}
-        </div>
+        <>
+            <div
+                role="tabpanel"
+                hidden={value !== index}
+                id={`simple-tabpanel-${index}`}
+                aria-labelledby={`simple-tab-${index}`}
+                {...other}
+            >
+                {value === index && (
+                    <Grid>
+                        {/* <RowTab name='Предварительные встречи' isName={true} marks={marks} id='№' /> */}
+                        {evaletionCriteries.map((criteria) => (
+                            <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} criteriaId={criteria.id} score={criteria.init_value} funSetMark={setGiveMark} gradesGiven={gradesGiven} key={criteria.id} />
+                        ))}
+                        Сумма {allDebet - allCredit}
+                    </Grid>
+                )}
+            </div>
+            <Button variant="outline" onClick={saveData}>Save</Button>
+        </>
+
     );
 }
 

@@ -1,42 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { socket } from "../../../socket/socket";
+import React, { useContext, useEffect, useState } from "react";
 import ListPair from "../ListPair/ListPair";
 
 import TableAll from "../PanelsMark/TableAll";
+import { SocketContext } from "../../../context/SocketProvider";
 
 
 
 
 export default function MenuSecretar() {
-    const [isConnected, setIsConnected] = useState(false);
+    const { socketAuth, isConnected } = useContext(SocketContext);
 
-    useEffect(() => {
+    console.debug("connected status", isConnected);
 
-        function onConnect() {
-            setIsConnected(true);
-        }
+    // useEffect(() => {
 
-        function onDisconnect() {
-            setIsConnected(false);
-        }
-
-
-        socket.on('connect', onConnect);
-
-        socket.on('disconnect', onDisconnect);
-
-
-
-        return () => {
-            socket.off('connect', onConnect);
-            socket.off('disconnect', onDisconnect);
-        }
-    }, [])
+    // }, [])
 
     return (
         <>
-            <ListPair/>
-            <TableAll/>
+            <ListPair />
+            <TableAll />
         </>
     )
 }
