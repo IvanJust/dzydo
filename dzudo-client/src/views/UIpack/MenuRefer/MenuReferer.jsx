@@ -1,16 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import CustomTabPanel from "../PanelsMark/OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
 import ListPair from "../ListPair/ListPair";
+import { saveEvaluations } from "../../../core/Api/ApiData/methods/event";
+import { Box, Button } from "@mui/material";
+import { useSelector } from "react-redux";
 
-export default function MenuReferer(){
+export default function MenuReferer() {
     const { socketAuth, isConnected } = useContext(SocketContext);
+    const currentPair = useSelector(state => state.user.currentPair);
 
-    console.debug("connected status", isConnected);
-    return(
+    const [gradesGiven, setGradesGiven] = useState([]);
+
+    const saveData = () => {
+        saveEvaluations(gradesGiven, currentPair.id).then(resp => {
+            console.debug(resp);
+        })
+    }
+    console.debug("pair ", currentPair);
+
+    return (
         <>
-            <ListPair/>
-            <CustomTabPanel value={0} index={0} />
+            <ListPair />
+            <Box>
+                <CustomTabPanel value={0} index={0} gradesGiven={gradesGiven} setGradesGiven={setGradesGiven} />
+                <Button variant="outline" onClick={saveData} disabled={currentPair?.condition != 1}>Save</Button>
+            </Box>
+            
         </>
     )
 }

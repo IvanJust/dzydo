@@ -2,10 +2,13 @@ import { Box, Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SocketContext } from "../../../context/SocketProvider";
+import { setCurrentPair } from "../../../store/slices/userSlice";
 
 export default function ListPair() {
+    const dispatch = useDispatch();
+    const currentPair = useSelector(state => state.user.currentPair);
 
     const { socketAuth } = useContext(SocketContext);
 
@@ -14,16 +17,23 @@ export default function ListPair() {
     const event = useSelector(state => state.user.eventInfo)
     const role_id = useSelector(state => state.user.role.id);
 
-
     useEffect(()=>{
         getPairs(event.id, "").then(resp => {
             setPairs(resp.data);
+            resp.data.forEach(it => {
+                if(it.condition == 1) dispatch(setCurrentPair(it));
+            })
         });
     }, [event.id])
 
 
     useEffect(() => {
         function onChangeRound(value) {
+            if(value.condition == 1){
+                dispatch(setCurrentPair(value));
+            }else{
+                dispatch(setCurrentPair({}));
+            }
             setPairs(pairs.map(it => {
                 if (it.id == value.id)
                     return {

@@ -8,9 +8,9 @@ import { SocketContext } from "../../../context/SocketProvider";
 
 
 export default function MenuSecretar() {
-    const { socketAuth, isConnected } = useContext(SocketContext);
+    //const { socketAuth, isConnected } = useContext(SocketContext);
 
-    console.debug("connected status", isConnected);
+    //console.debug("connected status", isConnected);
 
     // useEffect(() => {
 
@@ -18,8 +18,7 @@ export default function MenuSecretar() {
 
     return (
         <>
-            <ListPair />
-            <TableAll />
+            Секретарь
         </>
     )
 }

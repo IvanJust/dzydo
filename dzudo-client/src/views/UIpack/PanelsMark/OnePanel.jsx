@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Checkbox, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { getEvaletionCriteria, getMarks, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
+import { useSelector } from "react-redux";
 
 function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
 
@@ -48,17 +49,17 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...pr
     )
 }
 
-export default function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
+export default function CustomTabPanel({ children, value, index, gradesGiven, setGradesGiven, ...other }) {
     const [evaletionCriteries, setEvaletionCriteries] = useState([]);
     const [marks, setMarks] = useState([]);
-
-    const [gradesGiven, setGradesGiven] = useState([]);
+    const currentPair = useSelector(state => state.user.currentPair);
 
     const allCredit = gradesGiven.reduce((partialSum, it) => partialSum + it.score, 0);
     const allDebet = evaletionCriteries.reduce((partialSum, it) => partialSum + it.init_value, 0);
 
-    const pair_id = 2;
+    useEffect(()=>{
+        setGradesGiven([]);
+    }, [currentPair])
 
     useEffect(() => {
         getMarks().then((resp) => {
@@ -78,7 +79,7 @@ export default function CustomTabPanel(props) {
         if (isAdd) {
             setGradesGiven(
                 gradesGiven.concat({
-                    pair_id: pair_id,
+                    pair_id: currentPair.id,
                     evaluation_criteria_id: criteria_id,
                     mark_id: mark.id,
                     score: mark.score,      //нужно тока для фронта, беку не нужно
@@ -93,11 +94,7 @@ export default function CustomTabPanel(props) {
         }
     }
 
-    const saveData = () => {
-        saveEvaluations(gradesGiven, pair_id).then(resp => {
-            console.debug(resp);
-        })
-    }
+
 
 
     return (
@@ -119,7 +116,6 @@ export default function CustomTabPanel(props) {
                     </Grid>
                 )}
             </div>
-            <Button variant="outline" onClick={saveData}>Save</Button>
         </>
 
     );

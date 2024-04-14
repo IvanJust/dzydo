@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 
 import CustomTabPanel from "./OnePanel";
+import { SocketContext } from "../../../context/SocketProvider";
 
 function a11yProps(index) {
     return {
@@ -12,10 +13,41 @@ function a11yProps(index) {
 
 export default function TableAll() {
     const [value, setValue] = useState(0);
+    const { socketAuth } = useContext(SocketContext);
+    
+    const [gradesGiven1, setGradesGiven1] = useState([]);
+    const [gradesGiven2, setGradesGiven2] = useState([]);
+    const [gradesGiven3, setGradesGiven3] = useState([]);
+    const [gradesGiven4, setGradesGiven4] = useState([]);
+    const [gradesGiven5, setGradesGiven5] = useState([]);
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    useEffect(() => {
+        function onSaveReferee(value) {
+            if(gradesGiven1.length == 0){
+                setGradesGiven1(value);
+            }else if(gradesGiven2.length == 0){
+                setGradesGiven2(value);
+            }else if(gradesGiven3.length == 0){
+                setGradesGiven3(value);
+            }else if(gradesGiven4.length == 0){
+                setGradesGiven4(value);
+            }else if(gradesGiven5.length == 0){
+                setGradesGiven5(value);
+            }
+        }
+
+        socketAuth.on('save-evaluations-referee', onSaveReferee);
+
+
+        return () => {
+            socketAuth.off('save-evaluations-referee', onSaveReferee);
+        }
+    }, [socketAuth, gradesGiven1, gradesGiven2, gradesGiven3, gradesGiven4, gradesGiven5])
 
     return (
         <Grid sx={{ width: '100%' }}>
@@ -34,11 +66,11 @@ export default function TableAll() {
                     <Tab label="Судья 5" {...a11yProps(4)} />
                 </Tabs>
             </Box>
-            <CustomTabPanel value={value} index={0} />
-            <CustomTabPanel value={value} index={1} />
-            <CustomTabPanel value={value} index={2} />
-            <CustomTabPanel value={value} index={3} />
-            <CustomTabPanel value={value} index={4} />
+            <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} />
+            <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} />
+            <CustomTabPanel value={value} index={2} gradesGiven={gradesGiven3} setGradesGiven={setGradesGiven3} />
+            <CustomTabPanel value={value} index={3} gradesGiven={gradesGiven4} setGradesGiven={setGradesGiven4} />
+            <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} />
         </Grid>
     )
 }
