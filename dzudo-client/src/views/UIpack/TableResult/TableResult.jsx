@@ -1,12 +1,12 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { socket } from "../../../socket/socket";
+import React, { useContext, useEffect, useState } from "react";
 import { getEvent, getEvents, getTable } from "../../../core/Api/ApiData/methods/event";
 import { ShortName, getDateFromSQL } from "../../../features/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { setEvent } from "../../../store/slices/tableResultSlice";
+import { SocketContext } from "../../../context/SocketProvider";
 
-export default function TableResult(){
+export default function TableResult() {
     const [pairs, setPairs] = useState([
         {
             "tori": {
@@ -37,33 +37,34 @@ export default function TableResult(){
             "condition": 0
         }
     ]);
-    const [isConnected, setIsConnected] = useState(socket.connected);
+
     const [events, setEvents] = useState([]);
     const tableResult = useSelector((state) => state.tableResult);
     const dispatch = useDispatch();
 
+    const { socketAuth, isConnected } = useContext(SocketContext);
+
     console.debug(isConnected, pairs, tableResult);
+
     useEffect(() => {
         getEvents().then(resp => {
-            if(resp.data){
+            if (resp.data) {
                 setEvents(resp.data);
             }
         });
-
+    }, [])
+    
+    useEffect(() => {
         function onTable(table) {
-            setIsConnected(true);
             setPairs(table);
             console.debug(table);
         }
 
-        function onDisconnect() {
-            setIsConnected(false);
-        }
-        socket.on('table-get', onTable);
+        socketAuth.on('table-get', onTable);
         return () => {
-            socket.off('table-get', onDisconnect);
+            socketAuth.off('table-get', onTable);
         }
-    }, [])
+    }, [socketAuth])
 
     const changeSelect = (event) => {
         getEvent(event.target.value).then(resp => {
@@ -77,15 +78,15 @@ export default function TableResult(){
 
     let i = 0;
 
-    return(
-        <Grid sx={{width: '100%', minHeight: '100%'}}>
-            <Grid container my={2} sx={{display:"flex", justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+    return (
+        <Grid sx={{ width: '100%', minHeight: '100%' }}>
+            <Grid container my={2} sx={{ display: "flex", justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                 {tableResult.id > 0 && <>
                     <Box item><Typography fontSize={18}>{tableResult.name}</Typography></Box>
                     <Box item><Typography>{tableResult.place}</Typography></Box>
-                    <Box item><Typography>{ getDateFromSQL(tableResult.dateBegin) } - { getDateFromSQL(tableResult.dateEnd) }</Typography></Box>
+                    <Box item><Typography>{getDateFromSQL(tableResult.dateBegin)} - {getDateFromSQL(tableResult.dateEnd)}</Typography></Box>
                 </>}
-                {tableResult.id == 0 && 
+                {tableResult.id == 0 &&
                     <Box>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel id="demo-simple-select-label">Соревнования</InputLabel>
@@ -122,7 +123,7 @@ export default function TableResult(){
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell>{++i}</TableCell>
-                                    <TableCell sx={{cursor:'pointer'}}>{ShortName(pair.tori.firstname, pair.tori.lastname, pair.tori.patronymic)} - {ShortName(pair.uke.firstname, pair.uke.lastname, pair.uke.patronymic)}</TableCell>
+                                    <TableCell sx={{ cursor: 'pointer' }}>{ShortName(pair.tori.firstname, pair.tori.lastname, pair.tori.patronymic)} - {ShortName(pair.uke.firstname, pair.uke.lastname, pair.uke.patronymic)}</TableCell>
                                     <TableCell>{pair.region}</TableCell>
                                     <TableCell>{pair.points}</TableCell>
                                 </TableRow>
