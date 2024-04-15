@@ -614,11 +614,9 @@ app.post('/api/evaluations/get', (request, response) => {
 
 
 app.post('/api/current_event/get', async (request, response) => {
-  //const curr_date = await new Date();
   const res = await pool.query('SELECT * FROM "event" WHERE date_begin <= CURRENT_DATE AND CURRENT_DATE <= date_end');
   
   response.send(res['rows']);
-  //response.send(dateFormat(curr_date));
 });
 
 app.post('/api/future_event/get', async (request, response) => {
