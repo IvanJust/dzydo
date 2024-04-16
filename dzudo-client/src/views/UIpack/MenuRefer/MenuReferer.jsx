@@ -3,7 +3,7 @@ import CustomTabPanel from "../PanelsMark/OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
 import ListPair from "../ListPair/ListPair";
 import { saveEvaluations } from "../../../core/Api/ApiData/methods/event";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 
 export default function MenuReferer() {
@@ -20,13 +20,17 @@ export default function MenuReferer() {
     console.debug("pair ", currentPair);
 
     return (
-        <>
-            <ListPair />
-            <Box>
-                <CustomTabPanel value={0} index={0} gradesGiven={gradesGiven} setGradesGiven={setGradesGiven} />
-                <Button variant="outline" onClick={saveData} disabled={currentPair?.condition != 1}>Save</Button>
-            </Box>
+        <Grid container>
+            <Grid container sx={6}>
+                <ListPair />
+            </Grid>
+            <Grid container sx={6}>
+                <Box>
+                    <CustomTabPanel value={0} index={0} gradesGiven={gradesGiven} setGradesGiven={setGradesGiven} />
+                    <Button variant="outline" onClick={saveData} disabled={currentPair?.condition != 1}>Save</Button>
+                </Box>
+            </Grid>
             
-        </>
+        </Grid>
     )
 }

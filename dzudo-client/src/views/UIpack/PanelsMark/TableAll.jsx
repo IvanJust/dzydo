@@ -66,9 +66,9 @@ export default function TableAll() {
     }, [socketAuth, gradesGiven1, gradesGiven2, gradesGiven3, gradesGiven4, gradesGiven5])
 
     return (
-        <Box>
+        <Grid container>
             <Grid sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
+                <Grid sx={{ overflowX:'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
                     <Tabs
                         value={value}
                         onChange={handleChange}
@@ -82,15 +82,19 @@ export default function TableAll() {
                         <Tab label="Судья 4" {...a11yProps(3)} />
                         <Tab label="Судья 5" {...a11yProps(4)} />
                     </Tabs>
-                </Box>
-                <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} />
-                <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} />
-                <CustomTabPanel value={value} index={2} gradesGiven={gradesGiven3} setGradesGiven={setGradesGiven3} />
-                <CustomTabPanel value={value} index={3} gradesGiven={gradesGiven4} setGradesGiven={setGradesGiven4} />
-                <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} />
+                </Grid>
+                <Grid mt={1}>
+                    <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} />
+                    <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} />
+                    <CustomTabPanel value={value} index={2} gradesGiven={gradesGiven3} setGradesGiven={setGradesGiven3} />
+                    <CustomTabPanel value={value} index={3} gradesGiven={gradesGiven4} setGradesGiven={setGradesGiven4} />
+                    <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} />
+                </Grid>
             </Grid>
-            <Button onClick={saveData}>Сохранить</Button>
-        </Box>
+            <Grid my={1} container display='flex' justifyContent='center'>
+                <Button onClick={saveData} variant="outlined" color="success">Сохранить</Button>
+            </Grid>
+        </Grid>
 
     )
 }

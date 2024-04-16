@@ -3,6 +3,7 @@ import ListPair from "../ListPair/ListPair";
 
 import TableAll from "../PanelsMark/TableAll";
 import { SocketContext } from "../../../context/SocketProvider";
+import { Grid } from "@mui/material";
 
 export default function MenuSupervisor(){
     const { socketAuth, isConnected } = useContext(SocketContext);
@@ -14,9 +15,15 @@ export default function MenuSupervisor(){
     // }, [])
 
     return (
-        <>
-            <ListPair />
-            <TableAll />
-        </>
+        <Grid flexDirection='column'>
+            <Grid container justifyContent='center' display='flex'>
+                <Grid item>
+                    <ListPair />
+                </Grid>
+                <Grid item>
+                    <TableAll />
+                </Grid>
+            </Grid>
+        </Grid>
     )
 }

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { getEvent, getEvents, getTable } from "../../../core/Api/ApiData/methods/event";
 import { ShortName, getDateFromSQL } from "../../../features/functions";
 import { useDispatch, useSelector } from "react-redux";
-import { setEvent } from "../../../store/slices/tableResultSlice";
+import { setEvent, unsetEvent } from "../../../store/slices/tableResultSlice";
 import { SocketContext } from "../../../context/SocketProvider";
 
 import logo from '../../../images/logo-dzudo.png';
@@ -57,6 +57,9 @@ export default function TableResult() {
                 setEvents(resp.data);
             }
         });
+        return () => {
+            dispatch(unsetEvent());
+        }
     }, [])
     
     useEffect(() => {

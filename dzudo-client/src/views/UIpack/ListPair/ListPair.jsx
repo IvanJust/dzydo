@@ -1,10 +1,28 @@
-import { Box, Button } from "@mui/material";
+import { Avatar, Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
 import { useDispatch, useSelector } from "react-redux";
 import { SocketContext } from "../../../context/SocketProvider";
 import { setCurrentPair } from "../../../store/slices/userSlice";
+import FaceIcon from '@mui/icons-material/Face';
+import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import fight from '../../../images/fight.gif';
+
+function TitleChip({title, name}){
+    return(
+        <Grid flexDirection='column' justifyContent='flex-start'>
+            <Typography fontSize={12} pt={1} fontFamily='cursive' color='GrayText'>
+                {title}
+            </Typography>
+            <Typography fontSize={14} pb={1}>
+                {name}
+            </Typography>
+        </Grid>
+    )
+}
 
 export default function ListPair() {
     const dispatch = useDispatch();
@@ -65,20 +83,24 @@ export default function ListPair() {
 
     return (
         <div>
-            {pairs.map(it =>
-                <Box marginY={1} key={it.id}>
-                    tori - {it.tori.lastname}
-                    uke - {it.uke.lastname}
-                    condition - {it.condition}
-                </Box>
-            )}
-            {[2, 3].includes(role_id) &&
-                <>
-                    <Button variant="outlined" onClick={nextRound}>Следующая пара</Button>
-                    <Button variant="outlined" onClick={skipRound}>Пропустить пару</Button>
-                </>}
-
-
+            <Grid>
+                <Stack direction="column" spacing={1} my={1}>
+                    {pairs.map(it =>
+                        <Grid display='flex' alignItems='center' justifyContent='space-around' key={it.id}>
+                            <Chip sx={{height: 'auto'}} icon={<FaceIcon />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
+                            {/* <SportsKabaddiIcon fontSize="large" /> */}
+                            <img style={{width: '50px'}} title="Дзюдо-Ката" src={fight}/>
+                            <Chip sx={{height: 'auto'}} icon={<FaceIcon />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
+                            
+                        </Grid>
+                    )}
+                </Stack>
+                {[2, 3].includes(role_id) &&
+                    <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, spacing: {xs: 1, md: 2}}}>
+                        <Button variant="outlined" color="success" onClick={nextRound}>Следующая пара <ArrowForwardIosIcon fontSize="large"/> </Button>
+                        <Button variant="outlined" color="primary" onClick={skipRound}>Пропустить пару <SkipNextIcon fontSize="large"/> </Button>
+                    </Grid>}
+            </Grid>
         </div>
     )
 }

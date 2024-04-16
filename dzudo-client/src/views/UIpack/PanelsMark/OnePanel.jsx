@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Checkbox, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Grid, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { getEvaletionCriteria, getMarks, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
 import { useSelector } from "react-redux";
 
@@ -23,29 +23,58 @@ function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
 
 }
 
+function RowTitle({ marks, ...props }){
+
+
+    return(
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{ display:'sticky' }}>
+            <Grid item xs={1}>
+                <Typography >№</Typography>
+            </Grid>
+            <Grid item xs={3}>
+                <Typography>TECHNIQUES</Typography>
+            </Grid>
+            <Grid item xs={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
+                {marks.map((mark) => (
+                    <Typography>
+                        {mark.name}
+                    </Typography>
+                ))}
+            </Grid>
+            <Grid item xs={1}>
+                <Typography>
+                    Очки
+                </Typography>
+            </Grid>
+        </Grid>
+    )
+}
+
 function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...props }) {
     // console.debug(gradesGiven)
 
     const gradesOnRow = gradesGiven.filter(it => it.evaluation_criteria_id == criteriaId);
     const credit = gradesOnRow.reduce((partialSum, it) => partialSum + it.score, 0);
     return (
-        <Box my={1} sx={{ flexGrow: 1 }}>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={6} md={1}>
-                    {criteriaId}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                    {name}
-                </Grid>
-                {marks.map((mark) => (
-                    <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
-                ))}
-                <Grid item xs={6} md={1}>
-                    {props.isName && 'Score'}
-                    {props.isScore && score - credit}
-                </Grid>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+            <Grid item xs={1}>
+                {criteriaId}
             </Grid>
-        </Box>
+            <Grid item xs={3}>
+                {name}
+            </Grid>
+            <Grid item xs={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
+                {marks.map((mark) => (
+                    <Grid item>
+                        <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
+                    </Grid>
+                ))}
+            </Grid>
+            <Grid item xs={1}>
+                {props.isName && 'Score'}
+                {props.isScore && score - credit}
+            </Grid>
+        </Grid>
     )
 }
 
@@ -107,12 +136,17 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
                 {...other}
             >
                 {value === index && (
-                    <Grid>
-                        {/* <RowTab name='Предварительные встречи' isName={true} marks={marks} id='№' /> */}
+                    <Grid px={2}>
+                        <RowTitle isName marks={marks}/>
                         {evaletionCriteries.map((criteria) => (
                             <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} criteriaId={criteria.id} score={criteria.init_value} funSetMark={setGiveMark} gradesGiven={gradesGiven} key={criteria.id} />
                         ))}
-                        Сумма {allDebet - allCredit}
+                        <Box display='flex' flexDirection='row' justifyContent='flex-end'>
+                            <Box display='flex' alignItems='center'>
+                                <Typography mx={1} fontFamily='monospace'> Сумма:  </Typography>
+                            </Box>
+                            <TextField mx={1} disabled variant="outlined" size="small" sx={{width:'3.5rem'}} value={allDebet - allCredit}/>
+                        </Box>
                     </Grid>
                 )}
             </div>
