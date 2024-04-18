@@ -87,16 +87,15 @@ export default function ListPair() {
                 <Stack direction="column" spacing={1} my={1}>
                     {pairs.map(it =>
                         <Grid display='flex' alignItems='center' justifyContent='space-around' key={it.id}>
-                            <Chip sx={{height: 'auto'}} icon={<FaceIcon />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
+                            <Chip sx={{display: 'flex', height: 'auto', width: '180px', }} icon={<FaceIcon />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
                             {/* <SportsKabaddiIcon fontSize="large" /> */}
                             <img style={{width: '50px'}} title="Дзюдо-Ката" src={fight}/>
-                            <Chip sx={{height: 'auto'}} icon={<FaceIcon />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
-                            
+                            <Chip sx={{display: 'flex', height: 'auto', width: '180px'}} icon={<FaceIcon />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
                         </Grid>
                     )}
                 </Stack>
                 {[2, 3].includes(role_id) &&
-                    <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, spacing: {xs: 1, md: 2}}}>
+                    <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, justifyContent: {xs: 'center', md: 'space-between'}, spacing: {xs: 1, md: 2}}}>
                         <Button variant="outlined" color="success" onClick={nextRound}>Следующая пара <ArrowForwardIosIcon fontSize="large"/> </Button>
                         <Button variant="outlined" color="primary" onClick={skipRound}>Пропустить пару <SkipNextIcon fontSize="large"/> </Button>
                     </Grid>}

@@ -15,14 +15,12 @@ export default function MenuSupervisor(){
     // }, [])
 
     return (
-        <Grid flexDirection='column'>
-            <Grid container justifyContent='center' display='flex'>
-                <Grid item>
-                    <ListPair />
-                </Grid>
-                <Grid item>
-                    <TableAll />
-                </Grid>
+        <Grid container justifyContent='space-evenly'>
+            <Grid item>
+                <ListPair />
+            </Grid>
+            <Grid item>
+                <TableAll />
             </Grid>
         </Grid>
     )
