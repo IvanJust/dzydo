@@ -87,10 +87,10 @@ export default function ListPair() {
                 <Stack direction="column" spacing={1} my={1}>
                     {pairs.map(it =>
                         <Grid display='flex' alignItems='center' justifyContent='space-around' key={it.id}>
-                            <Chip sx={{display: 'flex', height: 'auto', width: '180px', }} icon={<FaceIcon />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
+                            <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
                             {/* <SportsKabaddiIcon fontSize="large" /> */}
                             <img style={{width: '50px'}} title="Дзюдо-Ката" src={fight}/>
-                            <Chip sx={{display: 'flex', height: 'auto', width: '180px'}} icon={<FaceIcon />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
+                            <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
                         </Grid>
                     )}
                 </Stack>
