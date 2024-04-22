@@ -15,7 +15,7 @@ jobs:
               - server: 79.174.84.7
               - user: root
               - password: s02eJvhQtiSGBKda
-              - dir: /var/www/server
+              - dir: /var/www/server/dzudo-client/build
 
         steps:
             - name: Chackout repository
