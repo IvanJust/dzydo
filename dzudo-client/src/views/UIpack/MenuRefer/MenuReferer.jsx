@@ -20,15 +20,17 @@ export default function MenuReferer() {
     console.debug("pair ", currentPair);
 
     return (
-        <Grid container>
-            <Grid container sx={6}>
+        <Grid container justifyContent='space-evenly'>
+            <Grid item>
                 <ListPair />
             </Grid>
-            <Grid container sx={6}>
-                <Box>
+            <Grid item>
+                {/* <Box> */}
                     <CustomTabPanel value={0} index={0} gradesGiven={gradesGiven} setGradesGiven={setGradesGiven} />
-                    <Button variant="outline" onClick={saveData} disabled={currentPair?.condition != 1}>Save</Button>
-                </Box>
+                    <Grid my={1}>
+                        <Button variant="outlined" color="success" onClick={saveData} disabled={currentPair?.condition != 1}>Сохранить</Button>
+                    </Grid>
+                {/* </Box> */}
             </Grid>
             
         </Grid>

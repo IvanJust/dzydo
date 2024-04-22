@@ -1,0 +1,3 @@
+.txt-calc{
+    font-size: clamp(10px, 1vw, 1rem);
+}

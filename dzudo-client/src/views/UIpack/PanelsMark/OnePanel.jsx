@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Checkbox, Grid, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Divider, Grid, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { getEvaletionCriteria, getMarks, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
 import { useSelector } from "react-redux";
+import "./mark-style.css"
 
 function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
 
@@ -15,7 +16,7 @@ function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
         const btns = [];
         for (let index = 0; index < count; index++) {
             //TODO добавить проверки на клик
-            btns.push(<Checkbox sx={{p: {xs: 0.3, md : 1}, size: {sx: 'small', md: 'default'}}} key={index} checked={index < countChecked} onChange={(event) => funSetMark(mark, criteriaId, event.target.checked)} />)
+            btns.push(<Checkbox sx={{p: {xs: 0.1, md : 0.4}, size: {sx: 'small', md: 'default'}}} key={index} checked={index < countChecked} onChange={(event) => funSetMark(mark, criteriaId, event.target.checked)} />)
         }
         return btns;
     }
@@ -27,26 +28,29 @@ function RowTitle({ marks, ...props }){
 
 
     return(
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{ display:'sticky' }}>
-            <Grid item xs={1} md={1}>
-                <Typography sx={{fontSize: {sx: 12, md: 14}}} >№</Typography>
-            </Grid>
-            <Grid item xs={3} md={3}>
-                <Typography sx={{fontSize: {sx: 12, md: 14}}}>TECHNIQUES</Typography>
-            </Grid>
-            <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
-                {marks.map((mark) => (
-                    <Typography sx={{fontSize: {sx: 12, md: 14}}}>
-                        {mark.name}
+        <>
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{ display:'sticky' }}>
+                <Grid item xs={1} md={1}>
+                    <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}} >№</Typography>
+                </Grid>
+                <Grid item xs={3} md={3}>
+                    <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}}>TECHNIQUES</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
+                    {marks.map((mark) => (
+                        <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}}>
+                            {mark.name}
+                        </Typography>
+                    ))}
+                </Grid>
+                <Grid item xs={1} md={1}>
+                    <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}}>
+                        Очки
                     </Typography>
-                ))}
+                </Grid>
             </Grid>
-            <Grid item xs={1} md={1}>
-                <Typography sx={{fontSize: {sx: 12, md: 14}}}>
-                    Очки
-                </Typography>
-            </Grid>
-        </Grid>
+            <Divider/>
+        </>
     )
 }
 
@@ -56,25 +60,30 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...pr
     const gradesOnRow = gradesGiven.filter(it => it.evaluation_criteria_id == criteriaId);
     const credit = gradesOnRow.reduce((partialSum, it) => partialSum + it.score, 0);
     return (
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-            <Grid item xs={1} md={1}>
-                {criteriaId}
+        <>
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                <Grid item xs={1} md={1}>
+                    <Typography className="txt-calc">{criteriaId}</Typography>
+                </Grid>
+                <Grid item  xs={3} md={3}>
+                    <Typography className="txt-calc">{name}</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
+                    {marks.map((mark) => (
+                        <Grid item>
+                            <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
+                        </Grid>
+                    ))}
+                </Grid>
+                <Grid item xs={1} md={1}>
+                    <Typography className="txt-calc">
+                        {props.isName && 'Score'}
+                        {props.isScore && score - credit}
+                    </Typography>
+                </Grid>
             </Grid>
-            <Grid item  xs={3} md={3}>
-                {name}
-            </Grid>
-            <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
-                {marks.map((mark) => (
-                    <Grid item>
-                        <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
-                    </Grid>
-                ))}
-            </Grid>
-            <Grid item xs={1} md={1}>
-                {props.isName && 'Score'}
-                {props.isScore && score - credit}
-            </Grid>
-        </Grid>
+            <Divider/>
+        </>
     )
 }
 
@@ -134,9 +143,10 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
                 id={`simple-tabpanel-${index}`}
                 aria-labelledby={`simple-tab-${index}`}
                 {...other}
+                style={{overflowX: 'auto'}}
             >
                 {value === index && (
-                    <Grid sx={{px:{sx: 0, md:2}}} >
+                    <Stack direction='column' sx={{p:{sx: 1, md:3}}} >
                         <RowTitle isName marks={marks}/>
                         {evaletionCriteries.map((criteria) => (
                             <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} criteriaId={criteria.id} score={criteria.init_value} funSetMark={setGiveMark} gradesGiven={gradesGiven} key={criteria.id} />
@@ -147,7 +157,7 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
                             </Box>
                             <TextField mx={1} disabled variant="outlined" size="small" sx={{width:'3.5rem'}} value={allDebet - allCredit}/>
                         </Box>
-                    </Grid>
+                    </Stack>
                 )}
             </div>
         </>

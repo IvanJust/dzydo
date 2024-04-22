@@ -65,7 +65,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                         fullWidth
                                         />
                                 </Box>
-                                <Box my={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                <Box mt={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                                     <FormControl variant="standard" fullWidth>
                                         <InputLabel id="demo-simple-select-label">Мероприятие</InputLabel>
                                         <Select
@@ -85,10 +85,10 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                         </Form>
                 </DialogContentText>
             </DialogContent>
-            <DialogActions sx={{justifyContent:'center'}}>
-                <Button  variant="outlined">
+            <DialogActions sx={{justifyContent:'flex-end'}}>
+                {/* <Button  variant="outlined">
                     ЗАБЫЛИ ПАРОЛЬ?
-                </Button>
+                </Button> */}
                 <Button  variant="outlined" type="submit" for="authform" onClick={headerSendForm}>
                     ВОЙТИ
                 </Button>
@@ -135,7 +135,7 @@ function Auth() {
     function sendform() {
         login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
-                // console.debug('user:', resp);
+                console.debug('user:', resp);
                 if(resp.data_token){
                     // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");

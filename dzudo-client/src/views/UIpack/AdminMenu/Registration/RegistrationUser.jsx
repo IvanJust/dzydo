@@ -25,10 +25,10 @@ function RegistrationUser({...props}){
                                 <TextField
                                     onChange={props.onChange}
                                     id="input-with-sx" 
-                                    label="Логин" 
+                                    label="Логин (необязательно)" 
                                     name="login" 
                                     autoFocus 
-                                    required
+                                    // required
                                     variant="filled" 
                                     fullWidth
                                     />
@@ -37,10 +37,10 @@ function RegistrationUser({...props}){
                                 <TextField 
                                     onChange={props.onChange}
                                     id="input-with-sx" 
-                                    label="Пароль" 
+                                    label="Пароль (необязательно)" 
                                     type="password" 
                                     name="password" 
-                                    required
+                                    // required
                                     variant="filled" 
                                     fullWidth
                                     />
@@ -73,7 +73,7 @@ function RegistrationUser({...props}){
                                 <TextField 
                                     onChange={props.onChange}
                                     id="input-with-sx" 
-                                    label="Отчество(необязательно)" 
+                                    label="Отчество (необязательно)" 
                                     type='text'
                                     name="patronymic" 
                                     variant="filled" 
