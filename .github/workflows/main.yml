@@ -10,18 +10,14 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
+            os: [macos-latest, windows-latest, ubuntu-latest]
             node: [20]
-            include:
-              - server: 79.174.84.7
-              - user: root
-              - password: s02eJvhQtiSGBKda
-              - dir: /var/www/server/dzudo-client/build
 
         steps:
             - name: Chackout repository
               uses: actions/checkout@v4.1.1
 
-            - name: Setup Node,js
+            - name: Setup Node.js
               uses: actions/setup-node@v4.0.2
 
               with: 
@@ -36,8 +32,8 @@ jobs:
             - name: Deploy
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
-                  server: ${{ matrix.server }}
-                  user: ${{ matrix.user }}
-                  password: ${{ matrix.password }}
-                  server-dir: ${{ matrix.dir }}
+                  server: 79.174.84.7
+                  user: ${{ secrets.USER }}
+                  password: ${{ secrets.PASSWORD }}
+                  server-dir: /var/www/server/dzudo-client/build
 
