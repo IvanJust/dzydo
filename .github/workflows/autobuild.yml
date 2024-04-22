@@ -1,0 +1,27 @@
+name: start build and deploy
+
+on: 
+    push: 
+        branches: [main]
+
+jobs:
+    deploy:
+        name: Deploy to server
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Chackout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node,js
+              uses: actions/setup-node@v4
+              with: 
+                node-version: 20
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build application
+              run: npm run build
+
+            - name: Deploy
