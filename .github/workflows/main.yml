@@ -10,11 +10,12 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            server: 79.174.84.7
-            user: root
-            password: s02eJvhQtiSGBKda
-            node-version: 20
-            dir: /var/www/server
+            node: [20]
+            include:
+              - server: 79.174.84.7
+              - user: root
+              - password: s02eJvhQtiSGBKda
+              - dir: /var/www/server
 
         steps:
             - name: Chackout repository
@@ -24,7 +25,7 @@ jobs:
               uses: actions/setup-node@v4.0.2
 
               with: 
-                node-version: ${{ matrix.node-version }}
+                node-version: ${{ matrix.node }}
 
             - name: Install dependencies
               run: npm ci
@@ -34,9 +35,9 @@ jobs:
 
             - name: Deploy
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-                with:
+              with:
                   server: ${{ matrix.server }}
-                  user: ${{ matrix.root }}
+                  user: ${{ matrix.user }}
                   password: ${{ matrix.password }}
                   server-dir: ${{ matrix.dir }}
 
