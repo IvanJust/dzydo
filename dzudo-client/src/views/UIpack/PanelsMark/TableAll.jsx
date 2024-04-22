@@ -68,10 +68,12 @@ export default function TableAll() {
     return (
         <Grid container>
             <Grid sx={{ width: '100%' }}>
-                <Grid sx={{ overflowX:'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ overflowX:'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
                     <Tabs
                         value={value}
                         onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
                         textColor="secondary"
                         indicatorColor="secondary"
                         aria-label="secondary tabs example"
@@ -82,7 +84,7 @@ export default function TableAll() {
                         <Tab label="Судья 4" {...a11yProps(3)} />
                         <Tab label="Судья 5" {...a11yProps(4)} />
                     </Tabs>
-                </Grid>
+                </Box>
                 <Grid mt={1}>
                     <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} />
                     <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} />
