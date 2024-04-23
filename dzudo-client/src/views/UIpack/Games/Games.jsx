@@ -5,6 +5,8 @@ import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
 import { setCurrentPair } from "../../../store/slices/userSlice";
 import { useSelector } from "react-redux";
 import FaceIcon from '@mui/icons-material/Face';
+import PlaceTwoToneIcon from '@mui/icons-material/PlaceTwoTone';
+import SlowMotionVideoTwoToneIcon from '@mui/icons-material/SlowMotionVideoTwoTone';
 import ModalGames from "./ModalGames";
 
 function TitleChip({title, name}){
@@ -25,15 +27,13 @@ export default function Games(){
     const [pairs, setPairs] = useState([]);
     const [open, setOpen] = useState(false);
     const event = useSelector(state => state.user.eventInfo)
+    const isAdmin = useSelector(state => state.user.isAdmin);
     let hidden = false;
 
     useEffect(()=>{
         getPairs(event.id, "").then(resp => {
             setPairs(resp.data);
             hidden = true;
-            // resp.data.forEach(it => {
-            //     if(it.condition == 1) dispatch(setCurrentPair(it));
-            // })
         });
     }, [event.id])
 
@@ -47,22 +47,21 @@ export default function Games(){
         setOpen(true);
     }
 
-    console.debug(id);
     return(
         <Container>
             <Stack m={2} direction='column'>
-                <Grid display='flex' justifyContent='center'>
+                {isAdmin && <Grid display='flex' justifyContent='center'>
                     <Button variant="outlined" color="primary" onClick={openModal}>Добавить пару</Button>
-                    <ModalGames open={open} setOpen={setOpen} />
-                </Grid>
+                    <ModalGames open={open} setOpen={setOpen} setPairs={setPairs} />
+                </Grid>}
                 <Grid justifyContent='center'>
                     <Stack direction="column" spacing={1} my={1}>
                         {pairs.map(it =>
-                            <Grid display='flex' alignItems='center' justifyContent='space-around' key={it.id}>
-                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
-                                {/* <SportsKabaddiIcon fontSize="large" /> */}
-                                {/* <img style={{width: '50px'}} title="Дзюдо-Ката" src={fight}/> */}
-                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
+                            <Grid display='flex' alignItems='center' justifyContent='center' key={it.id}>
+                                <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: 1 }} icon={<SlowMotionVideoTwoToneIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
+                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: 1 }} icon={<PlaceTwoToneIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
+                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: 1 }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
+                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: 1 }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
                             </Grid>
                         )}
                     </Stack>
@@ -71,8 +70,6 @@ export default function Games(){
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 hidden={hidden}
-                // open={open}
-                // onClick={handleClose}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>

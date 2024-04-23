@@ -31,9 +31,16 @@ export const tableSlice = createSlice({
     reducers: {
         setMistake: (state, action) => {
 
+        },
+        setEvent: (state, action) => {
+            state.idEvent = action.payload.id;
+            state.nameEvent = action.payload.name;
+            state.placeEvent = action.payload.place;
+            state.dateBegin = action.payload.date_begin;
+            state.dateEnd = action.payload.date_end;
         }
     }
 })
 
-export const {setMistake} = tableSlice.actions
+export const {setMistake, setEvent} = tableSlice.actions
 export default tableSlice;
