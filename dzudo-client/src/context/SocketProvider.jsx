@@ -12,14 +12,15 @@ export default function SocketProvider({ children }) {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        setSocketAuth(io(BASE_URL_SOCKET, {
+        const socketInner = io(BASE_URL_SOCKET, {
             auth: {
                 token: accessToken
             }
-        }))
+        })
+        setSocketAuth(socketInner)
 
         return ()=>{
-            socketAuth.disconnect();
+            socketInner.disconnect();
         }
     }, [accessToken]);
 
