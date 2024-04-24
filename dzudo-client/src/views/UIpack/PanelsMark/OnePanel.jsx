@@ -1,22 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Checkbox, Divider, Grid, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
-import { getEvaletionCriteria, getMarks, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
+import { Box, Checkbox, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
+import { getEvaletionCriteria, getMarks } from "../../../core/Api/ApiData/methods/event";
 import { useSelector } from "react-redux";
 import "./mark-style.css"
+import { green, grey, orange, purple, red } from "@mui/material/colors";
 
-function OneMark({ mark, gradesOnRow, funSetMark, criteriaId }) {
+const arrColorCheckBox = [
+    {color: green[600], checked: green[400]},
+    {color: orange[600], checked: orange[400]},
+    {color: purple[600], checked: purple[400]},
+    {color: red[600], checked: red[400]},
+    {color: grey[600], checked: grey[400]},
+    {color: grey[600], checked: grey[400]},
+];
+
+const styleArray = {
+    fontSize: {xs: 11, sm: 12, md: 14},
+    rotate: {xs: '-45deg', sm: '0deg', md: '0deg'},
+    px: {md: 1},
+}
+
+function OneMark({ mark, gradesOnRow, funSetMark, criteriaId, disabled }) {
 
     const checkedItems = gradesOnRow.filter(it =>
         it.mark_id == mark.id
     );
-
     const countChecked = checkedItems.length;
 
     const renderButtons = (count) => {
         const btns = [];
         for (let index = 0; index < count; index++) {
             //TODO добавить проверки на клик
-            btns.push(<Checkbox sx={{p: {xs: 0.1, md : 0.4}, size: {sx: 'small', md: 'default'}}} key={index} checked={index < countChecked} onChange={(event) => funSetMark(mark, criteriaId, event.target.checked)} />)
+            btns.push(<Checkbox disabled={disabled && checkedItems.length < Math.round(gradesOnRow.length/2) && index >= countChecked ? disabled : false} sx={{p: {xs: 0.1, md : 0.4}, size: {sx: 'small', md: 'default'}, color: arrColorCheckBox[mark.id - 1].color, '&.Mui-checked': {color: arrColorCheckBox[mark.id-1].checked}}} key={index} checked={index < countChecked} onChange={(event) => funSetMark(mark, criteriaId, event.target.checked)} />)
         }
         return btns;
     }
@@ -29,27 +44,28 @@ function RowTitle({ marks, ...props }){
 
     return(
         <>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{ display:'sticky' }}>
+            <Divider />
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 1, md: 2 }} sx={{ display:'sticky', pt: {xs: 3, sm: 0, md: 0} }}>
                 <Grid item xs={1} md={1}>
-                    <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}} >№</Typography>
+                    <Typography sx={{fontSize: styleArray.fontSize, px: styleArray.px}} >№</Typography>
                 </Grid>
                 <Grid item xs={3} md={3}>
-                    <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}}>TECHNIQUES</Typography>
+                    <Typography sx={{textAlign: {xs: 'center', sm: 'start', md: 'start'}, fontSize: styleArray.fontSize, px: styleArray.px, rotate: styleArray.rotate}}>TECHNIQUES</Typography>
                 </Grid>
                 <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
                     {marks.map((mark) => (
-                        <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}}>
+                        <Typography key={mark.id} sx={{textAlign: 'center', fontSize: styleArray.fontSize, px: styleArray.px, rotate: styleArray.rotate, color: arrColorCheckBox[mark.id - 1]}}>
                             {mark.name}
                         </Typography>
                     ))}
                 </Grid>
                 <Grid item xs={1} md={1}>
-                    <Typography className="txt-calc" sx={{fontSize: {sx: 12, md: 14}}}>
+                    <Typography sx={{fontSize: styleArray.fontSize, px: styleArray.px, rotate: styleArray.rotate}}>
                         Очки
                     </Typography>
                 </Grid>
             </Grid>
-            <Divider/>
+            <Divider sx={{mt: {xs: 3, sm: 0, md: 0}}}/>
         </>
     )
 }
@@ -63,20 +79,20 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...pr
         <>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 0, sm: 0, md: 1 }} sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                 <Grid item xs={1} md={1}>
-                    <Typography className="txt-calc">{criteriaId}</Typography>
+                    <Typography sx={{fontSize: styleArray.fontSize, px: styleArray.px}} >{criteriaId}</Typography>
                 </Grid>
                 <Grid item  xs={3} md={3}>
-                    <Typography className="txt-calc">{name}</Typography>
+                    <Typography sx={{fontSize: styleArray.fontSize, px: styleArray.px}} >{name}</Typography>
                 </Grid>
-                <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-evenly'>
+                <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-around'>
                     {marks.map((mark) => (
-                        <Grid item>
-                            <OneMark mark={mark} gradesOnRow={gradesOnRow} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
+                        <Grid item key={mark.id}>
+                            <OneMark mark={mark} gradesOnRow={gradesOnRow} disabled={score - credit - mark.score <= 0} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
                         </Grid>
                     ))}
                 </Grid>
                 <Grid item xs={1} md={1}>
-                    <Typography className="txt-calc">
+                    <Typography sx={{textAlign: 'center', fontSize: styleArray.fontSize, px: styleArray.px}} >
                         {props.isName && 'Score'}
                         {props.isScore && score - credit}
                     </Typography>
@@ -143,10 +159,10 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
                 id={`simple-tabpanel-${index}`}
                 aria-labelledby={`simple-tab-${index}`}
                 {...other}
-                style={{overflowX: 'auto'}}
+                style={{overflow: 'auto'}}
             >
                 {value === index && (
-                    <Stack direction='column' sx={{p:{sx: 1, md:3}}} >
+                    <Stack direction='column' sx={{p:{sx: 2, md:3}}} >
                         <RowTitle isName marks={marks}/>
                         {evaletionCriteries.map((criteria) => (
                             <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} criteriaId={criteria.id} score={criteria.init_value} funSetMark={setGiveMark} gradesGiven={gradesGiven} key={criteria.id} />

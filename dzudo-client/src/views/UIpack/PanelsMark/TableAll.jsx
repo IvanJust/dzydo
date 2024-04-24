@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Button, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Tab, Tabs } from "@mui/material";
 
 import CustomTabPanel from "./OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
@@ -66,7 +66,7 @@ export default function TableAll() {
     }, [socketAuth, gradesGiven1, gradesGiven2, gradesGiven3, gradesGiven4, gradesGiven5])
 
     return (
-        <Grid container>
+        <Container>
             <Grid sx={{ width: '100%' }}>
                 <Box sx={{ overflowX:'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
                     <Tabs
@@ -96,7 +96,7 @@ export default function TableAll() {
             <Grid my={1} container display='flex' justifyContent='center'>
                 <Button onClick={saveData} variant="outlined" color="success">Сохранить</Button>
             </Grid>
-        </Grid>
+        </Container>
 
     )
 }

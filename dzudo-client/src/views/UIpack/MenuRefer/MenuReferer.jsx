@@ -3,7 +3,7 @@ import CustomTabPanel from "../PanelsMark/OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
 import ListPair from "../ListPair/ListPair";
 import { saveEvaluations } from "../../../core/Api/ApiData/methods/event";
-import { Box, Button, Grid } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 
 export default function MenuReferer() {
@@ -20,7 +20,7 @@ export default function MenuReferer() {
     console.debug("pair ", currentPair);
 
     return (
-        <Grid container justifyContent='space-evenly'>
+        <Container justifyContent='space-evenly'>
             <Grid item>
                 <ListPair />
             </Grid>
@@ -33,6 +33,6 @@ export default function MenuReferer() {
                 {/* </Box> */}
             </Grid>
             
-        </Grid>
+        </Container>
     )
 }

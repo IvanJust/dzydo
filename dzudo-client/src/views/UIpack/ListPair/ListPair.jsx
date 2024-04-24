@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { SocketContext } from "../../../context/SocketProvider";
 import { setCurrentPair } from "../../../store/slices/userSlice";
 import FaceIcon from '@mui/icons-material/Face';
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import fight from '../../../images/fight.gif';
@@ -86,7 +85,7 @@ export default function ListPair() {
             <Grid>
                 <Stack direction="column" spacing={1} my={1}>
                     {pairs.map(it =>
-                        <Grid display='flex' alignItems='center' justifyContent='space-around' key={it.id}>
+                        <Grid display='flex' alignItems='center' justifyContent='center' key={it.id}>
                             <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
                             {/* <SportsKabaddiIcon fontSize="large" /> */}
                             <img style={{width: '50px'}} title="Дзюдо-Ката" src={fight}/>
