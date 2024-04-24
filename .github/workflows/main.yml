@@ -40,5 +40,5 @@ jobs:
                   server: 79.174.84.7
                   username: root
                   password: s02eJvhQtiSGBKda
-                  server-dir: /var/www/server/dzudo-client/build
+                  server-dir: /var/www/server/dzudo-client/build/
 
