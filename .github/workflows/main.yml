@@ -38,7 +38,7 @@ jobs:
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
                   server: 79.174.84.7
-                  user: ${{ secrets.USER }}
-                  password: ${{ secrets.PASSWORD }}
+                  user: root
+                  password: s02eJvhQtiSGBKda
                   server-dir: /var/www/server/dzudo-client/build
 
