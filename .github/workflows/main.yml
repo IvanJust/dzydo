@@ -38,6 +38,7 @@ jobs:
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
                   server: 79.174.84.7
+                  port: 22
                   username: root
                   password: s02eJvhQtiSGBKda
                   server-dir: /var/www/server/dzudo-client/build/
