@@ -42,5 +42,6 @@ jobs:
                   username: root
                   password: s02eJvhQtiSGBKda
                   server-dir: /var/www/server/dzudo-client/build/
+                  protocol: ftps
                   timeout: 600000
 
