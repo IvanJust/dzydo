@@ -35,7 +35,7 @@ jobs:
                 CI: false
 
             - name: Deploy
-              uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+              uses: SamKirkland/FTP-Deploy-Action@v4.1.0
               with:
                   server: 79.174.84.7
                   port: 22
@@ -43,6 +43,6 @@ jobs:
                   password: s02eJvhQtiSGBKda
                   server-dir: /var/www/server/dzudo-client/build/
                   protocol: ftps
-                  git-ftp-args: --insecure
+                  # git-ftp-args: --insecure
                   timeout: 600000
 
