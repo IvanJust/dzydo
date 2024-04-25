@@ -1,4 +1,4 @@
-import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { getEvent, getEvents, getTable } from "../../../core/Api/ApiData/methods/event";
 import { ShortName, getDateFromSQL } from "../../../features/functions";
@@ -91,8 +91,8 @@ export default function TableResult() {
     let i = 0;
 
     return (
-        <div className="wrapper">
-            <Grid sx={{ width: '100%', minHeight: '700px' }}>
+        <Grid container className="page" sx={{height: '100vh'}}>
+            <Grid sx={{ width: '100%'}} display={'flex'} flexDirection={'column'}>
                 <Grid container py={2} sx={{ display: { xs: 'flex', md: 'none' }}}>
                     <Grid container sx={{ display:'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
                         <Box item className="header-logo" sx={{ display: { xs: 'flex', md: 'none' }, ml: 1, cursor: 'pointer' }}>
@@ -157,8 +157,8 @@ export default function TableResult() {
                         }
                     </Grid>
                 </Grid>
-                {tableResult.id > 0 && <>
-                    <TableContainer component={Paper}>
+                {tableResult.id > 0 && <Grid container>
+                    <TableContainer component={Paper} sx={{mx: 1}}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -183,8 +183,8 @@ export default function TableResult() {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </>}
+                </Grid>}
             </Grid>
-        </div>
+        </Grid>
     );
 }
