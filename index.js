@@ -608,10 +608,59 @@ app.post('/api/evaluations/get', (request, response) => {
       });
 
   } catch (e) {
-      response.status(500).send(Error('Error receiving the pair.'));
+      response.status(500).send(Error('Error receiving the evaluations.'));
   }
 });
 
+
+app.post('/api/evaluations/getforsuper', (request, response) => {
+  const { pair_id , user_id } = request.body;
+  
+  try {
+      sql = 'SELECT "evaluations".id, row_to_json(p.*) AS pair, row_to_json(u1.*) AS referee, supervisor_id AS supervisor, row_to_json(ec.*) AS evaluation_criteria, row_to_json(m.*) AS mark, date '
+      + 'FROM "evaluations" '
+      + 'JOIN "pair" AS p ON p.id = pair_id AND p.event_id = ' + request.event_id
+      + 'LEFT JOIN "user" AS u1 ON u1.id = referee_id '
+      + 'JOIN "evaluation_criteria" AS ec ON ec.id = evaluation_criteria_id '
+      + 'JOIN "mark" AS m ON m.id = mark_id '
+      + 'WHERE supervisor_id IS NULL ';
+
+      if (pair_id) sql += 'AND "evaluations".pair_id = ' + pair_id;
+      if (pair_id) sql += ' AND "evaluations".referee_id = ' + user_id;
+      
+      pool.query(sql).then(function (res) {
+          response.send(res['rows']);
+      });
+
+  } catch (e) {
+      response.status(500).send(Error('Error receiving the evaluations.'));
+  }
+});
+
+app.post('/api/evaluations/getforsecretary', (request, response) => {
+  const { pair_id , user_id } = request.body;
+  
+  try {
+      sql = 'SELECT "evaluations".id, row_to_json(p.*) AS pair, row_to_json(u1.*) AS referee, row_to_json(u2.*) AS supervisor, row_to_json(ec.*) AS evaluation_criteria, row_to_json(m.*) AS mark, date '
+      + 'FROM "evaluations" '
+      + 'JOIN "pair" AS p ON p.id = pair_id AND p.event_id = ' + request.event_id
+      + 'LEFT JOIN "user" AS u1 ON u1.id = referee_id '
+      + 'LEFT JOIN "user" AS u2 ON u2.id = supervisor_id '
+      + 'JOIN "evaluation_criteria" AS ec ON ec.id = evaluation_criteria_id '
+      + 'JOIN "mark" AS m ON m.id = mark_id '
+      + 'WHERE supervisor_id IS NOT NULL ';
+
+      if (pair_id) sql += 'AND "evaluations".pair_id = ' + pair_id;
+      if (pair_id) sql += ' AND "evaluations".supervisor_id = ' + user_id;
+      
+      pool.query(sql).then(function (res) {
+          response.send(res['rows']);
+      });
+
+  } catch (e) {
+      response.status(500).send(Error('Error receiving the evaluations.'));
+  }
+});
 
 app.post('/api/current_event/get', async (request, response) => {
   const res = await pool.query('SELECT * FROM "event" WHERE date_begin <= CURRENT_DATE AND CURRENT_DATE <= date_end');
