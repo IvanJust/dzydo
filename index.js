@@ -39,7 +39,7 @@ const pool = new Pool()
 
 const socketIO = new Server({
   cors: {
-    origin: `http://localhost:${port}`
+    origin: '*'
   }
 });
 
