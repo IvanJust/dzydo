@@ -13,7 +13,7 @@ function a11yProps(index) {
     };
 }
 
-export default function TableAll() {
+export default function TableAll({secret}) {
     const [value, setValue] = useState(0);
     const { socketAuth } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
@@ -66,7 +66,7 @@ export default function TableAll() {
     }, [socketAuth, gradesGiven1, gradesGiven2, gradesGiven3, gradesGiven4, gradesGiven5])
 
     return (
-        <Container>
+        <>
             <Grid sx={{ width: '100%' }}>
                 <Box sx={{ overflowX:'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
                     <Tabs
@@ -85,7 +85,7 @@ export default function TableAll() {
                         <Tab label="Судья 5" {...a11yProps(4)} />
                     </Tabs>
                 </Box>
-                <Grid mt={1}>
+                <Grid>
                     <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} />
                     <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} />
                     <CustomTabPanel value={value} index={2} gradesGiven={gradesGiven3} setGradesGiven={setGradesGiven3} />
@@ -93,10 +93,10 @@ export default function TableAll() {
                     <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} />
                 </Grid>
             </Grid>
-            <Grid my={1} container display='flex' justifyContent='center'>
-                <Button onClick={saveData} variant="outlined" color="success">Сохранить</Button>
-            </Grid>
-        </Container>
+            {!secret && <Grid my={1} container display='flex' justifyContent='center'>
+                <Button onClick={saveData} variant="outlined" color="success" disabled={currentPair?.condition != 1}>Сохранить</Button>
+            </Grid>}
+        </>
 
     )
 }

@@ -30,14 +30,14 @@ body{
 .content {
     /* height: 100%; */
     overflow-y: auto;
-    height: 78vh;
+    height: 90vh;
     /* width: 980px; */
     /* background: yellow; */
 }
 @media screen and (max-width: 1200px){
 .content {
     margin-top: 0;
-    height: 89vh;
+    height: 93.6vh;
 }
 }
 .content-block1{

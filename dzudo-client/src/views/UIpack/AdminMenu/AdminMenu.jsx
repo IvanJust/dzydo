@@ -1,4 +1,4 @@
-import { Box, Grid, Tab, Tabs, Typography, Breadcrumbs } from "@mui/material"
+import { Box, Grid, Tab, Tabs, Typography, Breadcrumbs, Container } from "@mui/material"
 import React, { useState } from "react"
 import RegistrationUser from "./Registration/RegistrationUser";
 import { setUser } from "../../../core/Api/ApiData/methods/portfolio";
@@ -23,9 +23,9 @@ function CustomTabPanel(props) {
         {...other}
       >
         {value === index && (
-            <Box sx={{ p: 3 }}>
+            <>
                 {children}
-            </Box>
+            </>
         )}
       </div>
     );
@@ -86,40 +86,45 @@ export default function AdminMenu({bread}){
     }
 
     return(
-        <Grid mt={2}>
-            <Breadcrumbs
-                separator={<NavigateNextIcon fontSize="small" />}
-                aria-label="Административное меню"
-            >
-                {<Bread bread={bread} />}
-            </Breadcrumbs>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
-                <Tabs 
-                    value={value} 
-                    onChange={handleChange}
-                    textColor="secondary"
-                    indicatorColor="secondary"
-                    aria-label="secondary tabs example"
-                    sx={{overflowX: 'auto'}}
+        <Container mt={2}>
+                <Breadcrumbs
+                    separator={<NavigateNextIcon fontSize="small" />}
+                    aria-label="Административное меню"
                 >
-                    <Tab label="Регистрация пользователя" {...a11yProps(0)} />
-                    <Tab label="Создать мероприятие" {...a11yProps(1)} />
-                    <Tab label="Список пользователей" {...a11yProps(2)} />
-                    <Tab label="Список мероприятий" {...a11yProps(3)} />
-                </Tabs>
-            </Box>
-            <CustomTabPanel value={value} index={0}>
-                <RegistrationUser onChange={handleOnChangeLoginFormUser} onClick={registrationUser} />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                <RegistrationEvent onChange={handleOnChangeLoginFormEvent} onClick={registrationEvent} />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                <TableUsers />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-                <TableEvents />
-            </CustomTabPanel>
-        </Grid>
+                    {<Bread bread={bread} />}
+                </Breadcrumbs>
+                <Grid sx={{ width: '100%' }}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
+                        <Tabs 
+                            value={value} 
+                            onChange={handleChange}
+                            textColor="secondary"
+                            indicatorColor="secondary"
+                            aria-label="secondary tabs example"
+                            variant="scrollable"
+                            scrollButtons="auto"
+                        >
+                            <Tab label="Регистрация пользователя" {...a11yProps(0)} />
+                            <Tab label="Создать мероприятие" {...a11yProps(1)} />
+                            <Tab label="Список пользователей" {...a11yProps(2)} />
+                            <Tab label="Список мероприятий" {...a11yProps(3)} />
+                        </Tabs>
+                    </Box>
+                    <Grid>
+                        <CustomTabPanel value={value} index={0}>
+                            <RegistrationUser onChange={handleOnChangeLoginFormUser} onClick={registrationUser} />
+                        </CustomTabPanel>
+                        <CustomTabPanel value={value} index={1}>
+                            <RegistrationEvent onChange={handleOnChangeLoginFormEvent} onClick={registrationEvent} />
+                        </CustomTabPanel>
+                        <CustomTabPanel value={value} index={2}>
+                            <TableUsers />
+                        </CustomTabPanel>
+                        <CustomTabPanel value={value} index={3}>
+                            <TableEvents />
+                        </CustomTabPanel>
+                    </Grid>
+                </Grid>
+        </Container>
     )
 }

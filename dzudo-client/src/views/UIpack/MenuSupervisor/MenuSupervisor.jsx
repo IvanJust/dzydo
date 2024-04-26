@@ -3,7 +3,7 @@ import ListPair from "../ListPair/ListPair";
 
 import TableAll from "../PanelsMark/TableAll";
 import { SocketContext } from "../../../context/SocketProvider";
-import { Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 
 export default function MenuSupervisor(){
     const { socketAuth, isConnected } = useContext(SocketContext);
@@ -15,13 +15,13 @@ export default function MenuSupervisor(){
     // }, [])
 
     return (
-        <Grid container justifyContent='space-evenly'>
+        <Container justifyContent='space-evenly'>
             <Grid item>
                 <ListPair />
             </Grid>
             <Grid item>
                 <TableAll />
             </Grid>
-        </Grid>
+        </Container>
     )
 }

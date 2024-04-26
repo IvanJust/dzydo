@@ -10,9 +10,9 @@ function RegistrationEvent({...props}){
     const defaultDate = date;
     
     return(
-        <Grid>
+        <Grid item>
             <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <Card sx={{minWidth: '30rem'}}>
+                <Card>
                     <CardHeader
                         title='Пожалуйста, заполните все поля'
                     />

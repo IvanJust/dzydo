@@ -13,9 +13,9 @@ function RegistrationUser({...props}){
         });
     }, []);
     return(
-        <Grid>
+        <Grid item>
             <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <Card sx={{minWidth: '30rem'}}>
+                <Card>
                     <CardHeader
                         title='Пожалуйста, заполните все поля'
                     />

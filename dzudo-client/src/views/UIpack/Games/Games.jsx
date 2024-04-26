@@ -47,7 +47,7 @@ export default function Games(){
     return(
         <Container>
             {pairs.length > 0 && <Stack direction='column'>
-                {isAdmin && <Grid display='flex' justifyContent='center'>
+                {isAdmin && <Grid my={1} display='flex' justifyContent='center'>
                     <Button variant="outlined" color="primary" onClick={openModal}>Добавить пару</Button>
                     <ModalGames open={open} setOpen={setOpen} setPairs={setPairs} />
                 </Grid>}
