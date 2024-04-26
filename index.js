@@ -613,6 +613,17 @@ app.post('/api/evaluations/get', (request, response) => {
 });
 
 
+app.post('/api/current_event/get', async (request, response) => {
+  const res = await pool.query('SELECT * FROM "event" WHERE date_begin <= CURRENT_DATE AND CURRENT_DATE <= date_end');
+  
+  response.send(res['rows']);
+});
+
+app.post('/api/future_event/get', async (request, response) => {
+  const res = await pool.query('SELECT * FROM "event" WHERE CURRENT_DATE < date_begin');
+  
+  response.send(res['rows']);
+});
 
 
 app.get('*', (req, res) => {
@@ -639,6 +650,17 @@ function cdate(){
   curr_date.setFullYear(curr_date.getFullYear() + 1); 
 
   return Math.floor(curr_date.getTime() / 1000);
+}
+
+function dateFormat(date){
+  var yyyy = date.getFullYear().toString();
+  var mm = (date.getMonth()+1).toString();
+  var dd  = date.getDate().toString();
+
+  var mmChars = mm.split('');
+  var ddChars = dd.split('');
+
+  return yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
 }
 
 function check(request, response){
