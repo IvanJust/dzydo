@@ -626,7 +626,7 @@ app.post('/api/evaluations/getforsuper', (request, response) => {
       + 'WHERE supervisor_id IS NULL ';
 
       if (pair_id) sql += 'AND "evaluations".pair_id = ' + pair_id;
-      if (pair_id) sql += ' AND "evaluations".referee_id = ' + user_id;
+      if (user_id) sql += ' AND "evaluations".referee_id = ' + user_id;
       
       pool.query(sql).then(function (res) {
           response.send(res['rows']);
@@ -651,7 +651,7 @@ app.post('/api/evaluations/getforsecretary', (request, response) => {
       + 'WHERE supervisor_id IS NOT NULL ';
 
       if (pair_id) sql += 'AND "evaluations".pair_id = ' + pair_id;
-      if (pair_id) sql += ' AND "evaluations".supervisor_id = ' + user_id;
+      if (user_id) sql += ' AND "evaluations".supervisor_id = ' + user_id;
       
       pool.query(sql).then(function (res) {
           response.send(res['rows']);
