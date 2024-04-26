@@ -90,6 +90,7 @@ export default function ListPair() {
                             {/* <SportsKabaddiIcon fontSize="large" /> */}
                             <img style={{width: '50px'}} title="Дзюдо-Ката" src={fight}/>
                             <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
+                            {it.condition}
                         </Grid>
                     )}
                 </Stack>

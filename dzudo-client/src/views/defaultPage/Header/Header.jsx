@@ -71,7 +71,7 @@ function Header() {
     };
 
     function goTo(nav){
-        navigate("/"+nav, {replace: true});
+        navigate("/"+nav, {replace: false});
         // console.debug(nav);
     }
 
