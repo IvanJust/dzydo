@@ -42,7 +42,7 @@ jobs:
                   username: root
                   password: s02eJvhQtiSGBKda
                   server-dir: /var/www/server/dzudo-client/build/
-                  protocol: ftps-legacy
+                  protocol: ftp
                   # git-ftp-args: --insecure
                   timeout: 600000
 
