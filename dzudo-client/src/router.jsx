@@ -10,7 +10,12 @@ const router = createBrowserRouter([
         children: [
             {
                 path: 'games',
-                element: <views.Games/>,
+                element: <views.Games bread={
+                    [
+                        {title: 'Главная', link: '/', key: 1},
+                        {title: 'Выступающие пары', key: 2}
+                    ]
+                }/>,
                 children: [
                     {
                         path: ':id',
@@ -22,7 +27,12 @@ const router = createBrowserRouter([
             },
             {
                 path: 'writing',
-                element: <views.TableExs/>
+                element: <views.TableExs bread={
+                    [
+                        {title: 'Главная', link: '/', key: 1},
+                        {title: 'Результаты', key: 2}
+                    ]
+                }/>
             },
             {
                 path: 'admin',

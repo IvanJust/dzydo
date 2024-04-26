@@ -1,11 +1,13 @@
-import { Backdrop, Button, Chip, CircularProgress, Container, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Backdrop, Breadcrumbs, Button, Chip, CircularProgress, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
 import { useSelector } from "react-redux";
 import FaceIcon from '@mui/icons-material/Face';
 import PlaceTwoToneIcon from '@mui/icons-material/PlaceTwoTone';
 import SlowMotionVideoTwoToneIcon from '@mui/icons-material/SlowMotionVideoTwoTone';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ModalGames from "./ModalGames";
+import Bread from "../../UIpack v2/Bread/Bread";
 
 function TitleChip({title, name}){
     return(
@@ -20,12 +22,14 @@ function TitleChip({title, name}){
     )
 }
 
-export default function Games(){
+export default function Games({bread}){
     const [pairs, setPairs] = useState([]);
     const [open, setOpen] = useState(false);
     const event = useSelector(state => state.user.eventInfo)
     const isAdmin = useSelector(state => state.user.isAdmin);
     let hidden = false;
+
+    bread = Bread(bread);
 
     useEffect(()=>{
         getPairs(event.id, "").then(resp => {
@@ -46,6 +50,13 @@ export default function Games(){
 
     return(
         <Container>
+            <Breadcrumbs
+                sx={{my: 1}}
+                separator={<NavigateNextIcon fontSize="small" />}
+                aria-label="Административное меню"
+            >
+                {bread}
+            </Breadcrumbs>
             {pairs.length > 0 && <Stack direction='column'>
                 {isAdmin && <Grid my={1} display='flex' justifyContent='center'>
                     <Button variant="outlined" color="primary" onClick={openModal}>Добавить пару</Button>

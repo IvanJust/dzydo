@@ -2,7 +2,7 @@ import { Grid, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Bread({bread}){
+export default function Bread(bread){
     console.debug(bread);
     
   const breadcrumbs = [
@@ -16,22 +16,22 @@ export default function Bread({bread}){
   
     const bread_new = [];
     console.debug(bread_new, breadcrumbs, bread.length);
-    bread.forEach(item => {
+    bread = bread.map((item, key) => {
         if(item.key != bread.length){
-            bread_new.push(
-                            <Link underline="hover" key={item.key} color="inherit" href={item.link}>
-                                {item.title}
-                            </Link>
-                        )
+            return(
+                    <Link underline="hover" key={item.key} color="inherit" href={item.link}>
+                        {item.title}
+                    </Link>)
+                        
         } 
         if(item.key == bread.length){
-            bread_new.push(
-                            <Typography key={item.key} color="text.primary">
-                                {item.title}
-                            </Typography>
-                        )
+            return(
+                    <Typography key={item.key} color="text.primary">
+                        {item.title}
+                    </Typography>)
+                        
         } 
     });
-    console.debug(bread_new, breadcrumbs, bread.length);
-    return bread_new;
+    console.debug(bread_new, breadcrumbs, bread, bread.length);
+    return bread;
 }

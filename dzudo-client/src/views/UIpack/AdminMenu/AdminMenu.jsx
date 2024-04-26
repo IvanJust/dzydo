@@ -23,9 +23,9 @@ function CustomTabPanel(props) {
         {...other}
       >
         {value === index && (
-            <>
+            <Grid my={2}>
                 {children}
-            </>
+            </Grid>
         )}
       </div>
     );
@@ -46,6 +46,8 @@ export default function AdminMenu({bread}){
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+
+    bread = Bread(bread);
 
     function registrationUser() {
         setUser(dataLoginUser.login, dataLoginUser.password, dataLoginUser.firstname, dataLoginUser.lastname, dataLoginUser.patronymic)
@@ -88,10 +90,11 @@ export default function AdminMenu({bread}){
     return(
         <Container mt={2}>
                 <Breadcrumbs
+                    sx={{my: 1}}
                     separator={<NavigateNextIcon fontSize="small" />}
                     aria-label="Административное меню"
                 >
-                    {<Bread bread={bread} />}
+                    {bread}
                 </Breadcrumbs>
                 <Grid sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
