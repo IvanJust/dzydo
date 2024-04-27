@@ -22,3 +22,13 @@ export function setPair(event_id, tori, uke, region, round) {
         }
     );
 }
+
+export function getForSuper(event_id, id_user) {
+    return client.post(
+        'evaluations/getforsuper',
+        {
+            'event_id': event_id,
+            'user_id': id_user
+        }
+    )
+}

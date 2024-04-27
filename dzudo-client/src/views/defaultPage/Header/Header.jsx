@@ -10,37 +10,13 @@ import Auth from "../../UIpack/Auth/Auth";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { cyan } from "@mui/material/colors";
 // import Socket from "../../../components/Socket";
 // import logo from '/logo.svg';
 
-
-
-// function Header2(){
-
-
-//     const header = 'ЧЕМПИОНАТ РОССИИ ПО ДЗЮДО КАТА';
-//     const header2 = 'KOPER - SLOVENIA 2012';
-//     // const logo_dzudo = 'https://catherineasquithgallery.com/uploads/posts/2021-03/1614678021_71-p-fon-dzyudo-76.png';
-//     return(
-//         <div className="header">
-//             <Grid container justifyContent="space-around" alignItems="center" p={1} border={1} borderColor='#CFCFCF'>
-//                 <Box item>
-//                    <div className="header-logo"><img src={logo}/></div>
-//                  </Box>
-//                 <Box item alignItems='center' justifyContent='center'>
-//                     <div><span className="title-h-top">{header}</span></div>
-//                     <div><span className="title-h">{header2}</span></div>
-//                     {/* <div>{header}</div> */}
-//                 </Box>
-//                 <Box>
-//                     <div className="btn-hidden-menu"><Auth/></div>
-//                 </Box>
-//             </Grid>
-//         </div>
-//     )
-
-// }
-
+const styleHead = {
+    color: cyan[700],
+}
 const pages = [
     {
         name: 'Соревнования',
@@ -76,7 +52,7 @@ function Header() {
     }
 
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="sticky" sx={{backgroundColor: styleHead.color}}>
         <Container maxWidth="xl">
             <Toolbar disableGutters>
                 {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}

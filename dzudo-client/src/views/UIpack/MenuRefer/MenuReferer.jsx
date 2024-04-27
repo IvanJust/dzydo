@@ -9,13 +9,17 @@ import { useSelector } from "react-redux";
 export default function MenuReferer() {
     const { socketAuth, isConnected } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
-
+    let press = false;
     const [gradesGiven, setGradesGiven] = useState([]);
 
     const saveData = () => {
-        saveEvaluations(gradesGiven, currentPair.id).then(resp => {
-            console.debug(resp);
-        })
+        if(!press){
+            saveEvaluations(gradesGiven, currentPair.id).then(resp => {
+                console.debug(resp);
+                press = true;
+            })
+        }
+        
     }
     console.debug("pair ", currentPair);
 
@@ -28,7 +32,7 @@ export default function MenuReferer() {
                 {/* <Box> */}
                     <CustomTabPanel value={0} index={0} gradesGiven={gradesGiven} setGradesGiven={setGradesGiven} />
                     <Grid my={1}>
-                        <Button variant="outlined" color="success" onClick={saveData} disabled={currentPair?.condition != 1}>Сохранить</Button>
+                        <Button variant="outlined" color="success" onClick={saveData} disabled={currentPair?.condition != 1 || press}>Сохранить</Button>
                     </Grid>
                 {/* </Box> */}
             </Grid>

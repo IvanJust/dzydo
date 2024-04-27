@@ -12,7 +12,9 @@ html{
     /* position: absolute; */
 }
 .page{
+    height: 100vh;
     background: linear-gradient(0.5turn, #3f87a6, #ebf8e1, #44683f);
+    overflow-y: auto;
 }
 body{
     height: 100%;
@@ -29,15 +31,15 @@ body{
 } */
 .content {
     /* height: 100%; */
-    overflow-y: auto;
-    height: 90vh;
+    /* overflow-y: auto; */
+    /* height: 90vh; */
     /* width: 980px; */
     /* background: yellow; */
 }
 @media screen and (max-width: 1200px){
 .content {
     margin-top: 0;
-    height: 93.6vh;
+    /* height: 93.6vh; */
 }
 }
 .content-block1{

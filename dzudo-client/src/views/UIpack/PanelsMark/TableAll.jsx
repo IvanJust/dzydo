@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Button, Container, Grid, Tab, Tabs } from "@mui/material";
+import { Box, Button, Grid, Tab, Tabs, Typography } from "@mui/material";
 
 import CustomTabPanel from "./OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
 import { saveEvaluations } from "../../../core/Api/ApiData/methods/event";
 import { useSelector } from "react-redux";
+import CircleIcon from '@mui/icons-material/Circle';
 
 function a11yProps(index) {
     return {
@@ -13,16 +14,18 @@ function a11yProps(index) {
     };
 }
 
-export default function TableAll({secret}) {
+export default function TableAll({secret, data}) {
     const [value, setValue] = useState(0);
     const { socketAuth } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
+    const [read, setRead] = useState(false);
+    const refCount = [];
 
-    const [gradesGiven1, setGradesGiven1] = useState([]);
-    const [gradesGiven2, setGradesGiven2] = useState([]);
-    const [gradesGiven3, setGradesGiven3] = useState([]);
-    const [gradesGiven4, setGradesGiven4] = useState([]);
-    const [gradesGiven5, setGradesGiven5] = useState([]);
+    const [gradesGiven1, setGradesGiven1] = useState(data[0] || []);
+    const [gradesGiven2, setGradesGiven2] = useState(data[1] || []);
+    const [gradesGiven3, setGradesGiven3] = useState(data[2] || []);
+    const [gradesGiven4, setGradesGiven4] = useState(data[3] || []);
+    const [gradesGiven5, setGradesGiven5] = useState(data[4] || []);
 
     const saveData = () => {
         const allEvaluations = [
@@ -34,6 +37,7 @@ export default function TableAll({secret}) {
         ];
         saveEvaluations(allEvaluations, currentPair.id).then(resp => {
             console.debug(resp);
+            setRead(true);
         })
     }
 
@@ -46,17 +50,21 @@ export default function TableAll({secret}) {
             console.debug("referee", value)
             if (gradesGiven1.length == 0) {
                 setGradesGiven1(value);
+                refCount.push({refId: 1});
             } else if (gradesGiven2.length == 0) {
                 setGradesGiven2(value);
+                refCount.push({refId: 2});
             } else if (gradesGiven3.length == 0) {
                 setGradesGiven3(value);
+                refCount.push({refId: 3});
             } else if (gradesGiven4.length == 0) {
                 setGradesGiven4(value);
+                refCount.push({refId: 4});
             } else if (gradesGiven5.length == 0) {
                 setGradesGiven5(value);
+                refCount.push({refId: 5});
             }
         }
-
         socketAuth.on('save-evaluations-referee', onSaveReferee);
 
 
@@ -78,11 +86,11 @@ export default function TableAll({secret}) {
                         indicatorColor="secondary"
                         aria-label="secondary tabs example"
                     >
-                        <Tab label="Судья 1" {...a11yProps(0)} />
-                        <Tab label="Судья 2" {...a11yProps(1)} />
-                        <Tab label="Судья 3" {...a11yProps(2)} />
-                        <Tab label="Судья 4" {...a11yProps(3)} />
-                        <Tab label="Судья 5" {...a11yProps(4)} />
+                        <Tab label={<Typography>Судья 1 {(refCount.length == 1 && !read) && <CircleIcon color="success" sx={{ml: 1}} />}</Typography>} {...a11yProps(0)} />
+                        <Tab label={<Typography>Судья 2 {(refCount.length == 2 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(1)} />
+                        <Tab label={<Typography>Судья 3 {(refCount.length == 3 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(2)} />
+                        <Tab label={<Typography>Судья 4 {(refCount.length == 4 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(3)} />
+                        <Tab label={<Typography>Судья 5 {(refCount.length == 5 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(4)} />
                     </Tabs>
                 </Box>
                 <Grid>
@@ -93,8 +101,11 @@ export default function TableAll({secret}) {
                     <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} />
                 </Grid>
             </Grid>
-            {!secret && <Grid my={1} container display='flex' justifyContent='center'>
-                <Button onClick={saveData} variant="outlined" color="success" disabled={currentPair?.condition != 1}>Сохранить</Button>
+            {!secret && <Grid my={2} container display='flex' justifyContent='center'>
+                <Button onClick={saveData} variant="outlined" color="success" disabled={currentPair?.condition != 1 || refCount.length < 5}
+                >
+                    Сохранить
+                </Button>
             </Grid>}
         </>
 

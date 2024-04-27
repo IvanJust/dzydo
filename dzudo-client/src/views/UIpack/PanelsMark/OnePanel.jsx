@@ -167,11 +167,11 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
                         {evaletionCriteries.map((criteria) => (
                             <RowTab name={criteria.evaluation_criteria} isScore={true} marks={marks} criteriaId={criteria.id} score={criteria.init_value} funSetMark={setGiveMark} gradesGiven={gradesGiven} key={criteria.id} />
                         ))}
-                        <Box display='flex' flexDirection='row' justifyContent='flex-end'>
+                        <Box mt={1} display='flex' flexDirection='row' justifyContent='flex-end'>
                             <Box display='flex' alignItems='center'>
                                 <Typography mx={1} fontFamily='monospace'> Сумма:  </Typography>
                             </Box>
-                            <TextField mx={1} disabled variant="outlined" size="small" sx={{width:'3.5rem'}} value={allDebet - allCredit}/>
+                            <TextField mx={1} disabled variant="outlined" size="small" sx={{width:'4.5rem'}} value={allDebet - allCredit}/>
                         </Box>
                     </Stack>
                 )}
