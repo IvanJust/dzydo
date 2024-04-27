@@ -34,15 +34,15 @@ jobs:
               env:
                 CI: false
                 
-            - name: 📂 Sync files
-              uses: ./
-              with:
-                server: 79.174.84.7
-                port: 22
-                username: ${{ secrets.USER }}
-                password: ${{ secrets.PASSWORD }}
+            # - name: 📂 Sync files
+            #   uses: ./
+            #   with:
+            #     server: 79.174.84.7
+            #     port: 22
+            #     username: ${{ secrets.USER }}
+            #     password: ${{ secrets.PASSWORD }}
 
-            - name: Deploy
+            - name: 📂 Deploy
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
                   server: 79.174.84.7
