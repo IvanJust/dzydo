@@ -41,6 +41,5 @@ jobs:
                   username: ${{ secrets.USER }}
                   password: ${{ secrets.PASSWORD }}
                   server-dir: ${{ secrets.DIR }}
-                  protocol: ftp
                   timeout: 600000
 
