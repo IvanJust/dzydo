@@ -153,6 +153,21 @@ function Auth() {
                     toast.error("Неверный логин и/или пароль");
                 }
                 
+            })
+            .catch((error) => {
+                // Error
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    if(error.response.status == 401){
+                        toast.error('Пользователь не найден (проверьте правильность логина/пароля/мероприятия)');
+                    }else{
+                        toast.error(error.response.status + ': ' + error.response.data.Error);
+                    }
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    toast.error(error.message);
+                }
             });
     }
     // const openModal = () => {
