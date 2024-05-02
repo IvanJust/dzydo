@@ -49,7 +49,7 @@ jobs:
                     **/src/**
               
             - name: 🙈 Reload
-              run: pm2 reload app
+              run: cd /var/www/server && pm2 reload app
               # uses: fcocea/Restart-PM2-Action@v1.0
               # with:
               #   SSH_HOST: 79.174.84.7
