@@ -49,14 +49,15 @@ jobs:
                     **/src/**
               
             - name: 🙈 Reload
-              uses: fcocea/Restart-PM2-Action@v1.0
-              with:
-                SSH_HOST: 79.174.84.7
-                SSH_USER: ${{ secrets.USER }}
-                SSH_PASS: ${{ secrets.PASSWORD }}
-                SSH_PORT: 21
-                FOLDER: /var/www/server/
-                PM2_SERVICE: app
+              run: pm2 reload app
+              # uses: fcocea/Restart-PM2-Action@v1.0
+              # with:
+              #   SSH_HOST: 79.174.84.7
+              #   SSH_USER: ${{ secrets.USER }}
+              #   SSH_PASS: ${{ secrets.PASSWORD }}
+              #   SSH_PORT: 21
+              #   FOLDER: /var/www/server/
+              #   PM2_SERVICE: app
                 # REPO_BRANCH: main # Default: main  
   
 
