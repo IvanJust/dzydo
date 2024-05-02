@@ -1,4 +1,4 @@
-name: start build and deploy
+name: 💥 Start build and deploy
 
 on: 
     push: 
@@ -14,10 +14,10 @@ jobs:
             node: [20]
 
         steps:
-            - name: Checkout repository
+            - name: 👻 Checkout repository
               uses: actions/checkout@v4.1.1
 
-            - name: Setup Node.js
+            - name: 🌞 Setup Node.js
               uses: actions/setup-node@v4.0.2
 
               with: 
@@ -26,7 +26,7 @@ jobs:
             # - name: Path
             #   run: cd dzudo-client
 
-            - name: Install dependencies
+            - name: 🦴 Install dependencies
               run: npm ci
 
             - name: 🎉 Build application
@@ -47,4 +47,15 @@ jobs:
                     **/.git*/**
                     **/node_modules/**
                     **/src/**
+              
+            - name: 🙈 Reload
+              uses: fcocea/Restart-PM2-Action@v1.0
+              with:
+                SSH_HOST: 79.174.84.7
+                SSH_USER: ${{ secrets.USER }}
+                SSH_PASS: ${{ secrets.PASSWORD }}
+                FOLDER: /var/www/server/
+                PM2_SERVICE: app
+                # REPO_BRANCH: main # Default: main  
+  
 
