@@ -1,11 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-const roleName = new Map([
-    [1, 'Администратор'],
-    [2, 'Главный Секретарь'],
-    [3, 'Супервайзер'],
-    [4, 'Судья']
-]);
+import { roleName } from "../../core/config/config";
 
 export const userSlice = createSlice({
     name: 'user',
@@ -94,6 +88,6 @@ export const userSlice = createSlice({
         }
     },
 });
-export { roleName };
+
 export const {setRole, setUser, unsetUser, getFIO, setEventInfo, setCurrentPair } = userSlice.actions
 export default userSlice.reducer
