@@ -67,8 +67,7 @@ jobs:
                 user: ${{secrets.USER}}
                 private_key: ${{secrets.PRIVATE_KEY}}
                 command: |
-                  cd /var/www/server;
-                  git checkout main;
+                  cd ${{ secrets.DIR }};
                   pm2 reload app
   
 
