@@ -54,6 +54,7 @@ jobs:
                 SSH_HOST: 79.174.84.7
                 SSH_USER: ${{ secrets.USER }}
                 SSH_PASS: ${{ secrets.PASSWORD }}
+                SSH_PORT: 21
                 FOLDER: /var/www/server/
                 PM2_SERVICE: app
                 # REPO_BRANCH: main # Default: main  
