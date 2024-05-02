@@ -66,7 +66,7 @@ function RegistrationEvent({...props}){
                                     fullWidth
                                 /> */}
                             </Box>
-                            <Box my={2} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
+                            <Box mt={2} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
                                 <TextField 
                                     helperText="Дата конца соревнований" 
                                     onChange={props.onChange}
@@ -82,7 +82,7 @@ function RegistrationEvent({...props}){
                         </Form>
                     </CardContent>
                     <CardActions>
-                        <Button variant="outlined" type="submit" for="registrationEvent" onClick={props.onClick}>
+                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" for="registrationEvent" onClick={props.onClick}>
                             Организовать соревнование
                         </Button>
                     </CardActions>

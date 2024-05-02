@@ -2,8 +2,9 @@ import { Box, Button, Card, CardActions, CardContent, CardHeader, FormControl, G
 import React, { useState } from "react";
 import { getRoles } from "../../../../core/Api/ApiData/methods/admin";
 import { Form } from "react-router-dom";
+import { roleName } from "../../../../core/config/config";
 
-function RegistrationUser({...props}){
+function RegistrationStaff({...props}){
     const [roles, setRoles] = useState([]);
     React.useEffect(() => {
         getRoles().then((resp) => {
@@ -17,11 +18,11 @@ function RegistrationUser({...props}){
             <Box sx={{display: 'flex', justifyContent: 'center'}}>
                 <Card>
                     <CardHeader
-                        title='Пожалуйста, заполните все поля'
+                        title='Назначение ролей по мероприятию'
                     />
                     <CardContent>
                         <Form id="registrationUser">
-                            <Box my={2} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
+                            {/* <Box my={2} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
                                 <TextField
                                     onChange={props.onChange}
                                     id="input-with-sx" 
@@ -68,39 +69,27 @@ function RegistrationUser({...props}){
                                     variant="filled" 
                                     fullWidth
                                     />
-                            </Box>
-                            <Box mt={2} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
-                                <TextField 
-                                    onChange={props.onChange}
-                                    id="input-with-sx" 
-                                    label="Отчество (необязательно)" 
-                                    type='text'
-                                    name="patronymic" 
-                                    variant="filled" 
-                                    fullWidth
-                                    />
-                            </Box>
-                            {/* <Box my={2} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Выберете роль пользователя</InputLabel>
-                                    <Select
-                                        onChange={props.onChange}
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        name="role"
-                                        label="Роль"
-                                        >
-                                            {roles.map((role) => (
-                                                <MenuItem value={role.id}>{roleName.get(role.id)}</MenuItem>
-                                            ))}
-                                    </Select>
-                                </FormControl>
                             </Box> */}
+                            {roles.map((item, index) => (
+                                // for(let i = 0; i< item.id == 4 ? 5 : 1; i++){
+                                    <Box my={2} key={item.id} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
+                                        <TextField 
+                                            onChange={props.onChange}
+                                            id="input-with-sx" 
+                                            label={roleName.get(item.id)}
+                                            type='text'
+                                            name={item.name}
+                                            variant="filled" 
+                                            fullWidth
+                                        />
+                                    </Box>
+                                // }
+                            ))}
                         </Form>
                     </CardContent>
                     <CardActions>
                         <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" for="registrationUser" onClick={props.onClick}>
-                            Регистрация
+                            Назначить
                         </Button>
                     </CardActions>
                 </Card>
@@ -109,4 +98,4 @@ function RegistrationUser({...props}){
     )
 }
 
-export default RegistrationUser;
+export default RegistrationStaff;
