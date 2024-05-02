@@ -35,29 +35,37 @@ jobs:
                 CI: false
 
             - name: 📂 Deploy
-              uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+              uses: victorargento/pm2-deployment@main
               with:
-                  server: 79.174.84.7
-                  username: ${{ secrets.USER }}
-                  password: ${{ secrets.PASSWORD }}
-                  server-dir: ${{ secrets.DIR }}
-                  # timeout: 600000
-                  exclude: |
-                    **/.git*
-                    **/.git*/**
-                    **/node_modules/**
-                    **/src/**
-              
-            - name: 🙈 Reload
-              run: cd /var/www/server && pm2 reload app
-              # uses: fcocea/Restart-PM2-Action@v1.0
+                remote-path: "/var/www/server"
+                host: 79.174.84.7
+                username: ${{ secrets.USER }}
+                port: 21
+                password: ${{ secrets.PASSWORD }}
+                pm2-id: "app"
+              # uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               # with:
-              #   SSH_HOST: 79.174.84.7
-              #   SSH_USER: ${{ secrets.USER }}
-              #   SSH_PASS: ${{ secrets.PASSWORD }}
-              #   SSH_PORT: 21
-              #   FOLDER: /var/www/server/
-              #   PM2_SERVICE: app
-                # REPO_BRANCH: main # Default: main  
+              #     server: 79.174.84.7
+              #     username: ${{ secrets.USER }}
+              #     password: ${{ secrets.PASSWORD }}
+              #     server-dir: ${{ secrets.DIR }}
+              #     # timeout: 600000
+              #     exclude: |
+              #       **/.git*
+              #       **/.git*/**
+              #       **/node_modules/**
+              #       **/src/**
+              
+            # - name: 🙈 Reload
+            #   # run: cd /var/www/server && pm2 reload app
+            #   uses: fcocea/Restart-PM2-Action@v1.0
+            #   with:
+            #     SSH_HOST: 79.174.84.7
+            #     SSH_USER: ${{ secrets.USER }}
+            #     SSH_PASS: ${{ secrets.PASSWORD }}
+            #     SSH_PORT: 21
+            #     FOLDER: /var/www/server/
+            #     PM2_SERVICE: app
+            #     # REPO_BRANCH: main # Default: main  
   
 
