@@ -122,7 +122,6 @@ function Auth() {
     // console.debug(dataLogin);
 
     const handleOnChangeLoginForm = (event) => {
-        console.debug(event.target.name);
         dataLogin[event.target.name] = event.target.value;
         setDataLogin(dataLogin)
     }

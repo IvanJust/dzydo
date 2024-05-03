@@ -35,8 +35,11 @@ export function getRoles() {
     );
 }
 
-export function getUsers() {
+export function getUsers(fio) {
     return client.post(
-        'user/get'
+        'user/get',
+        { 
+            'fio': fio,
+        }
     );
 }

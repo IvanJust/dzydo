@@ -78,7 +78,6 @@ export default function AdminMenu({bread}){
     }
     
     const handleOnChangeLoginFormUser = (event) => {
-        console.debug(event.target.name);
         dataLoginUser[event.target.name] = event.target.value;
         setDataLoginUser(dataLoginUser);
     }

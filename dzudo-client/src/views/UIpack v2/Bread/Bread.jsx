@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Bread(bread){
-    console.debug(bread);
     
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/">
@@ -15,7 +14,6 @@ export default function Bread(bread){
   ];
   
     const bread_new = [];
-    console.debug(bread_new, breadcrumbs, bread.length);
     bread = bread.map((item, key) => {
         if(item.key != bread.length){
             return(
@@ -32,6 +30,5 @@ export default function Bread(bread){
                         
         } 
     });
-    console.debug(bread_new, breadcrumbs, bread, bread.length);
     return bread;
 }

@@ -23,9 +23,6 @@ jobs:
               with: 
                 node-version: ${{ matrix.node }}
 
-            # - name: Path
-            #   run: cd dzudo-client
-
             - name: 🦴 Install dependencies
               run: npm ci
 
@@ -35,14 +32,6 @@ jobs:
                 CI: false
 
             - name: 📂 Deploy
-              # uses: victorargento/pm2-deployment@main
-              # with:
-              #   remote-path: "/var/www/server"
-              #   host: 79.174.84.7
-              #   username: ${{ secrets.USER }}
-              #   port: 21
-              #   password: ${{ secrets.PASSWORD }}
-              #   pm2-id: "app"
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
                   server: 79.174.84.7
@@ -55,19 +44,19 @@ jobs:
                     **/.git*/**
                     **/node_modules/**
                     **/src/**
-    reload:
-        needs: deploy
-        name: Reload app
-        runs-on: ubuntu-latest
-        steps:
-            - name: Run command on remote server
-              uses: D3rHase/ssh-command-action@v0.2.2
-              with:
-                host: 79.174.84.7
-                user: ${{secrets.USER}}
-                private_key: ${{secrets.PRIVATE_KEY}}
-                command: |
-                  cd ${{ secrets.DIR }};
-                  pm2 reload app
+    # reload:
+    #     needs: deploy
+    #     name: Reload app
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Run command on remote server
+    #           uses: D3rHase/ssh-command-action@v0.2.2
+    #           with:
+    #             host: 79.174.84.7
+    #             user: ${{secrets.USER}}
+    #             private_key: ${{secrets.PRIVATE_KEY}}
+    #             command: |
+    #               cd ${{ secrets.DIR }};
+    #               pm2 reload app
   
 
