@@ -47,7 +47,7 @@ export const userSlice = createSlice({
             state.role.id = action.payload.role;
             state.role.name = roleName.get(action.payload.role);
 
-            if(action.payload.role == 1){
+            if(action.payload.admin == 1){
                 state.isAdmin = true;
             }
 
@@ -78,7 +78,7 @@ export const userSlice = createSlice({
             state.userInfo.firstname = action.payload.firstname;
             state.userInfo.secondname = action.payload.patronymic;
             state.userInfo.lastname = action.payload.lastname;
-            state.userInfo.shortName = `${action.payload.lastname} ${action.payload.firstname.substr(0, 1)}. ${action.payload.patronymic.substr(0, 1)}.`;
+            state.userInfo.shortName = state.isAdmin ? 'Администратор' : `${action.payload.lastname} ${action.payload.firstname.substr(0, 1)}. ${action.payload.patronymic.substr(0, 1)}.`;
         },
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
             state.eventInfo = action.payload;

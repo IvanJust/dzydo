@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 import { clearTokens } from "../../../core/Api/functions";
 import { getEvent, getEvents } from "../../../core/Api/ApiData/methods/event";
+import { unsetEvent } from "../../../store/slices/tableResultSlice";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
     const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
@@ -75,6 +76,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             name="id_event"
                                             label="Мероприятие"
                                             >
+                                                <MenuItem value={0}>Не выбрано</MenuItem>
                                                 {events.map((event) => (
                                                     <MenuItem value={event.id}>{event.name}</MenuItem>
                                                 ))}
@@ -141,9 +143,13 @@ function Auth() {
                     getProfile(resp.data_token.sub).then((response) =>{
                         // console.debug('user:', response);
                         dispatch(getFIO(response.data[0]));
-                        getEvent(dataLogin.id_event).then((resp) => {
-                            setEventInfo(resp.data[0]);
-                        })
+                        if(resp.data_token.id_event != 0){
+                            getEvent(dataLogin.id_event).then((resp) => {
+                                setEventInfo(resp.data[0]);
+                            })
+                        }else{
+                            dispatch(unsetEvent());
+                        }
                     });
                     dispatch(setUser(resp.data_token));
                     

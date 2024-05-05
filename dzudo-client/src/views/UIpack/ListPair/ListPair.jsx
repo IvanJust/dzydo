@@ -146,7 +146,7 @@ export default function ListPair() {
                     </Droppable>
                     {[2, 3].includes(role_id) &&
                         <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, justifyContent: {xs: 'center', md: 'space-between'}, spacing: {xs: 1, md: 2}}}>
-                            <Button variant="outlined" color="success" onClick={nextRound}>Следующая пара <ArrowForwardIosIcon fontSize="large"/> </Button>
+                            <Button variant="outlined" color="success" onClick={nextRound} disabled={currentPair?.condition === 1}>Следующая пара <ArrowForwardIosIcon fontSize="large"/> </Button>
                             <Button variant="outlined" color="primary" onClick={skipRound}>Пропустить пару <SkipNextIcon fontSize="large"/> </Button>
                         </Grid>}
                 </Grid>

@@ -16,7 +16,8 @@ export const TIMEOUT_ACCESS = 'Access token timeout';
 
 
 const roleName = new Map([
-    [1, 'Администратор'],
+    [0, 'Без роли'],
+    // [1, 'Администратор'],
     [2, 'Главный Секретарь'],
     [3, 'Супервайзер'],
     [4, 'Судья']
