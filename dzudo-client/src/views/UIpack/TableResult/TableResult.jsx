@@ -175,7 +175,7 @@ export default function TableResult() {
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell>{++i}</TableCell>
-                                        <TableCell sx={{ cursor: 'pointer' }}>{ShortName(pair.tori.firstname, pair.tori.lastname, pair.tori.patronymic)} - {ShortName(pair.uke.firstname, pair.uke.lastname, pair.uke.patronymic)}</TableCell>
+                                        <TableCell sx={{ cursor: 'pointer' }}>{ShortName(pair.tori)} - {ShortName(pair.uke)}</TableCell>
                                         <TableCell>{pair.region}</TableCell>
                                         <TableCell>{pair.points}</TableCell>
                                     </TableRow>

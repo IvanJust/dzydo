@@ -1,4 +1,4 @@
-import { Box, Grid, Tab, Tabs, Typography, Breadcrumbs, Container } from "@mui/material"
+import { Box, Grid, Tab, Tabs, Breadcrumbs, Container, Alert } from "@mui/material"
 import React, { useState } from "react"
 import RegistrationUser from "./Registration/RegistrationUser";
 import { setUser } from "../../../core/Api/ApiData/methods/portfolio";
@@ -11,6 +11,7 @@ import TableEvents from "./Tables/TableEvent";
 import { Link } from "react-router-dom";
 import Bread from "../../UIpack v2/Bread/Bread";
 import RegistrationStaff from "./Registration/RegistrationStaff";
+import { useSelector } from "react-redux";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -43,6 +44,7 @@ export default function AdminMenu({bread}){
     const [value, setValue] = React.useState(0);
     const [dataLoginUser, setDataLoginUser] = useState({});
     const [dataLoginEvent, setDataLoginEvent] = useState({});
+    const isAdmin = useSelector((state) => state.user.isAdmin);
   
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -96,41 +98,44 @@ export default function AdminMenu({bread}){
                 >
                     {bread}
                 </Breadcrumbs>
-                <Grid sx={{ width: '100%' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
-                        <Tabs 
-                            value={value} 
-                            onChange={handleChange}
-                            textColor="secondary"
-                            indicatorColor="secondary"
-                            aria-label="secondary tabs example"
-                            variant="scrollable"
-                            scrollButtons="auto"
-                        >
-                            <Tab label="Регистрация пользователя" {...a11yProps(0)} />
-                            <Tab label="Создать мероприятие" {...a11yProps(1)} />
-                            <Tab label="Список пользователей" {...a11yProps(2)} />
-                            <Tab label="Список мероприятий" {...a11yProps(3)} />
-                            <Tab label="Роли" {...a11yProps(4)} />
-                        </Tabs>
-                    </Box>
-                    <Grid>
-                        <CustomTabPanel value={value} index={0}>
-                            <RegistrationUser onChange={handleOnChangeLoginFormUser} onClick={registrationUser} />
-                        </CustomTabPanel>
-                        <CustomTabPanel value={value} index={1}>
-                            <RegistrationEvent onChange={handleOnChangeLoginFormEvent} onClick={registrationEvent} />
-                        </CustomTabPanel>
-                        <CustomTabPanel value={value} index={2}>
-                            <TableUsers />
-                        </CustomTabPanel>
-                        <CustomTabPanel value={value} index={3}>
-                            <TableEvents />
-                        </CustomTabPanel>
-                        <CustomTabPanel value={value} index={4}>
-                            <RegistrationStaff />
-                        </CustomTabPanel>
-                    </Grid>
+                <Grid sx={{ width: '100%' }} justifyContent={'center'}>
+                    {isAdmin && <>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider', display:'flex', justifyContent: 'center' }}>
+                            <Tabs 
+                                value={value} 
+                                onChange={handleChange}
+                                textColor="secondary"
+                                indicatorColor="secondary"
+                                aria-label="secondary tabs example"
+                                variant="scrollable"
+                                scrollButtons="auto"
+                            >
+                                <Tab label="Регистрация пользователя" {...a11yProps(0)} />
+                                <Tab label="Создать мероприятие" {...a11yProps(1)} />
+                                <Tab label="Список пользователей" {...a11yProps(2)} />
+                                <Tab label="Список мероприятий" {...a11yProps(3)} />
+                                <Tab label="Роли" {...a11yProps(4)} />
+                            </Tabs>
+                        </Box>
+                        <Grid>
+                            <CustomTabPanel value={value} index={0}>
+                                <RegistrationUser onChange={handleOnChangeLoginFormUser} onClick={registrationUser} />
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={1}>
+                                <RegistrationEvent onChange={handleOnChangeLoginFormEvent} onClick={registrationEvent} />
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={2}>
+                                <TableUsers />
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={3}>
+                                <TableEvents />
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={4}>
+                                <RegistrationStaff />
+                            </CustomTabPanel>
+                        </Grid>
+                    </>}
+                    {!isAdmin && <Alert sx={{my: 2}} color="error">У вас нет прав для модуля администрирования</Alert>}
                 </Grid>
         </Container>
     )

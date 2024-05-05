@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { roleName } from "../../core/config/config";
+import { ShortName } from "../../features/functions";
 
 export const userSlice = createSlice({
     name: 'user',
@@ -78,7 +79,7 @@ export const userSlice = createSlice({
             state.userInfo.firstname = action.payload.firstname;
             state.userInfo.secondname = action.payload.patronymic;
             state.userInfo.lastname = action.payload.lastname;
-            state.userInfo.shortName = state.isAdmin ? 'Администратор' : `${action.payload.lastname} ${action.payload.firstname.substr(0, 1)}. ${action.payload.patronymic.substr(0, 1)}.`;
+            state.userInfo.shortName = state.isAdmin ? 'Администратор' : ShortName(action.payload);
         },
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
             state.eventInfo = action.payload;

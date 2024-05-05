@@ -12,6 +12,6 @@ export function getDateFromSQL(date){
     return `${(date.getMonth() + 1)}.${date.getDate()}.${date.getFullYear()}`;
 }
 
-export function ShortName(firstname, lastname, secondname){
-    return `${lastname} ${firstname.substr(0, 1)}. ${secondname.substr(0, 1)}.`;
+export function ShortName(item){
+    return `${item.lastname} ${item.firstname.substr(0, 1)}. ${item.patronymic.substr(0, 1)}.`;
 }
