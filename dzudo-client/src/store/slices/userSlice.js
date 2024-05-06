@@ -40,11 +40,6 @@ export const userSlice = createSlice({
         },
         setUser: (state, action)=>{
             state.userInfo.id = action.payload.sub;
-            // state.userInfo.firstname = action.payload.firstname;
-            // // state.secondname = action.payload.secondname;
-            // state.userInfo.lastname = action.payload.lastname;
-            // state.userInfo.shortName = `${action.payload.lastname} ${action.payload.firstname.substr(0, 1)}.`;
-            
             state.role.id = action.payload.role;
             state.role.name = roleName.get(action.payload.role);
 
@@ -83,10 +78,6 @@ export const userSlice = createSlice({
         },
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
             state.eventInfo = action.payload;
-            // state.eventInfo.id = action.payload.id;
-            // state.eventInfo.name = action.payload.name;
-            // state.eventInfo.place = action.payload.place;
-            // console.debug(action.payload);
         },
         setCurrentPair: (state, action) => {
             state.currentPair = action.payload
