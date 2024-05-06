@@ -1,12 +1,13 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid } from "@mui/material";
-import * as React from "react";
-import { getUsers } from "../../../../core/Api/ApiData/methods/admin";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { getUsers, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
+import toast from "react-hot-toast";
 
 
 export default function TableUsers(){
-    const [users, setUsers] = React.useState([]); 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [users, setUsers] = useState([]); 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
   
     const emptyRows =
       page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
@@ -20,9 +21,42 @@ export default function TableUsers(){
       setPage(0);
     };
 
-    React.useEffect(() => {
+    const setAdm = (id_user) => {
+        setAdmin(id_user).then(resp => {
+            if(resp.data){
+                setUsers(
+                    users.map(item => {
+                        if (item.user_id == id_user) return { ...item, admin: 1 };
+                        else return item;
+                    })
+                );
+                toast.success('Пользователь назначен администратором')
+            }
+        }).catch(error => {
+            toast.error('Не удалось назначить пользователя администратором')
+        })
+    }
+    
+    const unsetAdm = (id_user) => {
+        unsetAdmin(id_user).then(resp => {
+            if(resp.data){
+                setUsers(
+                    users.map(item => {
+                        if (item.user_id == id_user) return { ...item, admin: 0 };
+                        else return item;
+                    })
+                );
+                toast.success('Пользователь теперь не администратор')
+            }
+        }).catch(error => {
+            toast.error('Не удалось снять права администратора у пользователя')
+        })
+    }
+
+    useEffect(() => {
         getUsers().then((resp) => {
             setUsers(resp.data);
+            console.debug(resp.data)
         });
     }, []);
 
@@ -36,7 +70,8 @@ export default function TableUsers(){
                         <TableCell>Фамилия</TableCell>
                         <TableCell>Имя</TableCell>
                         <TableCell>Отчество</TableCell>
-                        <TableCell align="right">Логин</TableCell>
+                        <TableCell align="center">Логин</TableCell>
+                        <TableCell align="center">Администратор</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -48,33 +83,35 @@ export default function TableUsers(){
                         key={user.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                        <TableCell component="th" scope="row" align="center">{user.id}</TableCell>
-                        <TableCell>{user.lastname}</TableCell>
-                        <TableCell>{user.firstname}</TableCell>
-                        <TableCell>{user.patronymic && user.patronymic}</TableCell>
-                        <TableCell align="right">{user.login}</TableCell>
+                            <TableCell component="th" scope="row" align="center">{user.user_id}</TableCell>
+                            <TableCell>{user.lastname}</TableCell>
+                            <TableCell>{user.firstname}</TableCell>
+                            <TableCell>{user.patronymic && user.patronymic}</TableCell>
+                            <TableCell align="center">{user.login}</TableCell>
+                            <TableCell align="center">{user.admin ? <Grid><Typography fontSize={14}>Да</Typography><Button color="primary" variant="contained" size="small" onClick={()=>unsetAdm(user.user_id)}>Убрать права администратора</Button></Grid> : <Grid><Typography fontSize={14}>Нет</Typography><Button color="success" variant="contained" size="small" onClick={()=>setAdm(user.user_id)}>Назначить администратором</Button></Grid>}</TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, { label: 'Все', value: -1 }]}
-                            count={users.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            labelDisplayedRows = {function defaultLabelDisplayedRows({ from, to, count }) { return `${from}–${to} из ${count !== -1 ? count : `Показать больше чем ${to}`}`; }}
-                            labelRowsPerPage = 'Выберете число отображаемых строк'
-                            slotProps={{
-                                select: {
-                                    inputProps: {
-                                        'aria-label': 'Выберете число отображаемых строк',
+                                sx={{display: 'sticky', justifyContent:'flex-start'}}
+                                rowsPerPageOptions={[10, 25, { label: 'Все', value: -1 }]}
+                                count={users.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                labelDisplayedRows = {function defaultLabelDisplayedRows({ from, to, count }) { return `${from}–${to} из ${count !== -1 ? count : `Показать больше чем ${to}`}`; }}
+                                labelRowsPerPage = 'Число отображаемых строк'
+                                slotProps={{
+                                    select: {
+                                        inputProps: {
+                                            'aria-label': 'Число отображаемых строк',
+                                        },
+                                        native: true,
                                     },
-                                    native: true,
-                                },
-                            }}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
+                                }}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
                             />
                         </TableRow>
                     </TableFooter>

@@ -43,3 +43,21 @@ export function getUsers(fio) {
         }
     );
 }
+
+export function setAdmin(id_user) {
+    return client.post(
+        'admin/set ',
+        { 
+            'user_id': id_user,
+        }
+    );
+}
+
+export function unsetAdmin(id_user) {
+    return client.post(
+        'admin/unset ',
+        { 
+            'user_id': id_user,
+        }
+    );
+}

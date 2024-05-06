@@ -10,7 +10,7 @@ import RegistrationStaff from "../Registration/RegistrationStaff";
 export default function TableEvents(){
     const [events, setEvents] = useState([]); 
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [isShow, setIsShow] = useState(false);
     const [selectEvent, setSelectEvent] = useState(0);
 
@@ -82,7 +82,7 @@ export default function TableEvents(){
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, { label: 'Все', value: -1 }]}
+                            rowsPerPageOptions={[10, 25, { label: 'Все', value: -1 }]}
                             count={events.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
