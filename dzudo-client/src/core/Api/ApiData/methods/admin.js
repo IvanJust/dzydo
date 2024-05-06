@@ -52,3 +52,12 @@ export function getEvaluationAfterSupervisor(event_id){
         }
     )
 }
+
+export function getRefereeFromEvent(id_event) {
+    return client.post(
+        'referee/event/get',
+        { 
+            'event_id': id_event,
+        }
+    );
+}

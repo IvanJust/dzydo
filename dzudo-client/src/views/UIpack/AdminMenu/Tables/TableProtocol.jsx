@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import { getEvaluationAfterSupervisor } from "../../../../core/Api/ApiData/methods/admin";
+import { getEvaluationAfterSupervisor, getRefereeFromEvent } from "../../../../core/Api/ApiData/methods/admin";
 import { getEvaletionCriteria } from "../../../../core/Api/ApiData/methods/event";
 import { getPairs } from "../../../../core/Api/ApiData/methods/pairs";
 
@@ -51,42 +51,44 @@ export default function TableProtocol() {
     const [columns, setColumns] = useState([]);
 
     const [pairs, setPairs] = useState([]);
+    const [referees, setReferees] = useState([]);
 
     const event_id = 1;
 
     useMemo(() => {
-        const columns = [];
+        const columns = [{ field: 'name', headerName: 'Техника' }];
+        let isFillHeader = false;
         const rows = [];
 
-        const pairs = [];
-        const referees = [];
-
-        data.forEach(it => {
-            if(pairs.findIndex(pairItem => pairItem.id == it.pair.id) == -1){
-                pairs.push(it.pair);
-            }
-        });
-
-        data.forEach(it => {
-            if(referees.findIndex(refereeItem => refereeItem.id == it.referee.id) == -1){
-                referees.push(it.referee);
-            }
-        });
-
-        console.debug(pairs, referees);
-        
         criteria.forEach(itemCriteria => {
             const itemRow = {};
+            itemRow['id'] = itemCriteria.id;
+            itemRow['name'] = itemCriteria.evaluation_criteria;
+
             const currRow = data.filter(it => it.evaluation_criteria.id === itemCriteria.id)
 
             pairs.forEach(itemPair => {
                 const currPair = currRow.filter(it => it.pair.id == itemPair.id)
-                
-                // refe
-            })
-                
+                referees.forEach(itemReferee => {
+                    const currReferee = currPair.filter(it => it.referee.id == itemReferee.id);
+                    const debit = currReferee.reduce((sum, item) => sum + item.mark.score, 0);
+
+                    itemRow[`${itemPair.id}_${itemReferee.id}`] = itemCriteria.init_value - debit;
+                    if (!isFillHeader) {
+                        columns.push(
+                            { field: `${itemPair.id}_${itemReferee.id}`, headerName: `${itemPair.id}_${itemReferee.id}` }
+                        )
+                    }
+
+                });
+            });
+            isFillHeader = true;
+            rows.push(itemRow);
         })
-    }, [data, criteria])
+        // console.debug(rows);
+        setRows(rows);
+        setColumns(columns);
+    }, [data, criteria, referees, pairs])
 
     useEffect(() => {
         getEvaluationAfterSupervisor(event_id).then(resp => {
@@ -100,6 +102,10 @@ export default function TableProtocol() {
 
         getPairs(event_id, 0).then(resp => {
             setPairs(resp.data || []);
+        });
+
+        getRefereeFromEvent(event_id).then(resp => {
+            setReferees(resp.data || []);
         });
 
     }, [])
