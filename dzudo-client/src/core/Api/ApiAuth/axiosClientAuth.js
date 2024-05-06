@@ -1,5 +1,5 @@
 import createAxiosClientAuth from "./createAxiosClient";
-import { BASE_URL_DATA, PLATFORM } from "../../config/config";
+import { BASE_URL_DATA } from "../../config/config";
 
 export const clientAuth = createAxiosClientAuth({
     options: {
@@ -8,5 +8,5 @@ export const clientAuth = createAxiosClientAuth({
             'Content-Type': 'application/json',
         }
     },
-    platform:PLATFORM
+    // platform:PLATFORM
 })

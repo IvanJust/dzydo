@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Card, CardActions, CardContent, CardHeader, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, Card, CardActions, CardContent, CardHeader, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getRoles, getUsers, setEventUserRole } from "../../../../core/Api/ApiData/methods/admin";
 import { Form } from "react-router-dom";
@@ -6,11 +6,10 @@ import { roleName } from "../../../../core/config/config";
 import { ShortName } from "../../../../features/functions";
 import toast, { LoaderIcon } from "react-hot-toast";
 
-function RowStaff({item, index, event_id, data, setData, findUser}){
+function RowStaff({ item, event_id, data, setData }){
     const [inputValue, setInputValue] = useState([]);
     const [value, setValue] = useState({});
     const [users, setUsers] = useState([]);
-    console.debug(users)
     useEffect(() => {
         if(inputValue.length > 0){
             // getUsers(inputValue).then(resp => {
@@ -25,9 +24,8 @@ function RowStaff({item, index, event_id, data, setData, findUser}){
 
     function getAxiosUsers(text){
         getUsers(text).then(resp => {
-            console.debug(text, resp);
-                setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.id}}));
-            })
+            setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.user_id}}));
+        })
     }
 
     let arr = [], count;
@@ -51,14 +49,12 @@ function RowStaff({item, index, event_id, data, setData, findUser}){
                     options={users}
                     value={data[item.id+'_'+i]}
                     data-name={count > 1 ? item.id+'_'+i : item.id}
-                    onChange={(event, newValue) => {data[item.id+'_'+i] = {event_id: event_id, user_id: newValue.id, role_id: item.id}; setData(data); setUsers([]); console.debug(data)}}
+                    onChange={(event, newValue) => {data[item.id+'_'+i] = {event_id: event_id, user_id: newValue.id, role_id: item.id}; setData(data); setUsers([]); /*console.debug(data, newValue)*/}}
                     inputValue={inputValue[item.id+'_'+i]}
                     onInputChange={(event, newInputValue) => {
-                        // inputValue[count > 1 ? item.id+'_'+i : item.id] = newInputValue; 
                         inputValue[item.id+'_'+i] = newInputValue;
-                        console.debug(inputValue, newInputValue);
                         setInputValue(inputValue);
-                        getAxiosUsers(inputValue[item.id+'_'+i]);
+                        if(inputValue[item.id+'_'+i].length > 1) getAxiosUsers(inputValue[item.id+'_'+i]);
                     }}
                     sx={{ my: 0.5 }}
                     renderInput={(params) => <TextField variant="filled" {...params} label={count > 1 ? roleName.get(item.id)+' '+i : roleName.get(item.id)} />} 
@@ -70,32 +66,33 @@ function RowStaff({item, index, event_id, data, setData, findUser}){
     return arr;
 }
 
-function RegistrationStaff({event_id, ...props}){
+function RegistrationStaff({event, handleClose, ...props}){
     const [roles, setRoles] = useState([]);
     const [data, setData] = useState([]);
-    console.debug(data);
     useEffect(() => {
         getRoles().then((resp) => {
             if(resp.data){
                 setRoles(resp.data);
-                // console.debug(roles);
             }
         });
+        return () => {
+            setData([]);
+        }
     }, [data]);
 
     function SendForm(){
-        console.debug(data)
-        // let arrPromise = [];
-        // data.forEach(item => {
-        //     arrPromise.push(setEventUserRole(item.event_id, item.user_id, item.role_id));
-        // });
-        // Promise.all(arrPromise).then(resp => {
-        //     if(resp.length == arrPromise.length){
-        //         toast.success('Люди успешно назначены на роли.');
-        //     }
-        // }).catch(resp => {
-        //     toast.error('Ошибка назначения ролей.')
-        // })
+        let arrPromise = [];
+        for(let item in data){
+            arrPromise.push(setEventUserRole(data[item].event_id, data[item].user_id, data[item].role_id));
+        };
+        Promise.all(arrPromise).then(resp => {
+            if(resp.length == arrPromise.length){
+                toast.success('Люди успешно назначены на роли.');
+                handleClose();
+            }
+        }).catch(resp => {
+            toast.error('Ошибка назначения ролей.')
+        })
     }
 
     return(
@@ -103,12 +100,12 @@ function RegistrationStaff({event_id, ...props}){
             <Box sx={{display: 'flex', justifyContent: 'center'}}>
                 {roles.length> 0 && <Card>
                     <CardHeader
-                        title={props.name ? 'Назначение ролей по мероприятию '+props.name : 'Назначение ролей по мероприятию'}
+                        title={<><Typography fontSize={20}>Назначение ролей по мероприятию</Typography><Typography>{event?.name}</Typography></>}
                     />
                     <CardContent>
                         <Form id="registrationStaff">
                             {roles.map((item, index) => (
-                                <RowStaff event_id={event_id} item={item} data={data} setData={setData} key={index} onChange={props.onChange} />
+                                <RowStaff event_id={event.id} item={item} data={data} setData={setData} key={index} onChange={props.onChange} />
                             ))}
                         </Form>
                     </CardContent>

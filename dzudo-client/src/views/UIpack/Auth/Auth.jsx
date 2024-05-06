@@ -15,6 +15,7 @@ import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 import { clearTokens } from "../../../core/Api/functions";
 import { getEvent, getEvents } from "../../../core/Api/ApiData/methods/event";
 import { unsetEvent } from "../../../store/slices/tableResultSlice";
+import { errorServer } from "../../../core/config/config";
 
 function AuthModal({headerSendForm, handleClose, ...props}) {
     const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
@@ -75,6 +76,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             id="demo-simple-select"
                                             name="id_event"
                                             label="Мероприятие"
+                                            defaultValue={0}
                                             >
                                                 <MenuItem value={0}>Не выбрано</MenuItem>
                                                 {events.map((event) => (
@@ -136,16 +138,17 @@ function Auth() {
     function sendform() {
         login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
-                console.debug('user:', resp);
+                // console.debug('user:', resp);
                 if(resp.data_token){
                     // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");
                     getProfile(resp.data_token.sub).then((response) =>{
                         // console.debug('user:', response);
                         dispatch(getFIO(response.data[0]));
-                        if(resp.data_token.id_event != 0){
-                            getEvent(dataLogin.id_event).then((resp) => {
-                                setEventInfo(resp.data[0]);
+                        if(dataLogin.id_event != 0){
+                            getEvent(dataLogin.id_event).then((res) => {
+                                setEventInfo(res.data[0]);
+                                // console.debug(res.data[0])
                             })
                         }else{
                             dispatch(unsetEvent());
@@ -166,6 +169,8 @@ function Auth() {
                     // that falls out of the range of 2xx
                     if(error.response.status == 401){
                         toast.error('Пользователь не найден (проверьте правильность логина/пароля/мероприятия)');
+                    }else if(errorServer.get(error.response.status)){
+                        toast.error(errorServer.get(error.response.status));
                     }else{
                         toast.error(error.response.status + ': ' + error.response.data.Error);
                     }

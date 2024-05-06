@@ -83,6 +83,10 @@ export const userSlice = createSlice({
         },
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
             state.eventInfo = action.payload;
+            // state.eventInfo.id = action.payload.id;
+            // state.eventInfo.name = action.payload.name;
+            // state.eventInfo.place = action.payload.place;
+            // console.debug(action.payload);
         },
         setCurrentPair: (state, action) => {
             state.currentPair = action.payload

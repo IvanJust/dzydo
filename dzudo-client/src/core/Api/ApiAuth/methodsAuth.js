@@ -10,7 +10,7 @@ export function login(_login, password, event) {
 
     return clientAuth.post(
         "token/get",
-        { 'event_id': event, 'login': _login, 'password': password }
+        event? { 'event_id': event, 'login': _login, 'password': password } : { 'login': _login, 'password': password }
     ).then((response) => {
         
         if (response.data?.token) {
@@ -18,7 +18,7 @@ export function login(_login, password, event) {
             setAccessTokens(response.data.token);
             // setRefreshedTokens(response.data.r_token);
         }
-        console.debug(response);
+        
         return response;
     })
 }

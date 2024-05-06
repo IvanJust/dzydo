@@ -24,3 +24,9 @@ const roleName = new Map([
 ]);
 
 export { roleName };
+
+const errorServer = new Map([
+    [500, 'Сервер не отвечает'],
+])
+
+export { errorServer };

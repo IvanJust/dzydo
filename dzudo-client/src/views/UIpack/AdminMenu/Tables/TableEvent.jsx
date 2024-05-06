@@ -1,15 +1,18 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid } from "@mui/material";
-import * as React from "react";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button, Dialog } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { } from "../../../../core/Api/ApiData/methods/admin";
 import { getEvents } from "../../../../core/Api/ApiData/methods/event";
 import { getDateFromSQL } from "../../../../features/functions";
 import { useNavigate } from "react-router-dom";
+import RegistrationStaff from "../Registration/RegistrationStaff";
 
 
 export default function TableEvents(){
-    const [events, setEvents] = React.useState([]); 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [events, setEvents] = useState([]); 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [isShow, setIsShow] = useState(false);
+    const [selectEvent, setSelectEvent] = useState(0);
 
     const navigate = useNavigate();
     function ToEvent(event){
@@ -22,16 +25,28 @@ export default function TableEvents(){
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
     };
-  
+    
     const handleChangeRowsPerPage = (event) => {
       setRowsPerPage(parseInt(event.target.value, 10));
       setPage(0);
     };
 
-    React.useEffect(() => {
+    const handleClose = () => {
+        setIsShow(false);
+    }
+
+    const showDialog = (event) => {
+        setSelectEvent(event);
+        setIsShow(true);
+    }
+
+    useEffect(() => {
         getEvents().then((resp) => {
             setEvents(resp.data);
         });
+        return () => {
+            setEvents([]);
+        }
     }, []);
 
     return(
@@ -57,7 +72,7 @@ export default function TableEvents(){
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row" align="center">{event.id}</TableCell>
-                            <TableCell onClick={() => ToEvent(event.id)} sx={{cursor:'pointer'}} title="Перейти на данное соревнование">{event.name}</TableCell>
+                            <TableCell><Typography onClick={() => ToEvent(event.id)} sx={{cursor:'pointer'}} title="Перейти на данное соревнование">{event.name}</Typography><Button size="small" color="info" variant="outlined" onClick={() => showDialog(event)}>Назначить персонал</Button></TableCell>
                             <TableCell>{event.place}</TableCell>
                             <TableCell>{getDateFromSQL(event.date_begin)}</TableCell>
                             <TableCell>{getDateFromSQL(event.date_end)}</TableCell>
@@ -88,6 +103,9 @@ export default function TableEvents(){
                     </TableFooter>
                 </Table>
             </TableContainer>
+            <Dialog onClose={handleClose} open={isShow}>
+                <RegistrationStaff event={selectEvent} handleClose={handleClose} />
+            </Dialog>
         </Grid>
     )
 }

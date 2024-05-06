@@ -28,6 +28,7 @@ function RegistrationUser({...props}){
                                     label="Логин (необязательно)" 
                                     name="login" 
                                     autoFocus 
+                                    autoComplete={false}
                                     // required
                                     variant="filled" 
                                     fullWidth
@@ -40,6 +41,7 @@ function RegistrationUser({...props}){
                                     label="Пароль (необязательно)" 
                                     type="password" 
                                     name="password" 
+                                    autoComplete={false}
                                     // required
                                     variant="filled" 
                                     fullWidth

@@ -3,13 +3,13 @@ import toast from "react-hot-toast";
 
 export default function createAxiosClientAuth({
   options,
-  platform
+  // platform
 }) {
   const client = axios.create(options);
 
   client.interceptors.request.use(
     (config) => {
-      config.data['platform'] = platform
+      // config.data['platform'] = platform
       return config;
     },
     (error) => {
