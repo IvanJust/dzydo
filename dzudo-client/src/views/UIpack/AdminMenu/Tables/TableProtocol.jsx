@@ -59,6 +59,7 @@ export default function TableProtocol() {
         const columns = [{ field: 'name', headerName: 'Техника' }];
         let isFillHeader = false;
         const rows = [];
+        const resultRow = {id: 0, name: 'Итого'};
 
         criteria.forEach(itemCriteria => {
             const itemRow = {};
@@ -67,25 +68,54 @@ export default function TableProtocol() {
 
             const currRow = data.filter(it => it.evaluation_criteria.id === itemCriteria.id)
 
-            pairs.forEach(itemPair => {
-                const currPair = currRow.filter(it => it.pair.id == itemPair.id)
-                referees.forEach(itemReferee => {
+            pairs.forEach((itemPair, indexPair) => {
+                const currPair = currRow.filter(it => it.pair.id == itemPair.id);
+
+                let maxV = 0;
+                let minV = itemCriteria.init_value;
+                let all = 0;
+
+                const keyInResultRow = `${itemPair.id}_score`;
+
+                referees.forEach((itemReferee, indexReferee) => {
                     const currReferee = currPair.filter(it => it.referee.id == itemReferee.id);
                     const debit = currReferee.reduce((sum, item) => sum + item.mark.score, 0);
 
-                    itemRow[`${itemPair.id}_${itemReferee.id}`] = itemCriteria.init_value - debit;
+                    const valueCriteria = itemCriteria.init_value - debit;
+                    const keyInTable = `${itemPair.id}_${itemReferee.id}`;
+
+                    itemRow[keyInTable] = valueCriteria;
+
+                    maxV = Math.max(maxV, valueCriteria);
+                    minV = Math.min(minV, valueCriteria);
+
+                    if(!resultRow[keyInTable]) resultRow[keyInTable] = 0;
+                    
+                    resultRow[keyInTable] += valueCriteria;
+                    all += valueCriteria;
+
                     if (!isFillHeader) {
                         columns.push(
-                            { field: `${itemPair.id}_${itemReferee.id}`, headerName: `${itemPair.id}_${itemReferee.id}` }
+                            { field: keyInTable, headerName: `${indexPair + 1}_${indexReferee + 1}` }
                         )
                     }
-
                 });
+
+                resultRow[keyInResultRow] = all - maxV - minV;
+
+                if (!isFillHeader)
+                    columns.push(
+                        { field: keyInResultRow, headerName: `Итого` }
+                    )
             });
             isFillHeader = true;
             rows.push(itemRow);
-        })
-        // console.debug(rows);
+        });
+
+
+
+        rows.push(resultRow);
+
         setRows(rows);
         setColumns(columns);
     }, [data, criteria, referees, pairs])
@@ -112,7 +142,7 @@ export default function TableProtocol() {
 
     return (
         <Grid>
-            <DataGrid rows={rows} columns={columns} disableColumnSorting disableColumnFilter hideFooterPagination slots={{ toolbar: CustomToolbar }} />
+            <DataGrid rows={rows} columns={columns} disableColumnSorting disableColumnFilter hideFooterPagination slots={{ toolbar: CustomToolbar }} density="compact" />
         </Grid>
     )
 }
