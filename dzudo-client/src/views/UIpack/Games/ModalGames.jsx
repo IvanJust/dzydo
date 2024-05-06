@@ -4,6 +4,7 @@ import { getPairs, setPair } from "../../../core/Api/ApiData/methods/pairs";
 import { getUsers } from "../../../core/Api/ApiData/methods/admin";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { ShortName } from "../../../features/functions";
 
 
 export default function ModalGames({open, setOpen, setPairs}){
@@ -18,16 +19,26 @@ export default function ModalGames({open, setOpen, setPairs}){
     }
 
     useEffect(() => {
-        getUsers().then((resp) => {
-            setUsers(resp.data.map(item => {return {'label': `${item.lastname} ${item.firstname.substr(0, 1)}. ${item.patronymic.substr(0, 1)}.`, 'id': item.id}}));
             data['event_id'] = eventId;
             setData(data);
-        });
         return () => {
-            data['event_id'] = eventId;
-            setData(data);
+            setUsers([]);
+            setInputValue1('');
+            setInputValue2('');
+            setData([]);
         }
     }, []);
+
+    function getToriUke(input){
+        if(input.length > 0){
+            getUsers(input).then((resp) => {
+                setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.id}}));
+            });
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     const handleChange = (event) => {
         data[event.target.name] = event.target.value;
@@ -38,7 +49,7 @@ export default function ModalGames({open, setOpen, setPairs}){
             setPair(data.event_id, data.tori, data.uke, data.region, data.round).then(resp => {
                 if(resp){
                     toast.success('Пара создана');
-                    getPairs(data.event_id, "").then(re => {
+                    getPairs(data.event_id).then(re => {
                         setPairs(re.data);
                         handleClose();
                     })
@@ -68,6 +79,7 @@ export default function ModalGames({open, setOpen, setPairs}){
                         inputValue={inputValue1}
                         onInputChange={(event, newInputValue) => {
                             setInputValue1(newInputValue);
+                            getToriUke(inputValue1);
                         }}
                         sx={{ my: 1 }}
                         renderInput={(params) => <TextField {...params} label="Tori" />} 
@@ -83,6 +95,7 @@ export default function ModalGames({open, setOpen, setPairs}){
                         inputValue={inputValue2}
                         onInputChange={(event, newInputValue) => {
                             setInputValue2(newInputValue);
+                            getToriUke(inputValue2);
                         }}
                         renderInput={(params) => <TextField {...params} label="Uke" />} 
                         fullWidth

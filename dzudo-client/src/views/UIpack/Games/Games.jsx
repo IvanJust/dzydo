@@ -8,6 +8,7 @@ import SlowMotionVideoTwoToneIcon from '@mui/icons-material/SlowMotionVideoTwoTo
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ModalGames from "./ModalGames";
 import Bread from "../../UIpack v2/Bread/Bread";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function TitleChip({title, name}){
     return(
@@ -32,10 +33,13 @@ export default function Games({bread}){
     bread = Bread(bread);
 
     useEffect(()=>{
-        getPairs(event.id, "").then(resp => {
+        getPairs(event.id).then(resp => {
             setPairs(resp.data);
             hidden = true;
         });
+        return () => {
+            setPairs([]);
+        }
     }, [event.id])
 
     useEffect(() => {
@@ -47,43 +51,86 @@ export default function Games({bread}){
     const openModal = () => {
         setOpen(true);
     }
+    
+    const onDragEnd = (result) => {
+        // Внедрение логики для обновления порядка пар
+        const { destination, source, draggableId } = result;
+
+        if (!destination) {
+        return;
+        }
+        if (
+        destination.droppableId === source.droppableId &&
+        destination.index === source.index
+        ) {
+        return;
+        }
+    const column = pairs[source.droppableId];
+    const newTaskIds = Array.from(column.taskIds);
+    newTaskIds.splice(source.index, 1);
+    newTaskIds.splice(destination.index, 0, draggableId);
+    
+    // const newColumn = {
+    // ...column,
+    // taskIds: newTaskIds,
+    // };
+    
+    // const newBoardData = {
+    // ...pairs,
+    // // columns: {
+    // // ...boardData.columns,
+    // [newColumn.id]: newColumn,
+    // },
+    // };
+    
+    // setPairs(pairs);
+    };
 
     return(
         <Container>
-            <Breadcrumbs
-                sx={{my: 1}}
-                separator={<NavigateNextIcon fontSize="small" />}
-                aria-label="Административное меню"
-            >
-                {bread}
-            </Breadcrumbs>
-            {pairs.length > 0 && <Stack direction='column'>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Breadcrumbs
+                    sx={{my: 1}}
+                    separator={<NavigateNextIcon fontSize="small" />}
+                    aria-label="Административное меню"
+                >
+                    {bread}
+                </Breadcrumbs>
                 {isAdmin && <Grid my={1} display='flex' justifyContent='center'>
                     <Button variant="outlined" color="primary" onClick={openModal}>Добавить пару</Button>
                     <ModalGames open={open} setOpen={setOpen} setPairs={setPairs} />
                 </Grid>}
-                <Grid justifyContent='center' sx={{overflow: 'auto', position: 'relative'}}>
-                    <Stack direction="column" spacing={1} m={1}>
-                        {pairs.map(it =>
-                        <div key={it.id}>
-                            <Grid display='flex' alignItems='center' sx={{justifyContent: {xs: 'flex-start', md: 'center'}}}>
-                                <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<SlowMotionVideoTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
-                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<PlaceTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
-                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<FaceIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
-                                <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<FaceIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
+                {pairs.length > 0 && 
+                    <Droppable>
+                    {(provided) => (
+                            <Grid justifyContent='center' sx={{overflow: 'auto', position: 'relative'}} {...provided.droppableProps}>
+                                <Stack direction="column" spacing={1} m={1}>
+                                    {pairs.map((it, index) =>
+                                        <Draggable key={it.id} {...provided.placeholder} draggableId={it.id} index={index}>
+                                            {(providedDrag) => (
+                                                <div {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}>
+                                                    <Grid display='flex' alignItems='center' sx={{justifyContent: {xs: 'flex-start', md: 'center'}}}>
+                                                        <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<SlowMotionVideoTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
+                                                        <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<PlaceTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
+                                                        <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<FaceIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
+                                                        <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<FaceIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Uke' name={it.uke.lastname} />} />
+                                                    </Grid>
+                                                    <Divider sx={{mt: 1, position: "sticky"}} />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    )}
+                                </Stack>
                             </Grid>
-                            <Divider sx={{mt: 1, position: "sticky"}} />
-                        </div>
-                        )}
-                    </Stack>
-                </Grid>
-            </Stack>}
-            {pairs.length == 0 && <Backdrop
-                sx={{ color: 'black', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                // hidden={hidden}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>}
+                    )}
+                    </Droppable>}
+                {pairs.length == 0 && <Backdrop
+                    sx={{ color: 'black', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    // hidden={hidden}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>}
+            </DragDropContext>
         </Container>
     )
 }

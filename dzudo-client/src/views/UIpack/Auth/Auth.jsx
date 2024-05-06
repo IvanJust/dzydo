@@ -25,7 +25,10 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                 setEvents(resp.data);
             }
         });
-    }, []); 
+        return () => {
+            setEvents([]);
+        }
+    }, [props.open]); 
     return (
         <Dialog
           open={props.open}
@@ -143,12 +146,10 @@ function Auth() {
                     // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");
                     getProfile(resp.data_token.sub).then((response) =>{
-                        // console.debug('user:', response);
                         dispatch(getFIO(response.data[0]));
                         if(dataLogin.id_event != 0){
                             getEvent(dataLogin.id_event).then((res) => {
-                                setEventInfo(res.data[0]);
-                                // console.debug(res.data[0])
+                                dispatch(setEventInfo(res.data[0]));
                             })
                         }else{
                             dispatch(unsetEvent());
@@ -186,6 +187,7 @@ function Auth() {
     const logoutAcc = () => {
         clearTokens();
         dispatch(unsetUser());
+        dispatch(unsetEvent());
         toast.error('Вы вышли из аккаунта');
         handleCloseUserMenu();
     }
