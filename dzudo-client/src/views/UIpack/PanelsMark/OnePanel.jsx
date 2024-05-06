@@ -87,7 +87,7 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...pr
                 <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-around'>
                     {marks.map((mark) => (
                         <Grid item key={mark.id}>
-                            <OneMark mark={mark} gradesOnRow={gradesOnRow} disabled={score - credit - mark.score <= 0} funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
+                            <OneMark mark={mark} gradesOnRow={gradesOnRow} disabled={ score - credit - mark.score <= 0 || score - credit - mark.score > 10 } funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
                         </Grid>
                     ))}
                 </Grid>
