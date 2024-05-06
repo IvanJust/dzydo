@@ -43,3 +43,12 @@ export function getUsers(fio) {
         }
     );
 }
+
+export function getEvaluationAfterSupervisor(event_id){
+    return client.post(
+        'evaluations/getforadmin',
+        {
+            event_id: event_id
+        }
+    )
+}
