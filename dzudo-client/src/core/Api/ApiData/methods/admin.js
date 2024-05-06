@@ -62,6 +62,15 @@ export function unsetAdmin(id_user) {
     );
 }
 
+export function getEvaluationAfterSupervisor(event_id){
+    return client.post(
+        'evaluations/getforadmin',
+        {
+            event_id: event_id
+        }
+    )
+}
+
 export function getRefereeFromEvent(id_event) {
     return client.post(
         'referee/event/get',

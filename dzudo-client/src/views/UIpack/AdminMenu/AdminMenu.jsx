@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import Bread from "../../UIpack v2/Bread/Bread";
 import RegistrationStaff from "./Registration/RegistrationStaff";
 import { useSelector } from "react-redux";
+import TableProtocol from "./Tables/TableProtocol";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -114,7 +115,7 @@ export default function AdminMenu({bread}){
                                 <Tab label="Создать мероприятие" {...a11yProps(1)} />
                                 <Tab label="Список пользователей" {...a11yProps(2)} />
                                 <Tab label="Список мероприятий" {...a11yProps(3)} />
-                                <Tab label="Роли" {...a11yProps(4)} />
+                                <Tab label="Протоколы" {...a11yProps(4)} />
                             </Tabs>
                         </Box>
                         <Grid>
@@ -131,7 +132,7 @@ export default function AdminMenu({bread}){
                                 <TableEvents />
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={4}>
-                                <RegistrationStaff />
+                                <TableProtocol />
                             </CustomTabPanel>
                         </Grid>
                     </>}
