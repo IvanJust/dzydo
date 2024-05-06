@@ -6,30 +6,6 @@ import { getEvaluationAfterSupervisor, getRefereeFromEvent } from "../../../../c
 import { getEvaletionCriteria } from "../../../../core/Api/ApiData/methods/event";
 import { getPairs } from "../../../../core/Api/ApiData/methods/pairs";
 
-const rows = [
-    { id: 1, col1: 'Hello', col2: 'World' },
-    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-    { id: 3, col1: 'MUI', col2: 'is Amazing' },
-];
-
-const columns = [
-    { field: 'col1', headerName: 'Column 1' },
-    { field: 'col2', headerName: 'Column 2' },
-    { field: 'col3', headerName: 'Column 2' },
-    { field: 'col4', headerName: 'Column 2' },
-    { field: 'col5', headerName: 'Column 2' },
-    { field: 'col6', headerName: 'Column 2' },
-    { field: 'col7', headerName: 'Column 2' },
-    { field: 'col8', headerName: 'Column 2' },
-    { field: 'col9', headerName: 'Column 2' },
-    { field: 'col10', headerName: 'Column 2' },
-    { field: 'col11', headerName: 'Column 2' },
-    { field: 'col12', headerName: 'Column 2' },
-    { field: 'col14', headerName: 'Column 2' },
-    { field: 'col15', headerName: 'Column 2' },
-];
-
-
 function CustomToolbar() {
     const csvOptions = {
         fileName: 'Протокол пар',
@@ -58,8 +34,9 @@ export default function TableProtocol() {
     useMemo(() => {
         const columns = [{ field: 'name', headerName: 'Техника' }];
         let isFillHeader = false;
+        const isHasForgotten = {};
         const rows = [];
-        const resultRow = {id: 0, name: 'Итого'};
+        const resultRow = { id: 0, name: 'Итого' };
 
         criteria.forEach(itemCriteria => {
             const itemRow = {};
@@ -71,28 +48,30 @@ export default function TableProtocol() {
             pairs.forEach((itemPair, indexPair) => {
                 const currPair = currRow.filter(it => it.pair.id == itemPair.id);
 
-                let maxV = 0;
-                let minV = itemCriteria.init_value;
-                let all = 0;
-
                 const keyInResultRow = `${itemPair.id}_score`;
 
                 referees.forEach((itemReferee, indexReferee) => {
                     const currReferee = currPair.filter(it => it.referee.id == itemReferee.id);
                     const debit = currReferee.reduce((sum, item) => sum + item.mark.score, 0);
 
+                    const isChange = currReferee.reduce((isChange, item) => isChange || item.is_change, false);
+
                     const valueCriteria = itemCriteria.init_value - debit;
                     const keyInTable = `${itemPair.id}_${itemReferee.id}`;
 
-                    itemRow[keyInTable] = valueCriteria;
+                    itemRow[keyInTable] = valueCriteria + (isChange ? ' (изм.)' : '');
 
-                    maxV = Math.max(maxV, valueCriteria);
-                    minV = Math.min(minV, valueCriteria);
 
-                    if(!resultRow[keyInTable]) resultRow[keyInTable] = 0;
-                    
+
+                    if (!resultRow[keyInTable]) resultRow[keyInTable] = 0;
+
                     resultRow[keyInTable] += valueCriteria;
-                    all += valueCriteria;
+
+
+                    //если есть Forgotten
+                    if (currReferee.findIndex(it => it.mark.id == 4) != -1) {
+                        isHasForgotten[keyInTable] = true;
+                    }
 
                     if (!isFillHeader) {
                         columns.push(
@@ -101,18 +80,42 @@ export default function TableProtocol() {
                     }
                 });
 
-                resultRow[keyInResultRow] = all - maxV - minV;
-
                 if (!isFillHeader)
                     columns.push(
                         { field: keyInResultRow, headerName: `Итого` }
                     )
             });
+
             isFillHeader = true;
             rows.push(itemRow);
         });
 
 
+        pairs.forEach(itemPair => {
+            const keyInResultRow = `${itemPair.id}_score`;
+            let allScore = 0;
+            let maxV = -1;
+            let minV = -1;
+
+            referees.forEach(itemReferee => {
+                const keyInTable = `${itemPair.id}_${itemReferee.id}`;
+
+                if (isHasForgotten[keyInTable]) {
+                    resultRow[keyInTable] = resultRow[keyInTable] / 2;
+                    //delete isHasForgotten[keyInTable];
+                }
+
+                if (maxV === -1) maxV = resultRow[keyInTable];
+                if (minV === -1) minV = resultRow[keyInTable];
+
+                maxV = Math.max(maxV, resultRow[keyInTable]);
+                minV = Math.min(minV, resultRow[keyInTable]);
+
+                allScore += resultRow[keyInTable];
+            });
+
+            resultRow[keyInResultRow] = allScore - minV - maxV;
+        });
 
         rows.push(resultRow);
 
