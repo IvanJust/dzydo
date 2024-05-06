@@ -1,4 +1,4 @@
-import { Button, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
@@ -91,7 +91,7 @@ export default function ListPair() {
         <div>
                 <Grid>
                         <Stack direction="column" spacing={1} my={1}>
-                            {pairs.map((it, index) =>
+                            {pairs.length>0 && pairs.map((it, index) =>
                                         <Grid display='flex' alignItems='center' justifyContent='center'>
                                             <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
                                             {/* <SportsKabaddiIcon fontSize="large" /> */}
@@ -103,6 +103,7 @@ export default function ListPair() {
                                             {/* {it.condition} */}
                                         </Grid>
                             )}
+                            {pairs.length == 0 && <Alert color="info">Список пар пуст</Alert>}
                         </Stack>
                     {[2, 3].includes(role_id) && currentPair.id &&
                         <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, justifyContent: {xs: 'center', md: 'space-between'}, spacing: {xs: 1, md: 2}}}>
