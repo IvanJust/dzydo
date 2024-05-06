@@ -61,3 +61,12 @@ export function unsetAdmin(id_user) {
         }
     );
 }
+
+export function getRefereeFromEvent(id_event) {
+    return client.post(
+        'referee/event/get',
+        { 
+            'event_id': id_event,
+        }
+    );
+}
