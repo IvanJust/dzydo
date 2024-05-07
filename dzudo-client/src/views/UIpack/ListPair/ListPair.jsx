@@ -92,7 +92,7 @@ export default function ListPair() {
                 <Grid>
                         <Stack direction="column" spacing={1} my={1}>
                             {pairs.length>0 && pairs.map((it, index) =>
-                                        <Grid display='flex' alignItems='center' justifyContent='center'>
+                                        <Grid display='flex' alignItems='center' justifyContent='center' key={index}>
                                             <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start' }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={it.tori.lastname} />} />
                                             {/* <SportsKabaddiIcon fontSize="large" /> */}
                                             {it.condition == 1 && <img style={{width: '50px'}} title="Выступают" src={fight}/>}
@@ -105,7 +105,7 @@ export default function ListPair() {
                             )}
                             {pairs.length == 0 && <Alert color="info">Список пар пуст</Alert>}
                         </Stack>
-                    {[2, 3].includes(role_id) && currentPair.id &&
+                    {[2, 3].includes(role_id) &&
                         <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, justifyContent: {xs: 'center', md: 'space-between'}, spacing: {xs: 1, md: 2}}}>
                             <Button variant="outlined" color="success" onClick={nextRound} disabled={currentPair?.condition === 1}>Следующая пара <ArrowForwardIosIcon fontSize="large"/> </Button>
                             <Button variant="outlined" color="primary" onClick={skipRound}>Пропустить пару <SkipNextIcon fontSize="large"/> </Button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
@@ -16,17 +16,18 @@ function App() {
   const accessToken = getCurrentAccessToken();
   const user = useSelector((state) => state.user.userInfo.shortName);
   const dispatch = useDispatch();
-  if (accessToken) {
-    const userData = processAccessToken(accessToken);
-    getProfile(userData.sub).then((response) => {
-      dispatch(getFIO(response.data[0]));
+  useEffect(() => {
+    if (accessToken) {
+      const userData = processAccessToken(accessToken);
+      getProfile(userData.sub).then((response) => {
+        dispatch(getFIO(response.data[0]));
+      });
+      getEvent(userData.event_id).then((response) => {
+        dispatch(setEventInfo(response.data[0]));
+      });
+      dispatch(setUser(userData));
     }
-    );
-    getEvent(userData.event_id).then((response) => {
-      dispatch(setEventInfo(response.data[0]));
-    })
-    dispatch(setUser(userData));
-  }
+  }, [])
 
   return (
     <>

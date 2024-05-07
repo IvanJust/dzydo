@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFIO, setEventInfo, setUser, unsetUser } from "../../../store/slices/userSlice";
-import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Card, CardHeader, CardContent, CardActions, Fade, FormControl, InputLabel, Select, MenuItem, Tooltip, IconButton, Menu, Typography, ListItemIcon, Divider } from "@mui/material";
+import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,FormControl, InputLabel, Select, MenuItem, Tooltip, IconButton, Menu, Typography, ListItemIcon, Divider } from "@mui/material";
 import { Form } from "react-router-dom";
 
 
@@ -83,7 +83,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                             >
                                                 <MenuItem value={0}>Не выбрано</MenuItem>
                                                 {events.map((event) => (
-                                                    <MenuItem value={event.id}>{event.name}</MenuItem>
+                                                    <MenuItem value={event.id} key={event.id}>{event.name}</MenuItem>
                                                 ))}
                                         </Select>
                                     </FormControl>
@@ -96,7 +96,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                 {/* <Button  variant="outlined">
                     ЗАБЫЛИ ПАРОЛЬ?
                 </Button> */}
-                <Button  variant="outlined" type="submit" for="authform" onClick={headerSendForm}>
+                <Button  variant="outlined" type="submit" onClick={headerSendForm}>
                     ВОЙТИ
                 </Button>
             </DialogActions>
@@ -213,9 +213,8 @@ function Auth() {
             {isLogin && <>
                 <Tooltip title={shortName}>
                     <Button variant="outlined" onClick={handleOpenUserMenu}>
-                        <IconButton sx={{ p: 0 }}>
-                            {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                            <AccountCircle fontSize="large"  color="primary" />
+                        <IconButton>
+                            <AccountCircle fontSize="large" color="primary" />
                         </IconButton>
                         <Typography fontSize='small' sx={{ my: 2, color: 'white',  display: { xs: 'none', md: 'flex' }}}>{roleName}</Typography>
                     </Button>

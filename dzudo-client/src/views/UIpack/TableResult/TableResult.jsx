@@ -76,7 +76,6 @@ export default function TableResult() {
 
     const changeSelect = (event) => {
         getEvent(event.target.value).then(resp => {
-            console.debug(event.target, resp.data[0]);
             dispatch(setEvent(resp.data[0]))
             getTable(event.target.value).then(resp => {
                 setPairs(resp.data);
@@ -95,18 +94,18 @@ export default function TableResult() {
             <Grid sx={{ width: '100%'}} display={'flex'} flexDirection={'column'}>
                 <Grid container py={2} sx={{ display: { xs: 'flex', md: 'none' }}}>
                     <Grid container sx={{ display:'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
-                        <Box item className="header-logo" sx={{ display: { xs: 'flex', md: 'none' }, ml: 1, cursor: 'pointer' }}>
+                        <Box className="header-logo" sx={{ display: { xs: 'flex', md: 'none' }, ml: 1, cursor: 'pointer' }}>
                             <img onClick={() => goTo('')} title="Дзюдо-Ката" src={logo}/>
                         </Box>
                         {tableResult.id > 0 && <Grid sx={{mr: 2}}>
-                            <Box item><Typography fontSize={18}>{tableResult.name}</Typography></Box>
-                            <Box item><Typography>{tableResult.place}</Typography></Box>
-                            <Box item><Typography>{getDateFromSQL(tableResult.dateBegin)} - {getDateFromSQL(tableResult.dateEnd)}</Typography></Box>
+                            <Box><Typography fontSize={18}>{tableResult.name}</Typography></Box>
+                            <Box><Typography>{tableResult.place}</Typography></Box>
+                            <Box><Typography>{getDateFromSQL(tableResult.dateBegin)} - {getDateFromSQL(tableResult.dateEnd)}</Typography></Box>
                         </Grid>}
                     </Grid>
                     <Grid container sx={{justifyContent: 'center'}}>
                         {tableResult.id == 0 &&
-                            <Box item>
+                            <Box>
                                 <Grid container alignContent='center' justifyContent='center'><Typography fontSize={18}>Выбирете соревнования для трансляции</Typography></Grid>
                                 <FormControl variant="standard" sx={{width: 'auto', display:'flex', justifyContent:'center'}} fullWidth>
                                     <InputLabel id="demo-simple-select-label">Соревнования</InputLabel>
@@ -127,17 +126,17 @@ export default function TableResult() {
                     </Grid>
                 </Grid>
                 <Grid container py={2} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                    <Box item className="header-logo" sx={{ position: 'absolute', left: '1rem', cursor: 'pointer'}}>
+                    <Box className="header-logo" sx={{ position: 'absolute', left: '1rem', cursor: 'pointer'}}>
                         <img onClick={() => goTo('')} title="Дзюдо-Ката" src={logo}/>
                     </Box>
                     <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                         {tableResult.id > 0 && <>
-                            <Box item><Typography fontSize={18}>{tableResult.name}</Typography></Box>
-                            <Box item><Typography>{tableResult.place}</Typography></Box>
-                            <Box item><Typography>{getDateFromSQL(tableResult.dateBegin)} - {getDateFromSQL(tableResult.dateEnd)}</Typography></Box>
+                            <Box><Typography fontSize={18}>{tableResult.name}</Typography></Box>
+                            <Box><Typography>{tableResult.place}</Typography></Box>
+                            <Box><Typography>{getDateFromSQL(tableResult.dateBegin)} - {getDateFromSQL(tableResult.dateEnd)}</Typography></Box>
                         </>}
                         {tableResult.id == 0 &&
-                            <Box item>
+                            <Box>
                                 <Grid container alignContent='center' justifyContent='center'><Typography fontSize={18}>Выбирете соревнования для трансляции</Typography></Grid>
                                 <FormControl variant="standard" sx={{width: 'auto', display:'flex', justifyContent:'center'}} fullWidth>
                                     <InputLabel id="demo-simple-select-label">Соревнования</InputLabel>

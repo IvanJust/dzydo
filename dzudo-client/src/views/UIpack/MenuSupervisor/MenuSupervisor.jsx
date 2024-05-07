@@ -26,7 +26,7 @@ export default function MenuSupervisor(){
     }, []);
 
     return (
-        <Container justifyContent='space-evenly'>
+        <Container>
             <Grid item>
                 <ListPair />
             </Grid>
