@@ -43,7 +43,7 @@ function RowStaff({ item, event_id, data, setData }){
 
     for(let i = 1; i <= count; i++){
         arr.push(
-            <Box my={2} key={item.id} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
+            <Box my={2} key={i} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'stretch' }}>
                 <Autocomplete 
                     id={"role"+item.name+item.id+'_'+i}
                     options={users}
@@ -78,7 +78,7 @@ function RegistrationStaff({event, handleClose, ...props}){
         return () => {
             setData([]);
         }
-    }, [data]);
+    }, []);
 
     function SendForm(){
         let arrPromise = [];

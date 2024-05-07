@@ -2,7 +2,7 @@
 import React from "react";
 import "./header-style.css"
 import { useState, useEffect } from 'react';
-import { AppBar, Avatar, Box, Button, Container, Grid, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 
 
 import logo from '../../../images/logo-dzudo.png';
@@ -17,29 +17,31 @@ import { cyan } from "@mui/material/colors";
 const styleHead = {
     color: cyan[700],
 }
-const pages = [
-    {
-        name: 'Соревнования',
-        nav: 'games',
-        // isAdmin: 0,
-    }, 
-    {
-        name: 'Результаты',
-        nav: 'writing',
-        isAdmin: 0,
-    }, 
-    {
-        name: 'Таблица',
-        nav: 'table',
-    }
-];
 
 function Header() {
 
     const isAdmin = useSelector((state) => state.user.isAdmin);
-    const isLogin = useSelector((state) => state.user.isLogin)
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const isLogin = useSelector((state) => state.user.isLogin);
+    const event = useSelector((state) => state.user.eventInfo);
+    const [anchorElNav, setAnchorElNav] = useState(null);
     const navigate = useNavigate();
+
+    const pages = [
+        {
+            name: 'Соревнования',
+            nav: 'games',
+            isEvent: event.id,
+        }, 
+        {
+            name: 'Результаты',
+            nav: 'writing',
+            isEvent: event.id,
+        }, 
+        {
+            name: 'Таблица',
+            nav: 'table',
+        }
+    ];
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -54,7 +56,7 @@ function Header() {
         // console.debug(nav);
     }
     function CompMenu({item}){
-        if(item.isAdmin == isAdmin || item.isAdmin != 0){
+        if(item.isEvent != 0){
             return(
                 <MenuItem onClick={handleCloseNavMenu}>
                     <Typography 
@@ -70,7 +72,7 @@ function Header() {
         }
     }
     function CompButton({item}){
-        if(item.isAdmin == isAdmin || item.isAdmin != 0){
+        if(item.isEvent != 0){
             return(
                 <Button
                     sx={{ my: 2, color: 'white', display: 'block' }} 
