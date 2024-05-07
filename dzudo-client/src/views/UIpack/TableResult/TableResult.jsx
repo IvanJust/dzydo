@@ -41,7 +41,7 @@ export default function TableResult() {
             "condition": 0
         }
     ]);
-
+    const [selectEvent, setSelectEvent] = useState('');
     const [events, setEvents] = useState([]);
     const tableResult = useSelector((state) => state.tableResult);
     const dispatch = useDispatch();
@@ -75,6 +75,7 @@ export default function TableResult() {
     }, [socketAuth])
 
     const changeSelect = (event) => {
+        setSelectEvent(event.target.value);
         getEvent(event.target.value).then(resp => {
             dispatch(setEvent(resp.data[0]))
             getTable(event.target.value).then(resp => {
@@ -113,11 +114,12 @@ export default function TableResult() {
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         name="id_event"
+                                        value={selectEvent}
                                         label="Выберете соревнования"
                                         onChange={changeSelect}
                                     >
                                         {events.map((event) => (
-                                            <MenuItem value={event.id}>{event.name}</MenuItem>
+                                            <MenuItem value={event.id} key={event.id}>{event.name}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
@@ -144,11 +146,12 @@ export default function TableResult() {
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         name="id_event"
+                                        value={selectEvent}
                                         label="Выберете соревнования"
                                         onChange={changeSelect}
                                     >
                                         {events.map((event) => (
-                                            <MenuItem value={event.id}>{event.name}</MenuItem>
+                                            <MenuItem value={event.id} key={event.id}>{event.name}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
