@@ -101,7 +101,7 @@ function RegistrationUser({...props}){
                         </Form>
                     </CardContent>
                     <CardActions>
-                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" for="registrationUser" onClick={props.onClick}>
+                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" onClick={props.onClick}>
                             Регистрация
                         </Button>
                     </CardActions>

@@ -110,7 +110,7 @@ function RegistrationStaff({event, handleClose, ...props}){
                         </Form>
                     </CardContent>
                     <CardActions>
-                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" for="registrationStaff"  onClick={SendForm}>
+                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" onClick={SendForm}>
                             Назначить
                         </Button>
                     </CardActions>

@@ -32,7 +32,7 @@ export default function ModalGames({open, setOpen, setPairs}){
     function getToriUke(input){
         if(input.length > 0){
             getUsers(input).then((resp) => {
-                setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.id}}));
+                setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.user_id}}));
             });
             return true;
         }else{
@@ -46,15 +46,15 @@ export default function ModalGames({open, setOpen, setPairs}){
     }
 
     const submitPair = () => {
-            setPair(data.event_id, data.tori, data.uke, data.region, data.round).then(resp => {
-                if(resp){
-                    toast.success('Пара создана');
-                    getPairs(data.event_id).then(re => {
-                        setPairs(re.data);
-                        handleClose();
-                    })
-                }
-            })
+        setPair(data.event_id, data.tori, data.uke, data.region, data.round).then(resp => {
+            if(resp){
+                toast.success('Пара создана');
+                getPairs(data.event_id).then(re => {
+                    setPairs(re.data);
+                    handleClose();
+                })
+            }
+        })
     }
 
     return(
@@ -68,18 +68,18 @@ export default function ModalGames({open, setOpen, setPairs}){
             <DialogTitle>Окно для организации пары выступления</DialogTitle>
             <DialogContent>
                 <Grid container py={1} flexDirection='column' display='flex' justifyContent='center'>
-                    {/* <DialogContentText>
-                    </DialogContentText> */}
                     <Autocomplete
                         id="tori"
                         options={users}
                         value={data.tori}
                         data-name='tori'
-                        onChange={(event, newValue) => {data['tori'] = newValue.id; setData(data); console.debug(data)}}
-                        inputValue={inputValue1}
+                        onChange={(event, newValue) => { console.debug(data, newValue); data['tori'] = newValue.id; setData(data);}}
+                        inputValue={inputValue1 || ''}
                         onInputChange={(event, newInputValue) => {
                             setInputValue1(newInputValue);
-                            getToriUke(inputValue1);
+                            if(newInputValue.length>0){ 
+                                getToriUke(inputValue1);
+                            }
                         }}
                         sx={{ my: 1 }}
                         renderInput={(params) => <TextField {...params} label="Tori" />} 
@@ -92,10 +92,12 @@ export default function ModalGames({open, setOpen, setPairs}){
                         name='uke'
                         sx={{ my: 1 }}
                         onChange={(event, newValue) => {data['uke'] = newValue.id; setData(data); console.debug(data)}}
-                        inputValue={inputValue2}
+                        inputValue={inputValue2 || ''}
                         onInputChange={(event, newInputValue) => {
                             setInputValue2(newInputValue);
-                            getToriUke(inputValue2);
+                            if(newInputValue.length>0) {
+                                getToriUke(inputValue2);
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} label="Uke" />} 
                         fullWidth
@@ -120,17 +122,6 @@ export default function ModalGames({open, setOpen, setPairs}){
                         variant="outlined" 
                         fullWidth
                     />
-                    {/* <Select
-                        onChange={props.onChange}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name="id_event"
-                        label="Мероприятие"
-                        >
-                            {events.map((event) => (
-                                <MenuItem value={event.id}>{event.name}</MenuItem>
-                            ))}
-                    </Select> */}
                 </Grid>
             </DialogContent>
             <DialogActions>

@@ -8,7 +8,7 @@ import SlowMotionVideoTwoToneIcon from '@mui/icons-material/SlowMotionVideoTwoTo
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ModalGames from "./ModalGames";
 import Bread from "../../UIpack v2/Bread/Bread";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function TitleChip({title, name}){
     return(
@@ -33,14 +33,16 @@ export default function Games({bread}){
     bread = Bread(bread);
 
     useEffect(()=>{
-        getPairs(event.id).then(resp => {
-            setPairs(resp.data);
-            hidden = true;
-        });
+        if(event.id){
+            getPairs(event.id).then(resp => {
+                setPairs(resp.data);
+                hidden = true;
+            });
+        }
         return () => {
             setPairs([]);
         }
-    }, [event.id])
+    }, [event?.id])
 
     useEffect(() => {
 
@@ -52,43 +54,43 @@ export default function Games({bread}){
         setOpen(true);
     }
     
-    const onDragEnd = (result) => {
-        // Внедрение логики для обновления порядка пар
-        const { destination, source, draggableId } = result;
+    // const onDragEnd = (result) => {
+    //     // Внедрение логики для обновления порядка пар
+    //     const { destination, source, draggableId } = result;
 
-        if (!destination) {
-        return;
-        }
-        if (
-        destination.droppableId === source.droppableId &&
-        destination.index === source.index
-        ) {
-        return;
-        }
-    const column = pairs[source.droppableId];
-    const newTaskIds = Array.from(column.taskIds);
-    newTaskIds.splice(source.index, 1);
-    newTaskIds.splice(destination.index, 0, draggableId);
+    //     if (!destination) {
+    //     return;
+    //     }
+    //     if (
+    //     destination.droppableId === source.droppableId &&
+    //     destination.index === source.index
+    //     ) {
+    //     return;
+    //     }
+    // const column = pairs[source.droppableId];
+    // const newTaskIds = Array.from(column.taskIds);
+    // newTaskIds.splice(source.index, 1);
+    // newTaskIds.splice(destination.index, 0, draggableId);
     
-    // const newColumn = {
-    // ...column,
-    // taskIds: newTaskIds,
+    // // const newColumn = {
+    // // ...column,
+    // // taskIds: newTaskIds,
+    // // };
+    
+    // // const newBoardData = {
+    // // ...pairs,
+    // // // columns: {
+    // // // ...boardData.columns,
+    // // [newColumn.id]: newColumn,
+    // // },
+    // // };
+    
+    // // setPairs(pairs);
     // };
-    
-    // const newBoardData = {
-    // ...pairs,
-    // // columns: {
-    // // ...boardData.columns,
-    // [newColumn.id]: newColumn,
-    // },
-    // };
-    
-    // setPairs(pairs);
-    };
 
     return(
         <Container>
-            <DragDropContext onDragEnd={onDragEnd}>
+            {/* <DragDropContext onDragEnd={onDragEnd}> */}
                 <Breadcrumbs
                     sx={{my: 1}}
                     separator={<NavigateNextIcon fontSize="small" />}
@@ -101,14 +103,14 @@ export default function Games({bread}){
                     <ModalGames open={open} setOpen={setOpen} setPairs={setPairs} />
                 </Grid>}
                 {pairs.length > 0 && 
-                    <Droppable>
-                    {(provided) => (
-                            <Grid justifyContent='center' sx={{overflow: 'auto', position: 'relative'}} {...provided.droppableProps}>
+                    // <Droppable>
+                    // {(provided) => (
+                            <Grid justifyContent='center' sx={{overflow: 'auto', position: 'relative'}} /*{...provided.droppableProps}*/>
                                 <Stack direction="column" spacing={1} m={1}>
                                     {pairs.map((it, index) =>
-                                        <Draggable key={it.id} {...provided.placeholder} draggableId={it.id} index={index}>
-                                            {(providedDrag) => (
-                                                <div {...providedDrag.draggableProps} {...providedDrag.dragHandleProps}>
+                                        // <Draggable key={it.id} {...provided.placeholder} draggableId={it.id} index={index}>
+                                        //     {(providedDrag) => (
+                                                <div key={index} /*{...providedDrag.draggableProps} {...providedDrag.dragHandleProps}*/>
                                                     <Grid display='flex' alignItems='center' sx={{justifyContent: {xs: 'flex-start', md: 'center'}}}>
                                                         <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<SlowMotionVideoTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
                                                         <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<PlaceTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
@@ -117,20 +119,21 @@ export default function Games({bread}){
                                                     </Grid>
                                                     <Divider sx={{mt: 1, position: "sticky"}} />
                                                 </div>
-                                            )}
-                                        </Draggable>
+                                        //     )}
+                                        // </Draggable>
                                     )}
                                 </Stack>
                             </Grid>
-                    )}
-                    </Droppable>}
-                {pairs.length == 0 && <Backdrop
+                    // )}
+                    // </Droppable>
+                }
+                <Backdrop
+                    open={pairs.length == 0}
                     sx={{ color: 'black', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    // hidden={hidden}
                 >
                     <CircularProgress color="inherit" />
-                </Backdrop>}
-            </DragDropContext>
+                </Backdrop>
+            {/* </DragDropContext> */}
         </Container>
     )
 }

@@ -82,7 +82,7 @@ function RegistrationEvent({...props}){
                         </Form>
                     </CardContent>
                     <CardActions>
-                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" for="registrationEvent" onClick={props.onClick}>
+                        <Button variant="outlined" sx={{ml: 1, mb: 1}} type="submit" onClick={props.onClick}>
                             Организовать соревнование
                         </Button>
                     </CardActions>

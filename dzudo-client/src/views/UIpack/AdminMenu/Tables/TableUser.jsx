@@ -65,14 +65,14 @@ export default function TableUsers(){
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>
-                    <TableRow>
-                        <TableCell align="center">№</TableCell>
-                        <TableCell>Фамилия</TableCell>
-                        <TableCell>Имя</TableCell>
-                        <TableCell>Отчество</TableCell>
-                        <TableCell align="center">Логин</TableCell>
-                        <TableCell align="center">Администратор</TableCell>
-                    </TableRow>
+                        <TableRow>
+                            <TableCell align="center">№</TableCell>
+                            <TableCell>Фамилия</TableCell>
+                            <TableCell>Имя</TableCell>
+                            <TableCell>Отчество</TableCell>
+                            <TableCell align="center">Логин</TableCell>
+                            <TableCell align="center">Администратор</TableCell>
+                        </TableRow>
                     </TableHead>
                     <TableBody>
                         { (rowsPerPage > 0
@@ -80,8 +80,8 @@ export default function TableUsers(){
                             : users
                         ).map((user) => (
                         <TableRow
-                        key={user.id}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            key={user.user_id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row" align="center">{user.user_id}</TableCell>
                             <TableCell>{user.lastname}</TableCell>
