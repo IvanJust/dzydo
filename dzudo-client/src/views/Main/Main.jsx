@@ -14,7 +14,7 @@ export default function Main(){
                 Приветсвуем вас на сайте соревнований Дзюдо Ката
             </Typography>
             <Typography fontSize={20}>
-                {eventInfo.name}
+                {eventInfo?.name}
             </Typography>
             <Box>
                 <img src={fight}/>
