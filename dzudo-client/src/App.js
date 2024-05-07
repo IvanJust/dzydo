@@ -22,9 +22,11 @@ function App() {
       getProfile(userData.sub).then((response) => {
         dispatch(getFIO(response.data[0]));
       });
-      getEvent(userData.event_id).then((response) => {
-        dispatch(setEventInfo(response.data[0]));
-      });
+      if(userData.event_id > 0){
+        getEvent(userData.event_id).then((response) => {
+          dispatch(setEventInfo(response.data[0]));
+        });
+      }
       dispatch(setUser(userData));
     }
   }, [])
