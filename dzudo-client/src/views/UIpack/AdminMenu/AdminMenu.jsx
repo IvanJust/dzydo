@@ -43,7 +43,6 @@ function a11yProps(index) {
 
 export default function AdminMenu({bread}){
     const [value, setValue] = React.useState(0);
-    const [dataLoginUser, setDataLoginUser] = useState({});
     const [dataLoginEvent, setDataLoginEvent] = useState({});
     const isAdmin = useSelector((state) => state.user.isAdmin);
   
@@ -53,19 +52,7 @@ export default function AdminMenu({bread}){
 
     bread = Bread(bread);
 
-    function registrationUser() {
-        setUser(dataLoginUser.login, dataLoginUser.password, dataLoginUser.firstname, dataLoginUser.lastname, dataLoginUser.patronymic)
-            .then((resp) => {
-                if(resp.data){
-                    toast.success("Вы успешно зарегистрировали пользователя!");
-                    document.getElementById("registrationUser").reset();
-                    setDataLoginUser({});
-                }else{
-                    toast.error("Произошла ошибка регистрации");
-                }
-                
-            });
-    }
+
 
     function registrationEvent() {
         setEvent(dataLoginEvent.name, dataLoginEvent.place, dataLoginEvent.date_begin, dataLoginEvent.date_end)
@@ -80,10 +67,7 @@ export default function AdminMenu({bread}){
             });
     }
     
-    const handleOnChangeLoginFormUser = (event) => {
-        dataLoginUser[event.target.name] = event.target.value;
-        setDataLoginUser(dataLoginUser);
-    }
+
 
     const handleOnChangeLoginFormEvent = (event) => {
         dataLoginEvent[event.target.name] = event.target.value;
@@ -120,7 +104,7 @@ export default function AdminMenu({bread}){
                         </Box>
                         <Grid>
                             <CustomTabPanel value={value} index={0}>
-                                <RegistrationUser onChange={handleOnChangeLoginFormUser} onClick={registrationUser} />
+                                <RegistrationUser />
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={1}>
                                 <RegistrationEvent onChange={handleOnChangeLoginFormEvent} onClick={registrationEvent} />
