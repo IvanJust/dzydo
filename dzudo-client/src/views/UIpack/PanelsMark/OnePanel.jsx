@@ -109,7 +109,15 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
     const currentPair = useSelector(state => state.user.currentPair);
 
     const allCredit = gradesGiven.reduce((partialSum, it) => partialSum + it.score, 0);
+    
     const allDebet = evaletionCriteries.reduce((partialSum, it) => partialSum + it.init_value, 0);
+
+    const isHasForgotten = gradesGiven.findIndex(it=> it.mark_id == 4) != -1;
+
+    let allScore = allDebet - allCredit;
+    if(isHasForgotten){
+        allScore /= 2;
+    }
 
     useEffect(()=>{
         setGradesGiven([]);
@@ -171,7 +179,7 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
                             <Box display='flex' alignItems='center'>
                                 <Typography mx={1} fontFamily='monospace'> Сумма:  </Typography>
                             </Box>
-                            <TextField mx={1} disabled variant="outlined" size="small" sx={{width:'4.5rem'}} value={allDebet - allCredit}/>
+                            <TextField mx={1} disabled variant="outlined" size="small" sx={{width:'4.5rem'}} value={allScore}/>
                         </Box>
                     </Stack>
                 )}
