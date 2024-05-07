@@ -71,9 +71,9 @@ export const userSlice = createSlice({
             state.role = action.payload.name;
         },
         getFIO: (state, action) => {
-            state.userInfo.firstname = action.payload.firstname;
-            state.userInfo.secondname = action.payload.patronymic;
-            state.userInfo.lastname = action.payload.lastname;
+            state.userInfo.firstname = action.payload.firstname ? action.payload.firstname : '';
+            state.userInfo.secondname = action.payload.patronymic ? action.payload.patronymic : '';
+            state.userInfo.lastname = action.payload.lastname ? action.payload.lastname : '';
             state.userInfo.shortName = state.isAdmin ? 'Администратор' : ShortName(action.payload);
         },
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
