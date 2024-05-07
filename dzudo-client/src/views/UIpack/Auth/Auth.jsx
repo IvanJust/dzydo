@@ -80,7 +80,7 @@ function AuthModal({headerSendForm, handleClose, data, ...props}) {
 }
 function ButtonAuth(props) {
     return (
-        <Button variant="contained" color="primary" disableElevation onClick={props.onClick}>
+        <Button variant="contained" color="primary" onClick={props.onClick}>
             {props.children}
         </Button>
     );
@@ -189,9 +189,7 @@ function Auth() {
             {isLogin && <>
                 <Tooltip title={shortName}>
                     <Button variant="outlined" onClick={handleOpenUserMenu}>
-                        <IconButton>
-                            <AccountCircle fontSize="large" color="primary" />
-                        </IconButton>
+                        <IconButton size="medium" sx={{p: 0, mr: 1}} children={<AccountCircle fontSize="large" color="primary" />} />
                         <Typography fontSize='small' sx={{ my: 2, color: 'white',  display: { xs: 'none', md: 'flex' }}}>{roleName}</Typography>
                     </Button>
                 </Tooltip>

@@ -31,36 +31,17 @@ function TitleChip({title, name}){
     )
 }
 
-export default function ListPair() {
+export default function ListPair({pairs, setPairs}) {
+
+    const role_id = useSelector(state => state.user.role.id);
     const dispatch = useDispatch();
-    const currentPair = useSelector(state => state.user.currentPair);
 
     const { socketAuth } = useContext(SocketContext);
 
-    const [pairs, setPairs] = useState([]);
-    const [open, setOpen] = useState(false);
-
-    const [event, setEvent] = useState(0);
-    const role_id = useSelector(state => state.user.role.id);
-
-    useEffect(()=>{
-        if(event != 0){
-            getPairs(event).then(resp => {
-                setPairs(resp.data);
-                resp.data.forEach(it => {
-                    if(it.condition == 1) dispatch(setCurrentPair(it));
-                })
-            });
-        }
-        return () => {
-            setPairs([]);
-        }
-    }, [event, socketAuth])
-
+    const currentPair = useSelector(state => state.user.currentPair);
 
     useEffect(() => {
         function onChangeRound(value) {
-            console.debug('change pair', value);
             if(value.condition == 1){
                 dispatch(setCurrentPair(value));
             }else{
@@ -93,24 +74,13 @@ export default function ListPair() {
     function skipRound(event) {
         socketAuth.emit('skip-round');
     }
-    
-    const openModal = () => {
-        setOpen(true);
-    }
 
     return (
         <Grid item>
-            <Box>
-                <SelectEvent effect={pairs} value={event} onChange={(event) => setEvent(event.target.value)} />
-            </Box>
             <Stack direction="column" spacing={1} my={1}>
-                {event != 0 && <Grid my={1} display='flex' justifyContent='center'>
-                    <Button variant="outlined" color="primary" onClick={openModal}>Добавить пару</Button>
-                    <ModalGames open={open} setOpen={setOpen} setPairs={setPairs} />
-                </Grid>}
                 <Grid justifyContent='center' sx={{overflow: 'auto', position: 'relative'}} /*{...provided.droppableProps}*/>
                     <Stack direction="column" spacing={1} m={1}>
-                        {pairs.length>0 && pairs.map((it, index) =>
+                        {pairs?.length>0 && pairs.map((it, index) =>
                             <Grid display='flex' sx={{ justifyContent: {xs:'flex-start', md: 'center'} }} alignItems='center' key={index}>
                                 <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<SlowMotionVideoTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
                                 <Chip sx={{display: 'flex', height: 'auto', width: '180px', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1} }} icon={<PlaceTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
@@ -124,7 +94,7 @@ export default function ListPair() {
                         )}
                     </Stack>
                 </Grid>
-                {pairs.length == 0 && <Alert color="info">Список пар пуст</Alert>}
+                {pairs?.length == 0 && <Alert color="info">Список пар пуст</Alert>}
             </Stack>
             {[2, 3].includes(role_id) &&
                 <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, justifyContent: {xs: 'center', md: 'space-between'}, spacing: {xs: 1, md: 2}}}>

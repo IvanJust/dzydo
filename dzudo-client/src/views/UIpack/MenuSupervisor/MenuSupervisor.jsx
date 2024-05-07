@@ -4,7 +4,7 @@ import ListPair from "../ListPair/ListPair";
 import TableAll from "../PanelsMark/TableAll";
 import { SocketContext } from "../../../context/SocketProvider";
 import { Container, Grid } from "@mui/material";
-import { getForSuper } from "../../../core/Api/ApiData/methods/pairs";
+import { getForSuper, getPairs } from "../../../core/Api/ApiData/methods/pairs";
 import { useSelector } from "react-redux";
 
 export default function MenuSupervisor(){
@@ -12,23 +12,30 @@ export default function MenuSupervisor(){
     const user = useSelector(state => state.user.userInfo);
     const event = useSelector(state => state.user.eventInfo);
     const [data, setData] = useState([])
+    const [pairs, setPairs] = useState([]);
 
     console.debug("connected status", isConnected);
 
     useEffect(() => {
         
-        getForSuper(event.id).then(resp => {
-            console.debug(resp.data);
-        })
+        if(event.id > 0){
+            getForSuper(event.id).then(resp => {
+                console.debug(resp.data);
+            })
+            getPairs(event.id).then(resp => {
+                setPairs(resp.data);
+            })
+        }
         return () => {
             setData([]);
+            setPairs([]);
         }
     }, []);
 
     return (
         <Container>
             <Grid item>
-                <ListPair />
+                <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
             <Grid item>
                 <TableAll data={data} />

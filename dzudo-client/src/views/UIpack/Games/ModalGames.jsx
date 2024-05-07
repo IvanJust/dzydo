@@ -7,11 +7,10 @@ import toast from "react-hot-toast";
 import { ShortName } from "../../../features/functions";
 
 
-export default function ModalGames({open, setOpen, setPairs}){
+export default function ModalGames({open, setOpen, setPairs, event_id}){
     const [users, setUsers] = useState([]);
     const [inputValue1, setInputValue1] = useState('');
     const [inputValue2, setInputValue2] = useState('');
-    const eventId = useSelector((state) => state.user.eventInfo.id)
     const [data, setData] = useState([]);
 
     const handleClose = () => {
@@ -19,7 +18,7 @@ export default function ModalGames({open, setOpen, setPairs}){
     }
 
     useEffect(() => {
-            data['event_id'] = eventId;
+            data['event_id'] = event_id;
             setData(data);
         return () => {
             setUsers([]);
@@ -71,9 +70,11 @@ export default function ModalGames({open, setOpen, setPairs}){
                     <Autocomplete
                         id="tori"
                         options={users}
-                        value={data.tori}
+                        value={data['tori']}
                         data-name='tori'
-                        onChange={(event, newValue) => { console.debug(data, newValue); data['tori'] = newValue.id; setData(data);}}
+                        sx={{ my: 1 }}
+                        noOptionsText='Пусто'
+                        onChange={(event, newValue) => { data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         inputValue={inputValue1 || ''}
                         onInputChange={(event, newInputValue) => {
                             setInputValue1(newInputValue);
@@ -81,17 +82,17 @@ export default function ModalGames({open, setOpen, setPairs}){
                                 getToriUke(inputValue1);
                             }
                         }}
-                        sx={{ my: 1 }}
                         renderInput={(params) => <TextField {...params} label="Tori" />} 
                         fullWidth
                     />
                     <Autocomplete
                         id="uke"
                         options={users}
-                        value={data.uke}
+                        value={data['uke']}
                         name='uke'
                         sx={{ my: 1 }}
-                        onChange={(event, newValue) => {data['uke'] = newValue.id; setData(data); console.debug(data)}}
+                        noOptionsText='Пусто'
+                        onChange={(event, newValue) => {data['uke'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]);}}
                         inputValue={inputValue2 || ''}
                         onInputChange={(event, newInputValue) => {
                             setInputValue2(newInputValue);

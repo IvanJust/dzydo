@@ -1,7 +1,6 @@
 import { Box, Grid, Tab, Tabs, Breadcrumbs, Container, Alert } from "@mui/material"
 import React, { useState } from "react"
 import RegistrationUser from "./Registration/RegistrationUser";
-import { setUser } from "../../../core/Api/ApiData/methods/portfolio";
 import toast from "react-hot-toast";
 import RegistrationEvent from "./Registration/RegistrationEvent";
 import { setEvent } from "../../../core/Api/ApiData/methods/event";
@@ -10,31 +9,30 @@ import TableUsers from "./Tables/TableUser";
 import TableEvents from "./Tables/TableEvent";
 import { Link } from "react-router-dom";
 import Bread from "../../UIpack v2/Bread/Bread";
-import RegistrationStaff from "./Registration/RegistrationStaff";
 import { useSelector } from "react-redux";
 import TableProtocol from "./Tables/TableProtocol";
-import ListPair from "../ListPair/ListPair";
+import TablePair from "./Tables/TablePair";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
   
     return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-            <Grid my={2}>
-                {children}
-            </Grid>
-        )}
-      </div>
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Grid my={2}>
+                    {children}
+                </Grid>
+            )}
+        </div>  
     );
   }
-  
+
 function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -118,7 +116,7 @@ export default function AdminMenu({bread}){
                                 <TableEvents />
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={4}>
-                                <ListPair />
+                                <TablePair />
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={5}>
                                 <TableProtocol />
