@@ -27,11 +27,11 @@ function Header() {
     const navigate = useNavigate();
 
     const pages = [
-        {
-            name: 'Соревнования',
-            nav: 'games',
-            isEvent: event.id,
-        }, 
+        // {
+        //     name: 'Соревнования',
+        //     nav: 'games',
+        //     isEvent: event.id,
+        // }, 
         {
             name: 'Результаты',
             nav: 'writing',
