@@ -35,7 +35,7 @@ function Header() {
         {
             name: 'Результаты',
             nav: 'writing',
-            isEvent: event.id,
+            isEvent: event?.id,
         }, 
         {
             name: 'Таблица',
