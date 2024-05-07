@@ -56,7 +56,7 @@ export default function TableUsers() {
     useEffect(() => {
         getUsers().then((resp) => {
             setUsers(resp.data);
-            console.debug(resp.data)
+            // console.debug(resp.data)
         });
     }, []);
 

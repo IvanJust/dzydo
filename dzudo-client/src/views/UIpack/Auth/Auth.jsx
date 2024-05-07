@@ -13,22 +13,12 @@ import Logout from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import { getProfile } from "../../../core/Api/ApiData/methods/portfolio";
 import { clearTokens } from "../../../core/Api/functions";
-import { getEvent, getEvents } from "../../../core/Api/ApiData/methods/event";
+import { getEvent} from "../../../core/Api/ApiData/methods/event";
 import { unsetEvent } from "../../../store/slices/tableResultSlice";
 import { errorServer } from "../../../core/config/config";
+import SelectEvent from "../../UIpack v2/SelectEvent/SelectEvent";
 
-function AuthModal({headerSendForm, handleClose, ...props}) {
-    const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
-    useEffect(() => {
-        getEvents().then((resp) => {
-            if(resp.data){
-                setEvents(resp.data);
-            }
-        });
-        return () => {
-            setEvents([]);
-        }
-    }, [props.open]); 
+function AuthModal({headerSendForm, handleClose, data, ...props}) {
     return (
         <Dialog
           open={props.open}
@@ -71,22 +61,7 @@ function AuthModal({headerSendForm, handleClose, ...props}) {
                                         />
                                 </Box>
                                 <Box mt={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                                    <FormControl variant="standard" fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Мероприятие</InputLabel>
-                                        <Select
-                                            onChange={props.onChange}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            name="id_event"
-                                            label="Мероприятие"
-                                            defaultValue={0}
-                                            >
-                                                <MenuItem value={0}>Не выбрано</MenuItem>
-                                                {events.map((event) => (
-                                                    <MenuItem value={event.id} key={event.id}>{event.name}</MenuItem>
-                                                ))}
-                                        </Select>
-                                    </FormControl>
+                                    <SelectEvent effect={props.open} value={data['id_event'] || 0} onChange={props.onChange} />
                                 </Box>
                             </Grid>
                         </Form>
@@ -129,8 +104,8 @@ function Auth() {
     // console.debug(dataLogin);
 
     const handleOnChangeLoginForm = (event) => {
-        dataLogin[event.target.name] = event.target.value;
-        setDataLogin(dataLogin)
+        // dataLogin[event.target.name] = event.target.value;
+        setDataLogin({...dataLogin, [event.target.name]: event.target.value})
     }
 
     const dispatch = useDispatch();
@@ -196,6 +171,7 @@ function Auth() {
             <AuthModal
                 headerSendForm={sendform}
                 open={modalShow}
+                data={dataLogin}
                 handleClose={handleClose}
                 onChange={handleOnChangeLoginForm}
             />

@@ -13,6 +13,7 @@ import Bread from "../../UIpack v2/Bread/Bread";
 import RegistrationStaff from "./Registration/RegistrationStaff";
 import { useSelector } from "react-redux";
 import TableProtocol from "./Tables/TableProtocol";
+import ListPair from "../ListPair/ListPair";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -99,7 +100,8 @@ export default function AdminMenu({bread}){
                                 <Tab label="Создать мероприятие" {...a11yProps(1)} />
                                 <Tab label="Список пользователей" {...a11yProps(2)} />
                                 <Tab label="Список мероприятий" {...a11yProps(3)} />
-                                <Tab label="Протоколы" {...a11yProps(4)} />
+                                <Tab label="Список пар" {...a11yProps(4)} />
+                                <Tab label="Протоколы" {...a11yProps(5)} />
                             </Tabs>
                         </Box>
                         <Grid>
@@ -116,6 +118,9 @@ export default function AdminMenu({bread}){
                                 <TableEvents />
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={4}>
+                                <ListPair />
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={5}>
                                 <TableProtocol />
                             </CustomTabPanel>
                         </Grid>
