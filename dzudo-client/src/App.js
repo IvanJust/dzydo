@@ -7,10 +7,11 @@ import { Toaster } from 'react-hot-toast';
 import { getCurrentAccessToken } from './core/Api/functions';
 import { processAccessToken } from './features/functions';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFIO, setEventInfo, setUser } from './store/slices/userSlice';
+import { getFIO, setEventInfo, setUser, unsetUser } from './store/slices/userSlice';
 import { getProfile } from './core/Api/ApiData/methods/portfolio';
 import SocketProvider from './context/SocketProvider';
 import { getEvent } from './core/Api/ApiData/methods/event';
+import { unsetEvent } from './store/slices/tableResultSlice';
 
 function App() {
   const accessToken = getCurrentAccessToken();
@@ -29,12 +30,16 @@ function App() {
       }
       dispatch(setUser(userData));
     }
-  }, [])
+    return () => {
+      dispatch(unsetEvent);
+      dispatch(unsetUser);
+    }
+  }, [accessToken])
 
   return (
     <>
       <SocketProvider>
-        <RouterProvider router={router} test={user} />
+        <RouterProvider router={router} />
       </SocketProvider>
       <Toaster position="bottom-center" />
     </>
