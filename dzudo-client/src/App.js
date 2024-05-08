@@ -31,8 +31,8 @@ function App() {
       dispatch(setUser(userData));
     }
     return () => {
-      dispatch(unsetEvent);
-      dispatch(unsetUser);
+      dispatch(unsetEvent());
+      dispatch(unsetUser());
     }
   }, [accessToken])
 
