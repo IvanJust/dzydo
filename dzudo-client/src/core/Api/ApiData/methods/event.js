@@ -62,3 +62,39 @@ export function getTable(id){
         }
     );
 }
+
+export function getSecretaryEvent(id){
+    return client.post(
+        'secretary/event/get',
+        {
+            'event_id': id,
+        }
+    );
+}
+
+export function getSupervisorEvent(id){
+    return client.post(
+        'supervisor/event/get',
+        {
+            'event_id': id,
+        }
+    );
+}
+
+export function getEvaletionsForSuper(id){
+    return client.post(
+        'evaluations/getforsuper',
+        {
+            'id_referee': id,
+        }
+    );
+}
+
+export function getEvaletionsForSecr(id){
+    return client.post(
+        'evaluations/getforsecretary',
+        {
+            'id_referee': id,
+        }
+    );
+}
