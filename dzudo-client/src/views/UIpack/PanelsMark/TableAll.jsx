@@ -14,7 +14,7 @@ function a11yProps(index) {
     };
 }
 
-export default function TableAll({secret, data}) {
+export default function TableAll({secret, data, evaluations, refereeList}) {
     const [value, setValue] = useState(0);
     const { socketAuth } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
@@ -44,6 +44,27 @@ export default function TableAll({secret, data}) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    useEffect(() => {
+        refereeList.forEach((item, index) => {
+            if (index == 1) {
+                setGradesGiven1(evaluations.filter(evalu => evalu.referee.id == item.id));
+                refCount.push({refId: 1});
+            } else if (index == 2) {
+                setGradesGiven2(evaluations.filter(evalu => evalu.referee.id == item.id));
+                refCount.push({refId: 2});
+            } else if (index == 3) {
+                setGradesGiven3(evaluations.filter(evalu => evalu.referee.id == item.id));
+                refCount.push({refId: 3});
+            } else if (index == 4) {
+                setGradesGiven4(evaluations.filter(evalu => evalu.referee.id == item.id));
+                refCount.push({refId: 4});
+            } else if (index == 5) {
+                setGradesGiven5(evaluations.filter(evalu => evalu.referee.id == item.id));
+                refCount.push({refId: 5});
+            }
+        });
+    }, [])
 
     useEffect(() => {
         function onSaveReferee(value) {

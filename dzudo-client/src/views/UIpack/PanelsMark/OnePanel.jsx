@@ -130,6 +130,10 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
         getEvaletionCriteria().then((resp) => {
             setEvaletionCriteries(resp.data);
         });
+        return () => {
+            setMarks([]);
+            setEvaletionCriteries([]);
+        }
     }, []);
 
 
