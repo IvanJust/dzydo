@@ -136,6 +136,14 @@ export default function CustomTabPanel({ children, value, index, gradesGiven, se
         }
     }, []);
 
+    useEffect(() => {
+        evaletionCriteries.forEach(itEv => {
+            gradesGiven.forEach(itGr => {
+                setGiveMark(itGr, itEv.id, true)
+            })
+        })
+    }, [])
+
 
     function setGiveMark(mark, criteria_id, isAdd) {
         const findMark = gradesGiven.findIndex(it =>

@@ -19,7 +19,7 @@ export default function MenuSupervisor(){
     const [refereeList, setRefereeList] = useState([]);
     const [evaluations, setEvaluations] = useState([]);
 
-    console.debug("connected status", isConnected);
+    console.debug("connected status", isConnected, 'referee ', refereeList);
 
     useEffect(() => {
         
@@ -29,19 +29,19 @@ export default function MenuSupervisor(){
                     // console.debug(resp.data);
                     setRefereeList(resp.data);
                 }
-            })
+            });
             getForSuper(event.id).then(response => {
                 if(response.data){
                     // console.debug(response.data);
                     setEvaluations(response.data);
                 }
-            })
+            });
             getPairs(event.id).then(resp => {
                 setPairs(resp.data);
                 resp.data.forEach(it => {
                     if(it.condition == 1) dispatch(setCurrentPair(it));
                 })
-            })
+            });
         }
         return () => {
             setData([]);
@@ -49,7 +49,7 @@ export default function MenuSupervisor(){
             setRefereeList([]);
             setEvaluations([]);
         }
-    }, []);
+    }, [event]);
 
     useEffect(() => {
         

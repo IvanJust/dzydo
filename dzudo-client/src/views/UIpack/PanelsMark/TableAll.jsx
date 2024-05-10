@@ -14,12 +14,13 @@ function a11yProps(index) {
     };
 }
 
+
 export default function TableAll({secret, data, evaluations, refereeList}) {
     const [value, setValue] = useState(0);
     const { socketAuth } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
-    const [read, setRead] = useState(false);
-    const refCount = [];
+    const [press, setPress] = useState(false);
+    const [refCount, setRefCount] = useState([]);
 
     const [gradesGiven1, setGradesGiven1] = useState(data[0] || []);
     const [gradesGiven2, setGradesGiven2] = useState(data[1] || []);
@@ -27,6 +28,17 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
     const [gradesGiven4, setGradesGiven4] = useState(data[3] || []);
     const [gradesGiven5, setGradesGiven5] = useState(data[4] || []);
 
+    function setMarkEvaluation(array, gradesGiven, setter){
+        array.forEach(element => {
+            
+            setter(gradesGiven.concat({...gradesGiven,
+                pair_id: currentPair.id,
+                evaluation_criteria_id: element.evaluation_criteria.id,
+                mark_id: element.mark.id,
+                score: element.mark.score,      
+            }));
+        });
+    }
     const saveData = () => {
         const allEvaluations = [
             ...gradesGiven1,
@@ -37,53 +49,71 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
         ];
         saveEvaluations(allEvaluations, currentPair.id).then(resp => {
             console.debug(resp);
-            setRead(true);
+            setPress(true);
         })
     }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
+            console.debug(refCount);
     useEffect(() => {
-        refereeList.forEach((item, index) => {
-            if (index == 1) {
-                setGradesGiven1(evaluations.filter(evalu => evalu.referee.id == item.id));
-                refCount.push({refId: 1});
-            } else if (index == 2) {
-                setGradesGiven2(evaluations.filter(evalu => evalu.referee.id == item.id));
-                refCount.push({refId: 2});
-            } else if (index == 3) {
-                setGradesGiven3(evaluations.filter(evalu => evalu.referee.id == item.id));
-                refCount.push({refId: 3});
-            } else if (index == 4) {
-                setGradesGiven4(evaluations.filter(evalu => evalu.referee.id == item.id));
-                refCount.push({refId: 4});
-            } else if (index == 5) {
-                setGradesGiven5(evaluations.filter(evalu => evalu.referee.id == item.id));
-                refCount.push({refId: 5});
-            }
-        });
-    }, [])
+        if(refereeList.length>0){
+            refereeList.forEach((item, index) => {
+                if (index === 0) {
+                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
+                    console.debug(temp)
+                    setMarkEvaluation(temp, gradesGiven1, setGradesGiven1);
+                    refCount[0] = true;
+                    setRefCount({...refCount});
+                } else if (index === 1) {
+                    // setGradesGiven2(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
+                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
+                    setMarkEvaluation(temp, gradesGiven2, setGradesGiven2);
+                    // console.debug(evaluations.filter(evalu => evalu.referee.id == item.id));
+                    refCount[1] = true;
+                    setRefCount({...refCount, refId: 2});
+                } else if (index === 2) {
+                    // setGradesGiven3(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
+                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
+                    setMarkEvaluation(temp, gradesGiven3, setGradesGiven3);
+                    refCount[2] = true;
+                    setRefCount({...refCount, refId: 3});
+                } else if (index === 3) {
+                    // setGradesGiven4(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
+                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
+                    setMarkEvaluation(temp, gradesGiven4, setGradesGiven4);
+                    refCount[3] = true;
+                    setRefCount({...refCount, refId: 4});
+                } else if (index === 4) {
+                    // setGradesGiven5(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
+                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
+                    setMarkEvaluation(temp, gradesGiven5, setGradesGiven5);
+                    refCount[4] = true;
+                    setRefCount({...refCount, refId: 5});
+                }
+            });
+        }
+    }, [refereeList]);
 
     useEffect(() => {
         function onSaveReferee(value) {
             console.debug("referee", value)
             if (gradesGiven1.length == 0) {
                 setGradesGiven1(value);
-                refCount.push({refId: 1});
+                // refCount.push({refId: 1});
             } else if (gradesGiven2.length == 0) {
                 setGradesGiven2(value);
-                refCount.push({refId: 2});
+                // refCount.push({refId: 2});
             } else if (gradesGiven3.length == 0) {
                 setGradesGiven3(value);
-                refCount.push({refId: 3});
+                // refCount.push({refId: 3});
             } else if (gradesGiven4.length == 0) {
                 setGradesGiven4(value);
-                refCount.push({refId: 4});
+                // refCount.push({refId: 4});
             } else if (gradesGiven5.length == 0) {
                 setGradesGiven5(value);
-                refCount.push({refId: 5});
+                // refCount.push({refId: 5});
             }
         }
         socketAuth.on('save-evaluations-referee', onSaveReferee);
@@ -107,11 +137,11 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
                         indicatorColor="secondary"
                         aria-label="secondary tabs example"
                     >
-                        <Tab label={<Typography>Судья 1 {(refCount.length == 1 && !read) && <CircleIcon color="success" sx={{ml: 1}} />}</Typography>} {...a11yProps(0)} />
-                        <Tab label={<Typography>Судья 2 {(refCount.length == 2 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(1)} />
-                        <Tab label={<Typography>Судья 3 {(refCount.length == 3 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(2)} />
-                        <Tab label={<Typography>Судья 4 {(refCount.length == 4 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(3)} />
-                        <Tab label={<Typography>Судья 5 {(refCount.length == 5 && !read) && <CircleIcon sx={{ml: 1}} />}</Typography>} {...a11yProps(4)} />
+                        <Tab label={<Grid><Typography>Судья 1 {(refCount[0]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(0)} />
+                        <Tab label={<Grid><Typography>Судья 2 {(refCount[1]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(1)} />
+                        <Tab label={<Grid><Typography>Судья 3 {(refCount[2]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(2)} />
+                        <Tab label={<Grid><Typography>Судья 4 {(refCount[3]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(3)} />
+                        <Tab label={<Grid><Typography>Судья 5 {(refCount[4]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(4)} />
                     </Tabs>
                 </Box>
                 <Grid>
@@ -123,7 +153,7 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
                 </Grid>
             </Grid>
             {!secret && <Grid my={2} container display='flex' justifyContent='center'>
-                <Button onClick={saveData} variant="outlined" color="success" disabled={currentPair?.condition != 1 || refCount.length < 5}
+                <Button onClick={saveData} variant="outlined" color="success" disabled={(currentPair?.condition != 1 && refCount.length < 5 && !press) ?? true}
                 >
                     Сохранить
                 </Button>
