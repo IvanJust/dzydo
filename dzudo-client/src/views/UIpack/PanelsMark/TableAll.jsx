@@ -28,16 +28,13 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
     const [gradesGiven4, setGradesGiven4] = useState(data[3] || []);
     const [gradesGiven5, setGradesGiven5] = useState(data[4] || []);
 
-    function setMarkEvaluation(array, gradesGiven, setter){
-        array.forEach(element => {
-            
-            setter(gradesGiven.concat({...gradesGiven,
-                pair_id: currentPair.id,
-                evaluation_criteria_id: element.evaluation_criteria.id,
-                mark_id: element.mark.id,
-                score: element.mark.score,      
-            }));
-        });
+    function setMarkEvaluation(array, setter){
+        setter(array.map(element => {return {
+            pair_id: currentPair.id,
+            evaluation_criteria_id: element.evaluation_criteria.id,
+            mark_id: element.mark.id,
+            score: element.mark.score,      
+        }}));
     }
     const saveData = () => {
         const allEvaluations = [
