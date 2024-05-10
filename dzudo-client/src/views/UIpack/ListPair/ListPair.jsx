@@ -11,11 +11,12 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import fight from '../../../images/fight.gif';
 import waiting from '../../../images/1486.gif';
 import skipping from '../../../images/skipping.gif';
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import SelfImprovementTwoToneIcon from '@mui/icons-material/SelfImprovementTwoTone';
 import { ShortName } from "../../../features/functions";
 import PlaceTwoToneIcon from '@mui/icons-material/PlaceTwoTone';
 import SlowMotionVideoTwoToneIcon from '@mui/icons-material/SlowMotionVideoTwoTone';
 import { green } from "@mui/material/colors";
+import SlowMotionVideoTwoTone from "@mui/icons-material/SlowMotionVideoTwoTone";
 
 function TitleChip({title, name}){
     return(
@@ -92,7 +93,7 @@ export default function ListPair({pairs, setPairs}) {
                                 {it.condition == 1 && <img style={{width: '50px'}} title="Выступают" src={fight}/>}
                                 {it.condition == 0 && <img style={{width: '50px'}} title="В ожидании выступления" src={waiting}/>}
                                 {it.condition == 3 && <img style={{width: '50px'}} title="Пропущено" src={skipping}/>}
-                                {it.condition == 2 && <img style={{width: '50px'}} title="Выступили" src={SelfImprovementIcon}/>}
+                                {it.condition == 2 && <SelfImprovementTwoToneIcon sx={{width: '50px'}} fontSize={'large'} titleAccess="Выступили" />}
                             </Grid>
                         )}
                     </Stack>
