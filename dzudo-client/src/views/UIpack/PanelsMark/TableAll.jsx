@@ -60,32 +60,32 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
                 if (index === 0) {
                     let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
                     console.debug(temp)
-                    setMarkEvaluation(temp, gradesGiven1, setGradesGiven1);
+                    setMarkEvaluation(temp, setGradesGiven1);
                     refCount[0] = true;
                     setRefCount({...refCount});
                 } else if (index === 1) {
                     // setGradesGiven2(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
                     let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, gradesGiven2, setGradesGiven2);
+                    setMarkEvaluation(temp, setGradesGiven2);
                     // console.debug(evaluations.filter(evalu => evalu.referee.id == item.id));
                     refCount[1] = true;
                     setRefCount({...refCount, refId: 2});
                 } else if (index === 2) {
                     // setGradesGiven3(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
                     let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, gradesGiven3, setGradesGiven3);
+                    setMarkEvaluation(temp, setGradesGiven3);
                     refCount[2] = true;
                     setRefCount({...refCount, refId: 3});
                 } else if (index === 3) {
                     // setGradesGiven4(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
                     let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, gradesGiven4, setGradesGiven4);
+                    setMarkEvaluation(temp, setGradesGiven4);
                     refCount[3] = true;
                     setRefCount({...refCount, refId: 4});
                 } else if (index === 4) {
                     // setGradesGiven5(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
                     let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, gradesGiven5, setGradesGiven5);
+                    setMarkEvaluation(temp, setGradesGiven5);
                     refCount[4] = true;
                     setRefCount({...refCount, refId: 5});
                 }
