@@ -98,3 +98,13 @@ export function getEvaletionsForSecr(id){
         }
     );
 }
+
+export function getVotedStaff(event_id, pair_id){
+    return client.post(
+        'voted_staff/get',
+        {
+            'event_id': event_id,
+            'pair_id': pair_id,
+        }
+    )
+}

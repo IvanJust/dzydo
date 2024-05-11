@@ -17,7 +17,6 @@ export default function MenuSupervisor(){
     const [data, setData] = useState([])
     const [pairs, setPairs] = useState([]);
     const [refereeList, setRefereeList] = useState([]);
-    const [evaluations, setEvaluations] = useState([]);
 
     console.debug("connected status", isConnected, 'referee ', refereeList);
 
@@ -26,14 +25,7 @@ export default function MenuSupervisor(){
         if(event.id > 0){
             getRefereeFromEvent(event.id).then(resp => {
                 if(resp.data){
-                    // console.debug(resp.data);
                     setRefereeList(resp.data);
-                }
-            });
-            getForSuper(event.id).then(response => {
-                if(response.data){
-                    // console.debug(response.data);
-                    setEvaluations(response.data);
                 }
             });
             getPairs(event.id).then(resp => {
@@ -47,19 +39,9 @@ export default function MenuSupervisor(){
             setData([]);
             setPairs([]);
             setRefereeList([]);
-            setEvaluations([]);
         }
     }, [event]);
 
-    useEffect(() => {
-        
-        getForSuper(event.id).then(response => {
-            if(response.data){
-                setEvaluations(response.data);
-            }
-        })
-
-    }, [refereeList]);
 
     return (
         <Container>
@@ -67,7 +49,7 @@ export default function MenuSupervisor(){
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
             <Grid item>
-                <TableAll data={data} refereeList={refereeList} evaluations={evaluations} />
+                <TableAll data={data} refereeList={refereeList} />
             </Grid>
         </Container>
     )

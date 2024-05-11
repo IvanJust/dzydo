@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import CustomTabPanel from "../PanelsMark/OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
 import ListPair from "../ListPair/ListPair";
-import { saveEvaluations } from "../../../core/Api/ApiData/methods/event";
+import { getVotedStaff, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
 import { Button, Container, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
+import { getForSuper, getPairs } from "../../../core/Api/ApiData/methods/pairs";
 import { setCurrentPair } from "../../../store/slices/userSlice";
 import toast from "react-hot-toast";
 
@@ -18,6 +18,7 @@ export default function MenuReferer() {
     const [data, setData] = useState([])
     const [pairs, setPairs] = useState([]);
     const [isSaved, setIsSaved] = useState(false);
+    const [gradesGiven, setGradesGiven] = useState([]);
 
     console.debug("connected status", isConnected);
 
@@ -35,18 +36,60 @@ export default function MenuReferer() {
             setData([]);
             setPairs([]);
         }
-    }, [event.id, socketAuth]);
+    }, [event, socketAuth]);
 
     useEffect(() => {
-        setIsSaved(false);
-    }, [currentPair.id, socketAuth]);
+        if(event.id>0 && currentPair.id>0){
+            getForSuper(currentPair.id, user.id).then(resp => {
+                if(resp.data){
+                    setGradesGiven(resp.data.map(element => {return {
+                        pair_id: currentPair.id,
+                        evaluation_criteria_id: element.evaluation_criteria.id,
+                        mark_id: element.mark.id,
+                        score: element.mark.score,      
+                    }}))
+                }
+            })
+            getVotedStaff(event.id, currentPair.id).then(resp => {
+                if(resp.data){
+                    if(resp.data.findIndex(item => item.user_id == user.id) != -1){
+                        setIsSaved(true);
+                    }else{
+                        setIsSaved(false);
+                    }
+                }
+            })
+        }
+    }, [event, currentPair]);
+    
+    useEffect(() => {
+        function onChangeRound(value) {
+            if(value.condition == 1){
+                dispatch(setCurrentPair(value));
+            }else{
+                dispatch(setCurrentPair({}));
+            }
+            getPairs(event.id).then(resp => {
+                if(resp.data){
+                    setPairs(resp.data)
+                }
+            });
+            setGradesGiven([]);
+            setIsSaved(false);
+        }
+
+        socketAuth.on('change-round', onChangeRound);
+
+
+        return () => {
+            socketAuth.off('change-round', onChangeRound);
+        }
+    }, [socketAuth, pairs])
  
-    const [gradesGiven, setGradesGiven] = useState([]);
 
     const saveData = () => {
         if(!isSaved){
             saveEvaluations(gradesGiven, currentPair.id).then(resp => {
-                console.debug(resp);
                 if(resp.data.Successfully){
                     setIsSaved(true);
                 }else{

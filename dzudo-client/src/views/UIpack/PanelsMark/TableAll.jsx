@@ -3,9 +3,11 @@ import { Box, Button, Grid, Tab, Tabs, Typography } from "@mui/material";
 
 import CustomTabPanel from "./OnePanel";
 import { SocketContext } from "../../../context/SocketProvider";
-import { saveEvaluations } from "../../../core/Api/ApiData/methods/event";
+import { getVotedStaff, saveEvaluations } from "../../../core/Api/ApiData/methods/event";
 import { useSelector } from "react-redux";
 import CircleIcon from '@mui/icons-material/Circle';
+import { getForSuper, getPairs } from "../../../core/Api/ApiData/methods/pairs";
+import toast from "react-hot-toast";
 
 function a11yProps(index) {
     return {
@@ -15,18 +17,45 @@ function a11yProps(index) {
 }
 
 
-export default function TableAll({secret, data, evaluations, refereeList}) {
+export default function TableAll({secret, data, refereeList}) {
     const [value, setValue] = useState(0);
     const { socketAuth } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
-    const [press, setPress] = useState(false);
-    const [refCount, setRefCount] = useState([]);
+    const event = useSelector(state => state.user.eventInfo);
+    const [refCount, setRefCount] = useState({});
+    const [votedStaff, setVotedStaff] = useState([]);
+    const [disSaved, setDisSaved] = useState(true);
 
     const [gradesGiven1, setGradesGiven1] = useState(data[0] || []);
     const [gradesGiven2, setGradesGiven2] = useState(data[1] || []);
     const [gradesGiven3, setGradesGiven3] = useState(data[2] || []);
     const [gradesGiven4, setGradesGiven4] = useState(data[3] || []);
     const [gradesGiven5, setGradesGiven5] = useState(data[4] || []);
+
+    const arrGrades = [
+        setGradesGiven1,
+        setGradesGiven2,
+        setGradesGiven3,
+        setGradesGiven4,
+        setGradesGiven5,
+    ]
+
+    function getForSuperAndSetMark(refereeList, votedStaff){
+        if(votedStaff.length > 0){
+            votedStaff.forEach(item => {
+                let ind = refereeList.findIndex(it => it.id == item.user_id);
+                if(ind != -1){
+                    getForSuper(currentPair.id, item.user_id).then(re => {
+                        if(re.data){
+                            setMarkEvaluation(re.data, arrGrades[ind]);
+                            refCount[ind] = item.user_id;
+                            setRefCount({...refCount});
+                        }
+                    })
+                }
+            } )
+        }
+    }
 
     function setMarkEvaluation(array, setter){
         setter(array.map(element => {return {
@@ -45,79 +74,67 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
             ...gradesGiven5,
         ];
         saveEvaluations(allEvaluations, currentPair.id).then(resp => {
-            console.debug(resp);
-            setPress(true);
+            if(resp.data){
+                toast.success('Данные сохранены');
+                setDisSaved(true);
+                setRefCount({});
+                setVotedStaff([]);
+                socketAuth.emit('next-round');
+            }
         })
     }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-            console.debug(refCount);
+    
     useEffect(() => {
-        if(refereeList.length>0){
-            refereeList.forEach((item, index) => {
-                if (index === 0) {
-                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    console.debug(temp)
-                    setMarkEvaluation(temp, setGradesGiven1);
-                    refCount[0] = true;
-                    setRefCount({...refCount});
-                } else if (index === 1) {
-                    // setGradesGiven2(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
-                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, setGradesGiven2);
-                    // console.debug(evaluations.filter(evalu => evalu.referee.id == item.id));
-                    refCount[1] = true;
-                    setRefCount({...refCount, refId: 2});
-                } else if (index === 2) {
-                    // setGradesGiven3(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
-                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, setGradesGiven3);
-                    refCount[2] = true;
-                    setRefCount({...refCount, refId: 3});
-                } else if (index === 3) {
-                    // setGradesGiven4(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
-                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, setGradesGiven4);
-                    refCount[3] = true;
-                    setRefCount({...refCount, refId: 4});
-                } else if (index === 4) {
-                    // setGradesGiven5(evaluations.filter(evalu => evalu.referee.id == item.id).map(itemEvalu => itemEvalu.mark));
-                    let temp = evaluations.filter(evalu => evalu.referee.id == item.id);
-                    setMarkEvaluation(temp, setGradesGiven5);
-                    refCount[4] = true;
-                    setRefCount({...refCount, refId: 5});
+        if(event.id > 0 && currentPair.id > 0){
+            getVotedStaff(event.id, currentPair.id).then(resp => {
+                if(resp.data){
+                    setVotedStaff(resp.data);
+                    getForSuperAndSetMark(refereeList, resp.data);
                 }
-            });
+            }).catch(error => {
+                console.debug("никто не проголосовал");
+            })
         }
-    }, [refereeList]);
+    }, [currentPair, event]);
 
     useEffect(() => {
-        function onSaveReferee(value) {
+        getForSuperAndSetMark(refereeList, votedStaff);
+    }, [votedStaff]);
+
+    useEffect(() => {
+        if(Object.keys(refCount).length >= 5 && currentPair.condition == 1){
+            setDisSaved(false);
+        }else if(Object.keys(refCount).length < 5 || currentPair.condition != 1){
+            setDisSaved(true);
+        }
+    }, [refCount]);
+
+    useEffect(() => {
+        function onSaveReferee(value) { //отображение данных судей по сокету
             console.debug("referee", value)
-            if (gradesGiven1.length == 0) {
-                setGradesGiven1(value);
-                // refCount.push({refId: 1});
-            } else if (gradesGiven2.length == 0) {
-                setGradesGiven2(value);
-                // refCount.push({refId: 2});
-            } else if (gradesGiven3.length == 0) {
-                setGradesGiven3(value);
-                // refCount.push({refId: 3});
-            } else if (gradesGiven4.length == 0) {
-                setGradesGiven4(value);
-                // refCount.push({refId: 4});
-            } else if (gradesGiven5.length == 0) {
-                setGradesGiven5(value);
-                // refCount.push({refId: 5});
+            const index = refereeList.findIndex((item) => item.id == value.user_id);
+            if(index != -1){
+                arrGrades[index](value.evaluations);
+                refCount[index] = value.user_id;
+                setRefCount({...refCount});
+                console.debug(refCount, refereeList);
             }
+            getVotedStaff(event.id, currentPair.id).then(resp => {
+                if(resp.data){
+                    setVotedStaff(resp.data);
+                }
+            })
         }
         socketAuth.on('save-evaluations-referee', onSaveReferee);
 
 
         return () => {
             socketAuth.off('save-evaluations-referee', onSaveReferee);
+            setDisSaved(true);
         }
     }, [socketAuth, gradesGiven1, gradesGiven2, gradesGiven3, gradesGiven4, gradesGiven5])
 
@@ -150,7 +167,7 @@ export default function TableAll({secret, data, evaluations, refereeList}) {
                 </Grid>
             </Grid>
             {!secret && <Grid my={2} container display='flex' justifyContent='center'>
-                <Button onClick={saveData} variant="outlined" color="success" disabled={(currentPair?.condition != 1 && refCount.length < 5 && !press) ?? true}
+                <Button onClick={saveData} variant="outlined" color="success" disabled={disSaved}
                 >
                     Сохранить
                 </Button>

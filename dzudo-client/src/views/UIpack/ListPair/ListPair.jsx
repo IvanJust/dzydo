@@ -34,6 +34,7 @@ function TitleChip({title, name}){
 export default function ListPair({pairs, setPairs}) {
 
     const role_id = useSelector(state => state.user.role.id);
+    const event = useSelector(state => state.user.eventInfo);
     const dispatch = useDispatch();
 
     const { socketAuth } = useContext(SocketContext);
@@ -47,16 +48,11 @@ export default function ListPair({pairs, setPairs}) {
             }else{
                 dispatch(setCurrentPair({}));
             }
-            setPairs(pairs.map(it => {
-                if (it.id == value.id)
-                    return {
-                        ...it,
-                        condition: value.condition
-                    }
-                else
-                    return it;
-    
-            }))
+            getPairs(event.id).then(resp => {
+                if(resp.data){
+                    setPairs(resp.data)
+                }
+            })
         }
 
         socketAuth.on('change-round', onChangeRound);
