@@ -35,11 +35,13 @@ export function getRoles() {
     );
 }
 
-export function getUsers(fio) {
+export function getUsers(fio, perPage, page) {
     return client.post(
         'user/get',
         { 
             'fio': fio,
+            'perPage': perPage,
+            'page': page,
         }
     );
 }
@@ -76,6 +78,24 @@ export function getRefereeFromEvent(id_event) {
         'referee/event/get',
         { 
             'event_id': id_event,
+        }
+    );
+}
+
+export function getSecretaryFromEvent(id){
+    return client.post(
+        'secretary/event/get',
+        {
+            'event_id': id,
+        }
+    );
+}
+
+export function getSupervisorFromEvent(id){
+    return client.post(
+        'supervisor/event/get',
+        {
+            'event_id': id,
         }
     );
 }

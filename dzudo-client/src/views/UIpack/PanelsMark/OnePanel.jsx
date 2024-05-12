@@ -70,7 +70,7 @@ function RowTitle({ marks, ...props }){
     )
 }
 
-function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...props }) {
+function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, secret, score, ...props }) {
     // console.debug(gradesGiven)
 
     const gradesOnRow = gradesGiven.filter(it => it.evaluation_criteria_id == criteriaId);
@@ -87,7 +87,7 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...pr
                 <Grid item xs={7} md={7} display='flex' flexDirection='row' justifyContent='space-around'>
                     {marks.map((mark) => (
                         <Grid item key={mark.id}>
-                            <OneMark mark={mark} gradesOnRow={gradesOnRow} disabled={ score - credit - mark.score <= 0 || score - credit - mark.score > 10 } funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
+                            <OneMark mark={mark} gradesOnRow={gradesOnRow} disabled={ ((score - credit - mark.score <= 0) || (score - credit - mark.score > 10) || secret) ?? false } funSetMark={funSetMark} criteriaId={criteriaId} key={mark.id} />
                         </Grid>
                     ))}
                 </Grid>
@@ -103,7 +103,7 @@ function RowTab({ marks, name, criteriaId, funSetMark, gradesGiven, score, ...pr
     )
 }
 
-export default function CustomTabPanel({ children, value, index, gradesGiven, setGradesGiven, ...other }) {
+export default function CustomTabPanel({ children, secret, value, index, gradesGiven, setGradesGiven, ...other }) {
     const [evaletionCriteries, setEvaletionCriteries] = useState([]);
     const [marks, setMarks] = useState([]);
     const currentPair = useSelector(state => state.user.currentPair);
