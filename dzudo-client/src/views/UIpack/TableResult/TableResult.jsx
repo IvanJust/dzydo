@@ -1,7 +1,7 @@
-import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { getEvent, getEvents, getTable } from "../../../core/Api/ApiData/methods/event";
-import { ShortName, getDateFromSQL } from "../../../features/functions";
+import { getDateFromSQL } from "../../../features/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { setEvent, unsetEvent } from "../../../store/slices/tableResultSlice";
 import { SocketContext } from "../../../context/SocketProvider";
@@ -9,6 +9,8 @@ import { SocketContext } from "../../../context/SocketProvider";
 import logo from '../../../images/logo-dzudo.png';
 import "./TableResult-style.css";
 import { useNavigate } from "react-router-dom";
+import TableOchki from "../../UIpack v2/TableOchki/TableOchki";
+import { getRefereeFromEvent } from "../../../core/Api/ApiData/methods/admin";
 
 export default function TableResult() {
     const [pairs, setPairs] = useState([
@@ -43,13 +45,12 @@ export default function TableResult() {
     ]);
     const [selectEvent, setSelectEvent] = useState('');
     const [events, setEvents] = useState([]);
+    const [refereeList, setRefereeList] = useState([]);
     const tableResult = useSelector((state) => state.tableResult);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { socketAuth, isConnected } = useContext(SocketContext);
-
-    console.debug(isConnected, pairs, tableResult);
 
     useEffect(() => {
         getEvents().then(resp => {
@@ -61,6 +62,19 @@ export default function TableResult() {
             dispatch(unsetEvent());
         }
     }, [])
+
+    useEffect(() => {
+        if(selectEvent > 0){
+            getRefereeFromEvent(selectEvent).then(resp => {
+                if(resp.data){
+                    setRefereeList(resp.data);
+                }
+            })
+        }
+        return () => {
+            setRefereeList([]);
+        }
+    }, [selectEvent])
     
     useEffect(() => {
         function onTable(table) {
@@ -160,31 +174,7 @@ export default function TableResult() {
                     </Grid>
                 </Grid>
                 {tableResult.id > 0 && <Grid container>
-                    <TableContainer component={Paper} sx={{mx: 1}}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>№</TableCell>
-                                    <TableCell>Tori - Uke</TableCell>
-                                    <TableCell>Country</TableCell>
-                                    <TableCell>Points</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {pairs.length > 0 && pairs.map((pair) => (
-                                    <TableRow
-                                        key={pair.event.id}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell>{++i}</TableCell>
-                                        <TableCell sx={{ cursor: 'pointer' }}>{ShortName(pair.tori)} - {ShortName(pair.uke)}</TableCell>
-                                        <TableCell>{pair.region}</TableCell>
-                                        <TableCell>{pair.points}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <TableOchki refereeList={refereeList} event_id={selectEvent} />
                 </Grid>}
             </Grid>
         </Grid>

@@ -4,18 +4,17 @@ import ListPair from "../ListPair/ListPair";
 import { SocketContext } from "../../../context/SocketProvider";
 import { Container, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getRefereeFromEvent, getSupervisorFromEvent } from "../../../core/Api/ApiData/methods/admin";
-import { getEvaluationsForSecr } from "../../../core/Api/ApiData/methods/event";
+import { getRefereeFromEvent } from "../../../core/Api/ApiData/methods/admin";
 import { setCurrentPair } from "../../../store/slices/userSlice";
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
-import TableSecret from "../PanelsMark/TableSecretar";
+import TableOchki from "../../UIpack v2/TableOchki/TableOchki";
 
 
 
 
 export default function MenuSecretar() {
     const dispatch = useDispatch();
-    const { socketAuth, isConnected } = useContext(SocketContext);
+    const { isConnected } = useContext(SocketContext);
     const event = useSelector(state => state.user.eventInfo);
     const [pairs, setPairs] = useState([]);
     const [refereeList, setRefereeList] = useState([]);
@@ -49,7 +48,7 @@ export default function MenuSecretar() {
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
             <Grid item>
-                <TableSecret refereeList={refereeList} />
+                <TableOchki refereeList={refereeList} event_id={event.id} isShowRef />
             </Grid>
         </Container>
     )
