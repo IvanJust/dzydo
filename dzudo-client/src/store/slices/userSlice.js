@@ -79,11 +79,21 @@ export const userSlice = createSlice({
         setEventInfo: (state, action) => { // TODO доделать потом сохрание эвента
             state.eventInfo = action.payload;
         },
+        unsetEventInfo: (state) => { 
+            state.eventInfo.id = 0;
+            state.eventInfo.name = '';
+            state.eventInfo.place = '';
+            state.eventInfo.date_begin = 0;
+            state.eventInfo.date_end = 0;
+        },
         setCurrentPair: (state, action) => {
             state.currentPair = action.payload
-        }
+        },
+        unsetCurrentPair: (state) => {
+            state.currentPair = {id: 0};
+        },
     },
 });
 
-export const {setRole, setUser, unsetUser, getFIO, setEventInfo, setCurrentPair } = userSlice.actions
+export const {setRole, setUser, unsetUser, getFIO, setEventInfo, unsetEventInfo, setCurrentPair, unsetCurrentPair } = userSlice.actions
 export default userSlice.reducer

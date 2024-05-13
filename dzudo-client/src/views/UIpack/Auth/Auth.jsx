@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFIO, setEventInfo, setUser, unsetUser } from "../../../store/slices/userSlice";
+import { getFIO, setEventInfo, setUser, unsetCurrentPair, unsetEventInfo, unsetUser } from "../../../store/slices/userSlice";
 import { Button, Box, Grid, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,FormControl, InputLabel, Select, MenuItem, Tooltip, IconButton, Menu, Typography, ListItemIcon, Divider } from "@mui/material";
 import { Form } from "react-router-dom";
 
@@ -163,6 +163,8 @@ function Auth() {
         clearTokens();
         dispatch(unsetUser());
         dispatch(unsetEvent());
+        dispatch(unsetEventInfo());
+        dispatch(unsetCurrentPair());
         toast.error('Вы вышли из аккаунта');
         handleCloseUserMenu();
     }
