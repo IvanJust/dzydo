@@ -82,3 +82,12 @@ export function getVotedStaff(event_id, pair_id){
         }
     )
 }
+
+export function getTable1(event_id){
+    return client.post(
+        'table1/get',
+        {
+            'event_id': event_id,
+        }
+    )
+}

@@ -79,7 +79,7 @@ export default function TableAll({secret, data, refereeList}) {
                 setDisSaved(true);
                 setRefCount({});
                 setVotedStaff([]);
-                socketAuth.emit('next-round');
+                // socketAuth.emit('next-round');
             }
         })
     }
