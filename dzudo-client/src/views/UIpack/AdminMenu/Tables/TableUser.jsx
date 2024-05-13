@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getUsers, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
+import { getCount, getUsersForTable, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
 import toast from "react-hot-toast";
 
 
@@ -8,17 +8,25 @@ export default function TableUsers() {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [count, setCount] = useState(0);
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        getUsersForTable(rowsPerPage, String(newPage)).then((resp) => {
+            setUsers(resp.data);
+        });
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        const newPerPage = parseInt(event.target.value, 10);
+        setRowsPerPage(newPerPage);
         setPage(0);
+        getUsersForTable(newPerPage, String(0)).then((resp) => {
+            setUsers(resp.data);
+        });
     };
 
     const setAdm = (id_user) => {
@@ -54,10 +62,14 @@ export default function TableUsers() {
     }
 
     useEffect(() => {
-        getUsers().then((resp) => {
-            setUsers(resp.data);
-            // console.debug(resp.data)
-        });
+        getCount('user').then(response => {
+            if(response.data){
+                setCount(response.data.count);
+                getUsersForTable(rowsPerPage, String(page)).then((resp) => {
+                    setUsers(resp.data);
+                });
+            }
+        })
     }, []);
 
     return (
@@ -75,10 +87,7 @@ export default function TableUsers() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(rowsPerPage > 0
-                            ? users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : users
-                        ).map((user) => (
+                        {users.map((user) => (
                             <TableRow
                                 key={user.user_id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -95,9 +104,8 @@ export default function TableUsers() {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                sx={{ display: 'sticky', justifyContent: 'flex-start' }}
                                 rowsPerPageOptions={[10, 25, { label: 'Все', value: -1 }]}
-                                count={users.length}
+                                count={count}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 labelDisplayedRows={function defaultLabelDisplayedRows({ from, to, count }) { return `${from}–${to} из ${count !== -1 ? count : `Показать больше чем ${to}`}`; }}

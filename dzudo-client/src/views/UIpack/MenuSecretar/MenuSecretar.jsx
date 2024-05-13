@@ -58,7 +58,7 @@ export default function MenuSecretar() {
 
 
     return (
-        <Container justifyContent='space-evenly'>
+        <Container>
             <Grid item>
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>

@@ -43,8 +43,7 @@ export default function TableOchki({event_id, isShowRef, refereeList, pairs}){
                 <TableBody>
                     {data.length > 0 && data.map((pair) => (
                         <TableRow
-                            key={pair.event.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            key={pair.pair_id}
                         >
                             <TableCell>{++i}</TableCell>
                             <TableCell title="Регион">{pair.region}</TableCell>
