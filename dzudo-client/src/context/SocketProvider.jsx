@@ -2,12 +2,14 @@ import React, { createContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { BASE_URL_SOCKET } from "../core/config/config";
 import { getCurrentAccessToken } from "../core/Api/functions";
+import { useSelector } from "react-redux";
 
 export const SocketContext = createContext()
 
 export default function SocketProvider({ children }) {
     const accessToken = getCurrentAccessToken();
     const [socketAuth, setSocketAuth] = useState(io(BASE_URL_SOCKET));
+    const user = useSelector(state => state.user.userInfo);
 
     const [isConnected, setIsConnected] = useState(false);
 
@@ -22,7 +24,7 @@ export default function SocketProvider({ children }) {
         return ()=>{
             socketInner.disconnect();
         }
-    }, [accessToken]);
+    }, [accessToken, user]);
 
     useEffect(() => {
 

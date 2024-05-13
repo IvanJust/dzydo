@@ -1,10 +1,10 @@
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getPairs, setPair } from "../../../core/Api/ApiData/methods/pairs";
 import { getUsers } from "../../../core/Api/ApiData/methods/admin";
-import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { ShortName } from "../../../features/functions";
+import StandartAutocomplete from "../../UIpack v2/StandartAutocomlete/StandartAutocomplete";
 
 
 export default function ModalGames({open, setOpen, setPairs, event_id}){
@@ -67,14 +67,13 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
             <DialogTitle>Окно для организации пары выступления</DialogTitle>
             <DialogContent>
                 <Grid container py={1} flexDirection='column' display='flex' justifyContent='center'>
-                    <Autocomplete
+                    <StandartAutocomplete 
+                        label={"Tori"}
                         id="tori"
                         options={users}
                         value={data['tori']}
-                        data-name='tori'
                         sx={{ my: 1 }}
                         noOptionsText='Пусто'
-                        onChange={(event, newValue) => { data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         inputValue={inputValue1 || ''}
                         onInputChange={(event, newInputValue) => {
                             setInputValue1(newInputValue);
@@ -82,25 +81,24 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                                 getToriUke(inputValue1);
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} label="Tori" />} 
+                        onChange={(event, newValue) => { data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         fullWidth
                     />
-                    <Autocomplete
+                    <StandartAutocomplete 
+                        label={"Uke"}
                         id="uke"
                         options={users}
                         value={data['uke']}
-                        name='uke'
                         sx={{ my: 1 }}
                         noOptionsText='Пусто'
-                        onChange={(event, newValue) => {data['uke'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]);}}
                         inputValue={inputValue2 || ''}
                         onInputChange={(event, newInputValue) => {
                             setInputValue2(newInputValue);
-                            if(newInputValue.length>0) {
+                            if(newInputValue.length>0){ 
                                 getToriUke(inputValue2);
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} label="Uke" />} 
+                        onChange={(event, newValue) => { data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         fullWidth
                     />
                     <TextField 
