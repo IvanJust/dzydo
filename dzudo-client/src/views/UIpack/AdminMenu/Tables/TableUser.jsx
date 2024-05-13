@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getCount, getUsers, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
+import { getCount, getUsersForTable, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
 import toast from "react-hot-toast";
 
 
@@ -15,15 +15,18 @@ export default function TableUsers() {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-        getUsers('', rowsPerPage, page).then((resp) => {
+        getUsersForTable(rowsPerPage, String(newPage)).then((resp) => {
             setUsers(resp.data);
-            // console.debug(resp.data)
         });
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        const newPerPage = parseInt(event.target.value, 10);
+        setRowsPerPage(newPerPage);
         setPage(0);
+        getUsersForTable(newPerPage, String(0)).then((resp) => {
+            setUsers(resp.data);
+        });
     };
 
     const setAdm = (id_user) => {
@@ -61,10 +64,9 @@ export default function TableUsers() {
     useEffect(() => {
         getCount('user').then(response => {
             if(response.data){
-                setCount(response.data);
-                getUsers('', rowsPerPage, page).then((resp) => {
+                setCount(response.data.count);
+                getUsersForTable(rowsPerPage, String(page)).then((resp) => {
                     setUsers(resp.data);
-                    // console.debug(resp.data)
                 });
             }
         })
@@ -85,10 +87,7 @@ export default function TableUsers() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(rowsPerPage > 0
-                            ? users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : users
-                        ).map((user) => (
+                        {users.map((user) => (
                             <TableRow
                                 key={user.user_id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -105,8 +104,6 @@ export default function TableUsers() {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                // component={'div'}
-                                sx={{ display: 'sticky', justifyContent: 'flex-start' }}
                                 rowsPerPageOptions={[10, 25, { label: 'Все', value: -1 }]}
                                 count={count}
                                 rowsPerPage={rowsPerPage}

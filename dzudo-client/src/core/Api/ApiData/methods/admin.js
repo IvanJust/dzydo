@@ -35,11 +35,29 @@ export function getRoles() {
     );
 }
 
-export function getUsers(fio, perPage, page) {
+export function getUsers(fio) {
     return client.post(
         'user/get',
         { 
             'fio': fio,
+        }
+    );
+}
+
+export function getUsersForTable(perPage, page) {
+    return client.post(
+        'user/get',
+        { 
+            'perPage': perPage,
+            'page': page,
+        }
+    );
+}
+
+export function getEventsForTable(perPage, page) {
+    return client.post(
+        'event/get',
+        { 
             'perPage': perPage,
             'page': page,
         }
