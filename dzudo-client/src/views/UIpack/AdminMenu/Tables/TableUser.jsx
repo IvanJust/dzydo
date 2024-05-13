@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getUsers, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
+import { getCount, getUsers, setAdmin, unsetAdmin } from "../../../../core/Api/ApiData/methods/admin";
 import toast from "react-hot-toast";
 
 
@@ -8,12 +8,17 @@ export default function TableUsers() {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [count, setCount] = useState(0);
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        getUsers('', rowsPerPage, page).then((resp) => {
+            setUsers(resp.data);
+            // console.debug(resp.data)
+        });
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -54,10 +59,15 @@ export default function TableUsers() {
     }
 
     useEffect(() => {
-        getUsers().then((resp) => {
-            setUsers(resp.data);
-            // console.debug(resp.data)
-        });
+        getCount('user').then(response => {
+            if(response.data){
+                setCount(response.data);
+                getUsers('', rowsPerPage, page).then((resp) => {
+                    setUsers(resp.data);
+                    // console.debug(resp.data)
+                });
+            }
+        })
     }, []);
 
     return (
@@ -95,9 +105,10 @@ export default function TableUsers() {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
+                                // component={'div'}
                                 sx={{ display: 'sticky', justifyContent: 'flex-start' }}
                                 rowsPerPageOptions={[10, 25, { label: 'Все', value: -1 }]}
-                                count={users.length}
+                                count={count}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 labelDisplayedRows={function defaultLabelDisplayedRows({ from, to, count }) { return `${from}–${to} из ${count !== -1 ? count : `Показать больше чем ${to}`}`; }}

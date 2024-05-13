@@ -99,3 +99,12 @@ export function getSupervisorFromEvent(id){
         }
     );
 }
+
+export function getCount(entity){
+    return client.post(
+        'count',
+        {
+            'entity': entity,
+        }
+    );
+}
