@@ -5,6 +5,7 @@ import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-g
 import { getEvaluationAfterSupervisor, getRefereeFromEvent } from "../../../../core/Api/ApiData/methods/admin";
 import { getEvaletionCriteria } from "../../../../core/Api/ApiData/methods/event";
 import { getPairs } from "../../../../core/Api/ApiData/methods/pairs";
+import SelectEvent from "../../../UIpack v2/SelectEvent/SelectEvent";
 
 function CustomToolbar() {
     const csvOptions = {
@@ -29,7 +30,7 @@ export default function TableProtocol() {
     const [pairs, setPairs] = useState([]);
     const [referees, setReferees] = useState([]);
 
-    const event_id = 1;
+    const [eventId, setEventId] = useState(0);
 
     useMemo(() => {
         const columns = [{ field: 'name', headerName: 'Техника' }];
@@ -124,28 +125,36 @@ export default function TableProtocol() {
     }, [data, criteria, referees, pairs])
 
     useEffect(() => {
-        getEvaluationAfterSupervisor(event_id).then(resp => {
-            setData(resp.data || [])
-            console.debug(resp.data);
-        });
+            getEvaletionCriteria().then(resp => {
+                setCriteria(resp.data || []);
+            });
 
-        getEvaletionCriteria().then(resp => {
-            setCriteria(resp.data || []);
-        });
+        if(eventId > 0){
+            getEvaluationAfterSupervisor(eventId).then(resp => {
+                setData(resp.data || [])
+                // console.debug(resp.data);
+            });
 
-        getPairs(event_id, 0).then(resp => {
-            setPairs(resp.data || []);
-        });
+            getPairs(eventId, 0).then(resp => {
+                setPairs(resp.data || []);
+            });
 
-        getRefereeFromEvent(event_id).then(resp => {
-            setReferees(resp.data || []);
-        });
-
-    }, [])
+            getRefereeFromEvent(eventId).then(resp => {
+                setReferees(resp.data || []);
+            });
+        }
+        return () => {
+            setData([])
+            setReferees([]);
+            setPairs([]);
+            setCriteria([]);
+        }
+    }, [eventId])
 
     return (
         <Grid>
-            <DataGrid rows={rows} columns={columns} disableColumnSorting disableColumnFilter hideFooterPagination slots={{ toolbar: CustomToolbar }} density="compact" />
+            <Grid item my={1}><SelectEvent value={eventId} onChange={(event) => setEventId(event.target.value)} /></Grid>
+            <DataGrid rows={rows} columns={columns} disableColumnSorting disableColumnFilter hideFooterPagination slots={{ toolbar: CustomToolbar }} noResultsOverlay='Нет данных' density="compact" />
         </Grid>
     )
 }
