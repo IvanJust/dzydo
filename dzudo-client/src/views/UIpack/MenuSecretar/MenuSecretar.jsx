@@ -14,7 +14,7 @@ import TableOchki from "../../UIpack v2/TableOchki/TableOchki";
 
 export default function MenuSecretar() {
     const dispatch = useDispatch();
-    const { isConnected } = useContext(SocketContext);
+    const { socketAuth, isConnected } = useContext(SocketContext);
     const event = useSelector(state => state.user.eventInfo);
     const [pairs, setPairs] = useState([]);
     const [refereeList, setRefereeList] = useState([]);
@@ -41,6 +41,21 @@ export default function MenuSecretar() {
         }
     }, [event]);
 
+    useEffect(() => {
+        function saveEvaluationsSuper(value){
+            getPairs(event.id).then(resp => {
+                setPairs(resp.data);
+                resp.data.forEach(it => {
+                    if(it.condition == 1) dispatch(setCurrentPair(it));
+                })
+            });
+        }
+        socketAuth.on('save-evaluations-supervisor', saveEvaluationsSuper);
+        return () => {
+            socketAuth.off('save-evaluations-supervisor', saveEvaluationsSuper);
+        }
+    }, [socketAuth]);
+
 
     return (
         <Container justifyContent='space-evenly'>
@@ -48,7 +63,7 @@ export default function MenuSecretar() {
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
             <Grid item>
-                <TableOchki refereeList={refereeList} event_id={event.id} isShowRef />
+                <TableOchki refereeList={refereeList} event_id={event.id} isShowRef pairs={pairs} />
             </Grid>
         </Container>
     )

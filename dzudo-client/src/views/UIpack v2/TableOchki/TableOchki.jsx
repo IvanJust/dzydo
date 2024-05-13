@@ -11,7 +11,7 @@ function RefereeCol({refer}){
 }
 
 
-export default function TableOchki({event_id, isShowRef, refereeList}){
+export default function TableOchki({event_id, isShowRef, refereeList, pairs}){
     const [data, setData] = useState([]);
     let i = 0;
 
@@ -26,7 +26,7 @@ export default function TableOchki({event_id, isShowRef, refereeList}){
                 console.debug(error);
             })
         }
-    }, [event_id])
+    }, [event_id, pairs])
 
     return (
         <TableContainer component={Paper} sx={{mx: 1}}>
