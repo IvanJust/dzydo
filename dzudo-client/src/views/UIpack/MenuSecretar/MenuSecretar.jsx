@@ -18,6 +18,7 @@ export default function MenuSecretar() {
     const event = useSelector(state => state.user.eventInfo);
     const [pairs, setPairs] = useState([]);
     const [refereeList, setRefereeList] = useState([]);
+    const [data, setData] = useState([]);
 
     console.debug("connected status", isConnected);
 
@@ -50,9 +51,16 @@ export default function MenuSecretar() {
                 })
             });
         }
+        function setDataTable(value){ // TODO: потом проверить по сокету
+            if(value){
+                setData(data.concat([value]));
+            }
+        }
         socketAuth.on('save-evaluations-supervisor', saveEvaluationsSuper);
+        socketAuth.on('save-table-supervisor', setDataTable);
         return () => {
             socketAuth.off('save-evaluations-supervisor', saveEvaluationsSuper);
+            socketAuth.off('save-table-supervisor', setDataTable);
         }
     }, [socketAuth]);
 
@@ -63,7 +71,7 @@ export default function MenuSecretar() {
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
             <Grid item>
-                <TableOchki refereeList={refereeList} event_id={event.id} isShowRef pairs={pairs} />
+                <TableOchki refereeList={refereeList} event_id={event.id} isShowRef data={data} />
             </Grid>
         </Container>
     )

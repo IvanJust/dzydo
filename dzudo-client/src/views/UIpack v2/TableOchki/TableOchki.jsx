@@ -1,32 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { getTable1 } from "../../../core/Api/ApiData/methods/event";
+import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, Paper, TableRow } from "@mui/material";
-import toast from "react-hot-toast";
 import { ShortName } from "../../../features/functions";
+import CircleIcon from '@mui/icons-material/Circle';
 
 function RefereeCol({refer}){
     return(
-        <TableCell>{refer?.sum ? refer.sum : 0}</TableCell>
+        <TableCell>{refer?.sum ? refer.sum : 0}{refer?.flag ?? <CircleIcon color="success" titleAccess="Супервайзер изменил баллы" sx={{height: '10px', width: '10px'}} />}</TableCell>
     )
 }
 
 
-export default function TableOchki({event_id, isShowRef, refereeList, pairs}){
-    const [data, setData] = useState([]);
+export default function TableOchki({isShowRef, refereeList, data}){
     let i = 0;
-
-    useEffect(() => {
-        if(event_id > 0){
-            getTable1(event_id).then(resp => {
-                if(resp.data){
-                    setData(resp.data);
-                }
-            }).catch(error => {
-                toast.error('Ошибка получения данных');
-                console.debug(error);
-            })
-        }
-    }, [event_id, pairs])
 
     return (
         <TableContainer component={Paper} sx={{mx: 1}}>

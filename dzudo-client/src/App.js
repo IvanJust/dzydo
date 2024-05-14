@@ -34,7 +34,7 @@ function App() {
       dispatch(unsetEvent());
       dispatch(unsetUser());
     }
-  }, [accessToken, user])
+  }, [accessToken])
 
   return (
     <>

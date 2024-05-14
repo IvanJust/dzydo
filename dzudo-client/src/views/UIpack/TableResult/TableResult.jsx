@@ -1,6 +1,6 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { getEvent, getEvents, getTable } from "../../../core/Api/ApiData/methods/event";
+import { getEvent, getEvents, getTable, getTable2 } from "../../../core/Api/ApiData/methods/event";
 import { getDateFromSQL } from "../../../features/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { setEvent, unsetEvent } from "../../../store/slices/tableResultSlice";
@@ -13,39 +13,11 @@ import TableOchki from "../../UIpack v2/TableOchki/TableOchki";
 import { getRefereeFromEvent } from "../../../core/Api/ApiData/methods/admin";
 
 export default function TableResult() {
-    const [pairs, setPairs] = useState([
-        {
-            "tori": {
-                "id": 1,
-                "lastname": "Скворцов",
-                "firstname": "Олег",
-                "patronymic": "Сергеевич",
-                "login": "skv",
-                "password": "1"
-            },
-            "uke": {
-                "id": 2,
-                "lastname": "Кондырев",
-                "firstname": "Олег",
-                "patronymic": "Владимирович",
-                "login": "kov",
-                "password": "2"
-            },
-            "region": "Пенз. обл.",
-            "event": {
-                "id": 1,
-                "name": "Всероссийское соревнование по дзюдо-кате № 10",
-                "place": "город Пенза, просп. Строителей, 96 подъезд 6",
-                "date_begin": "2024-04-05",
-                "date_end": "2024-05-05"
-            },
-            "round": 1,
-            "condition": 0
-        }
-    ]);
+    const [pairs, setPairs] = useState([]);
     const [selectEvent, setSelectEvent] = useState('');
     const [events, setEvents] = useState([]);
     const [refereeList, setRefereeList] = useState([]);
+    const [data, setData] = useState([]);
     const tableResult = useSelector((state) => state.tableResult);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -63,6 +35,18 @@ export default function TableResult() {
         }
     }, [])
 
+    useEffect(() => { // обновление таблицы по сокету после сохранения супервайзера
+        function setDataTable(value){
+            if(value){
+                setData(data.concat([value]).sort((a, b) => a.referee.reduce((acc, obj) => acc + obj.sum, 0) - b.referee.reduce((acc, obj) => acc + obj.sum, 0)).reverse());
+            }
+        }
+        socketAuth.on('save-table-supervisor', setDataTable);
+        return () => {
+            socketAuth.off('save-table-supervisor', setDataTable);
+        }
+    }, [socketAuth]);
+
     useEffect(() => {
         if(selectEvent > 0){
             getRefereeFromEvent(selectEvent).then(resp => {
@@ -75,25 +59,13 @@ export default function TableResult() {
             setRefereeList([]);
         }
     }, [selectEvent])
-    
-    useEffect(() => {
-        function onTable(table) {
-            setPairs(table);
-            console.debug(table);
-        }
-
-        socketAuth.on('table-get', onTable);
-        return () => {
-            socketAuth.off('table-get', onTable);
-        }
-    }, [socketAuth])
 
     const changeSelect = (event) => {
         setSelectEvent(event.target.value);
         getEvent(event.target.value).then(resp => {
             dispatch(setEvent(resp.data[0]))
-            getTable(event.target.value).then(resp => {
-                setPairs(resp.data);
+            getTable2(event.target.value).then(resp => {
+                setData(resp.data);
             })
         });
     }
@@ -174,7 +146,7 @@ export default function TableResult() {
                     </Grid>
                 </Grid>
                 {tableResult.id > 0 && <Grid container>
-                    <TableOchki refereeList={refereeList} event_id={selectEvent} />
+                    <TableOchki refereeList={refereeList} data={data} />
                 </Grid>}
             </Grid>
         </Grid>
