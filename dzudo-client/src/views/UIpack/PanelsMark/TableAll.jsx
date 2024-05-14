@@ -134,9 +134,8 @@ export default function TableAll({secret, data, refereeList}) {
 
         return () => {
             socketAuth.off('save-evaluations-referee', onSaveReferee);
-            setDisSaved(true);
         }
-    }, [socketAuth, gradesGiven1, gradesGiven2, gradesGiven3, gradesGiven4, gradesGiven5])
+    }, [socketAuth])
 
     return (
         <>

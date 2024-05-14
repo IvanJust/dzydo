@@ -91,3 +91,12 @@ export function getTable1(event_id){
         }
     )
 }
+
+export function getTable2(event_id){
+    return client.post(
+        'table2/get',
+        {
+            'event_id': event_id,
+        }
+    )
+}
