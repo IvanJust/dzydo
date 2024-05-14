@@ -17,7 +17,7 @@ function a11yProps(index) {
 }
 
 
-export default function TableAll({secret, data, refereeList}) {
+export default function TableAll({ secret, data, refereeList }) {
     const [value, setValue] = useState(0);
     const { socketAuth } = useContext(SocketContext);
     const currentPair = useSelector(state => state.user.currentPair);
@@ -40,30 +40,33 @@ export default function TableAll({secret, data, refereeList}) {
         setGradesGiven5,
     ]
 
-    function getForSuperAndSetMark(refereeList, votedStaff){
-        if(votedStaff.length > 0){
+    function getForSuperAndSetMark(refereeList, votedStaff) {
+        if (votedStaff.length > 0) {
             votedStaff.forEach(item => {
                 let ind = refereeList.findIndex(it => it.id == item.user_id);
-                if(ind != -1){
+                if (ind != -1) {
                     getForSuper(currentPair.id, item.user_id).then(re => {
-                        if(re.data){
+                        if (re.data) {
                             setMarkEvaluation(re.data, arrGrades[ind]);
                             refCount[ind] = item.user_id;
-                            setRefCount({...refCount});
+                            setRefCount({ ...refCount });
                         }
                     })
                 }
-            } )
+            })
         }
     }
 
-    function setMarkEvaluation(array, setter){
-        setter(array.map(element => {return {
-            pair_id: currentPair.id,
-            evaluation_criteria_id: element.evaluation_criteria.id,
-            mark_id: element.mark.id,
-            score: element.mark.score,      
-        }}));
+    function setMarkEvaluation(array, setter) {
+        setter(array.map(element => {
+            return {
+                pair_id: currentPair.id,
+                evaluation_criteria_id: element.evaluation_criteria.id,
+                mark_id: element.mark.id,
+                score: element.mark.score,
+                referee_id: element.referee.id,
+            }
+        }));
     }
     const saveData = () => {
         const allEvaluations = [
@@ -74,7 +77,7 @@ export default function TableAll({secret, data, refereeList}) {
             ...gradesGiven5,
         ];
         saveEvaluations(allEvaluations, currentPair.id).then(resp => {
-            if(resp.data){
+            if (resp.data) {
                 toast.success('Данные сохранены');
                 setDisSaved(true);
                 setRefCount({});
@@ -87,11 +90,11 @@ export default function TableAll({secret, data, refereeList}) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    
+
     useEffect(() => {
-        if(event.id > 0 && currentPair.id > 0){
+        if (event.id > 0 && currentPair.id > 0) {
             getVotedStaff(event.id, currentPair.id).then(resp => {
-                if(resp.data){
+                if (resp.data) {
                     setVotedStaff(resp.data);
                     getForSuperAndSetMark(refereeList, resp.data);
                 }
@@ -106,9 +109,9 @@ export default function TableAll({secret, data, refereeList}) {
     }, [votedStaff]);
 
     useEffect(() => {
-        if(Object.keys(refCount).length >= 5 && currentPair.condition == 1){
+        if (Object.keys(refCount).length >= 5 && currentPair.condition == 1) {
             setDisSaved(false);
-        }else if(Object.keys(refCount).length < 5 || currentPair.condition != 1){
+        } else if (Object.keys(refCount).length < 5 || currentPair.condition != 1) {
             setDisSaved(true);
         }
     }, [refCount]);
@@ -117,14 +120,14 @@ export default function TableAll({secret, data, refereeList}) {
         function onSaveReferee(value) { //отображение данных судей по сокету
             console.debug("referee", value)
             const index = refereeList.findIndex((item) => item.id == value.user_id);
-            if(index != -1){
+            if (index != -1) {
                 arrGrades[index](value.evaluations);
                 refCount[index] = value.user_id;
-                setRefCount({...refCount});
+                setRefCount({ ...refCount });
                 console.debug(refCount, refereeList);
             }
             getVotedStaff(event.id, currentPair.id).then(resp => {
-                if(resp.data){
+                if (resp.data) {
                     setVotedStaff(resp.data);
                 }
             })
@@ -140,7 +143,7 @@ export default function TableAll({secret, data, refereeList}) {
     return (
         <>
             <Grid sx={{ width: '100%' }}>
-                <Box sx={{ overflowX:'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ overflowX: 'auto', borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
                     <Tabs
                         value={value}
                         onChange={handleChange}
@@ -150,19 +153,19 @@ export default function TableAll({secret, data, refereeList}) {
                         indicatorColor="secondary"
                         aria-label="secondary tabs example"
                     >
-                        <Tab label={<Grid><Typography>Судья 1 {(refCount[0]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(0)} />
-                        <Tab label={<Grid><Typography>Судья 2 {(refCount[1]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(1)} />
-                        <Tab label={<Grid><Typography>Судья 3 {(refCount[2]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(2)} />
-                        <Tab label={<Grid><Typography>Судья 4 {(refCount[3]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(3)} />
-                        <Tab label={<Grid><Typography>Судья 5 {(refCount[4]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{height: '10px', width: '10px'}} />}</Typography></Grid>} {...a11yProps(4)} />
+                        <Tab label={<Grid><Typography>Судья 1 {(refCount[0]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{ height: '10px', width: '10px' }} />}</Typography></Grid>} {...a11yProps(0)} />
+                        <Tab label={<Grid><Typography>Судья 2 {(refCount[1]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{ height: '10px', width: '10px' }} />}</Typography></Grid>} {...a11yProps(1)} />
+                        <Tab label={<Grid><Typography>Судья 3 {(refCount[2]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{ height: '10px', width: '10px' }} />}</Typography></Grid>} {...a11yProps(2)} />
+                        <Tab label={<Grid><Typography>Судья 4 {(refCount[3]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{ height: '10px', width: '10px' }} />}</Typography></Grid>} {...a11yProps(3)} />
+                        <Tab label={<Grid><Typography>Судья 5 {(refCount[4]) && <CircleIcon color="success" titleAccess="Судья оценил пару" sx={{ height: '10px', width: '10px' }} />}</Typography></Grid>} {...a11yProps(4)} />
                     </Tabs>
                 </Box>
                 <Grid>
-                    <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} />
-                    <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} />
-                    <CustomTabPanel value={value} index={2} gradesGiven={gradesGiven3} setGradesGiven={setGradesGiven3} />
-                    <CustomTabPanel value={value} index={3} gradesGiven={gradesGiven4} setGradesGiven={setGradesGiven4} />
-                    <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} />
+                    <CustomTabPanel value={value} index={0} gradesGiven={gradesGiven1} setGradesGiven={setGradesGiven1} refereeId={refereeList[0]?.id} />
+                    <CustomTabPanel value={value} index={1} gradesGiven={gradesGiven2} setGradesGiven={setGradesGiven2} refereeId={refereeList[1]?.id} />
+                    <CustomTabPanel value={value} index={2} gradesGiven={gradesGiven3} setGradesGiven={setGradesGiven3} refereeId={refereeList[2]?.id} />
+                    <CustomTabPanel value={value} index={3} gradesGiven={gradesGiven4} setGradesGiven={setGradesGiven4} refereeId={refereeList[3]?.id} />
+                    <CustomTabPanel value={value} index={4} gradesGiven={gradesGiven5} setGradesGiven={setGradesGiven5} refereeId={refereeList[4]?.id} />
                 </Grid>
             </Grid>
             {!secret && <Grid my={2} container display='flex' justifyContent='center'>
