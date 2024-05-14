@@ -8,6 +8,7 @@ import { getRefereeFromEvent } from "../../../core/Api/ApiData/methods/admin";
 import { setCurrentPair } from "../../../store/slices/userSlice";
 import { getPairs } from "../../../core/Api/ApiData/methods/pairs";
 import TableOchki from "../../UIpack v2/TableOchki/TableOchki";
+import { getTable2 } from "../../../core/Api/ApiData/methods/event";
 
 
 
@@ -35,10 +36,16 @@ export default function MenuSecretar() {
                     if(it.condition == 1) dispatch(setCurrentPair(it));
                 })
             });
+            getTable2(event.id).then(resp => {
+                if(resp.data){
+                    setData(resp.data);
+                }
+            })
         }
         return () => {
             setRefereeList([]);
             setPairs([]);
+            setData([]);
         }
     }, [event]);
 
@@ -71,7 +78,7 @@ export default function MenuSecretar() {
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
             <Grid item>
-                <TableOchki refereeList={refereeList} event_id={event.id} isShowRef data={data} />
+                <TableOchki refereeList={refereeList} isShowRef data={data} />
             </Grid>
         </Container>
     )
