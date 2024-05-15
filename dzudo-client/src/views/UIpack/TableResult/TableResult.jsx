@@ -131,7 +131,7 @@ export default function TableResult() {
                         }
                     </Grid>
                 </Grid>
-                {tableResult.id > 0 && <Grid container>
+                {tableResult.id > 0 && <Grid sx={{m: 1}}>
                     <TableOchki data={data} />
                 </Grid>}
             </Grid>

@@ -78,7 +78,7 @@ export default function MenuSecretar() {
             <Grid item>
                 <ListPair pairs={pairs} setPairs={setPairs} />
             </Grid>
-            <Grid item>
+            <Grid item sx={{m: 1}}>
                 <TableOchki refereeList={refereeList} isShowRef data={data} />
             </Grid>
         </Container>

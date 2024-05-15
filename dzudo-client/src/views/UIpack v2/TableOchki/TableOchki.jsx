@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, Paper, TableRow } from "@mui/material";
 import { ShortName } from "../../../features/functions";
 import CircleIcon from '@mui/icons-material/Circle';
@@ -32,7 +32,7 @@ export default function TableOchki({isShowRef, refereeList, data}){
     let i = 0;
     const filterData = data.filter(pair => pair.condition != 3);
     return (
-        <TableContainer component={Paper} sx={{my: 1}}>
+        <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
