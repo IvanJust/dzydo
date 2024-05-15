@@ -1,34 +1,38 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, Paper, TableRow } from "@mui/material";
 import { ShortName } from "../../../features/functions";
 import CircleIcon from '@mui/icons-material/Circle';
 
 function RefereeCol({refer}){
     return(
-        <TableCell>{refer?.sum ? refer.sum : 0}{refer?.flag ?? <CircleIcon color="success" titleAccess="Супервайзер изменил баллы" sx={{height: '10px', width: '10px'}} />}</TableCell>
+        <TableCell>{refer?.sum ? refer.sum : 0}{refer?.flag ? <CircleIcon color="success" titleAccess="Супервайзер изменил баллы" sx={{height: '10px', width: '10px', ml: 0.5}} /> : ''}</TableCell>
     )
 }
 
 function RenderPair({isShowRef, refereeList, pair, i}){
     const max = useMemo(() => { return Math.max(...pair.referee.map(refer => refer.sum)) }, [pair])
     const min = useMemo(() => { return Math.min(...pair.referee.map(refer => refer.sum)) }, [pair])
-    return(
-        <TableRow>
-        <TableCell>{i}</TableCell>
-        <TableCell title="Регион">{pair.region}</TableCell>
-        <TableCell sx={{ cursor: 'pointer' }} title="Участники">{ShortName(pair.tori)} - {ShortName(pair.uke)}</TableCell>
-        {isShowRef && refereeList.map((ref, index) => <RefereeCol refer={pair.referee.filter(item => item.referee_id == ref.id).shift()} key={index} />)}
-        <TableCell>{pair.referee.reduce((acc, obj) => acc + obj.sum, 0) - max - min}</TableCell>
-    </TableRow>
-    )
+    if(pair.condition != 3){
+        return(
+            <TableRow>
+                <TableCell>{i}</TableCell>
+                <TableCell title="Регион">{pair.region}</TableCell>
+                <TableCell sx={{ cursor: 'pointer' }} title="Участники">{ShortName(pair.tori)} - {ShortName(pair.uke)}</TableCell>
+                {isShowRef && refereeList.map((ref, index) => <RefereeCol refer={pair.referee.filter(item => item.referee_id == ref.id).shift()} key={index} />)}
+                <TableCell>{pair.referee.reduce((acc, obj) => acc + obj.sum, 0) - max - min}</TableCell>
+            </TableRow>
+        )
+    }else{
+        return false;
+    }
 }
 
 
 export default function TableOchki({isShowRef, refereeList, data}){
     let i = 0;
-
+    const filterData = data.filter(pair => pair.condition != 3);
     return (
-        <TableContainer component={Paper} sx={{mx: 1}}>
+        <TableContainer component={Paper} sx={{m: 1}}>
             <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
@@ -40,7 +44,7 @@ export default function TableOchki({isShowRef, refereeList, data}){
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.length > 0 && data.map((pair) => (
+                    {filterData.length > 0 && filterData.map((pair) => (
                         <RenderPair pair={pair} key={pair.pair_id} i={++i} isShowRef={isShowRef} refereeList={refereeList} />
                     ))}
                 </TableBody>
