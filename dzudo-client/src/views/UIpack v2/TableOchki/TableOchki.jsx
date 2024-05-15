@@ -10,8 +10,8 @@ function RefereeCol({refer}){
 }
 
 function RenderPair({isShowRef, refereeList, pair, i}){
-    const max = useMemo(() => { Math.max(...pair.referee.map(referee => referee.sum)) }, [pair])
-    const min = useMemo(() => { Math.min(...pair.referee.map(referee => referee.sum)) }, [pair])
+    const max = useMemo(() => { return Math.max(...pair.referee.map(refer => refer.sum)) }, [pair])
+    const min = useMemo(() => { return Math.min(...pair.referee.map(refer => refer.sum)) }, [pair])
     return(
         <TableRow>
         <TableCell>{i}</TableCell>
