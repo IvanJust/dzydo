@@ -32,8 +32,8 @@ export default function TableOchki({isShowRef, refereeList, data}){
     let i = 0;
     const filterData = data.filter(pair => pair.condition != 3);
     return (
-        <TableContainer component={Paper} sx={{m: 1}}>
-            <Table aria-label="simple table">
+        <TableContainer component={Paper} sx={{my: 1}}>
+            <Table>
                 <TableHead>
                     <TableRow>
                         <TableCell>№</TableCell>
