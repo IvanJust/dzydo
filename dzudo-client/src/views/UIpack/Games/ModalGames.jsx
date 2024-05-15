@@ -98,7 +98,7 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                                 getToriUke(inputValue2);
                             }
                         }}
-                        onChange={(event, newValue) => { data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
+                        onChange={(event, newValue) => { data['uke'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         fullWidth
                     />
                     <TextField 
