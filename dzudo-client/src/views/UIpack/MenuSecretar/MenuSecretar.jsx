@@ -60,7 +60,7 @@ export default function MenuSecretar() {
         }
         function setDataTable(value){ // TODO: потом проверить по сокету
             if(value){
-                setData(data.concat([value]));
+                setData(data.concat([value.pair]));
             }
         }
         socketAuth.on('save-evaluations-supervisor', saveEvaluationsSuper);

@@ -37,7 +37,7 @@ export default function TableResult() {
     useEffect(() => { // обновление таблицы по сокету после сохранения супервайзера
         function setDataTable(value){
             if(value){
-                setData(data.concat([value]).sort((a, b) => a.referee.reduce((acc, obj) => acc + obj.sum, 0) - b.referee.reduce((acc, obj) => acc + obj.sum, 0)).reverse());
+                setData(data.concat([value.pair]).sort((a, b) => a.referee.reduce((acc, obj) => acc + obj.sum, 0) - b.referee.reduce((acc, obj) => acc + obj.sum, 0)).reverse());
             }
         }
         socketAuth.on('save-table-supervisor', setDataTable);
