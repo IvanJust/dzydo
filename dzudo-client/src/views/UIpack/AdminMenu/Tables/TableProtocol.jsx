@@ -132,11 +132,10 @@ export default function TableProtocol() {
         if(eventId > 0){
             getEvaluationAfterSupervisor(eventId).then(resp => {
                 setData(resp.data || [])
-                // console.debug(resp.data);
             });
 
             getPairs(eventId, 0).then(resp => {
-                setPairs(resp.data || []);
+                setPairs(resp.data.filter(item => item.condition != 3) || []);
             });
 
             getRefereeFromEvent(eventId).then(resp => {
