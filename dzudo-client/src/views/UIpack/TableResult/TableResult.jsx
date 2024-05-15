@@ -16,7 +16,6 @@ export default function TableResult() {
     const [pairs, setPairs] = useState([]);
     const [selectEvent, setSelectEvent] = useState('');
     const [events, setEvents] = useState([]);
-    const [refereeList, setRefereeList] = useState([]);
     const [data, setData] = useState([]);
     const tableResult = useSelector((state) => state.tableResult);
     const dispatch = useDispatch();
@@ -46,19 +45,6 @@ export default function TableResult() {
             socketAuth.off('save-table-supervisor', setDataTable);
         }
     }, [socketAuth]);
-
-    useEffect(() => {
-        if(selectEvent > 0){
-            getRefereeFromEvent(selectEvent).then(resp => {
-                if(resp.data){
-                    setRefereeList(resp.data);
-                }
-            })
-        }
-        return () => {
-            setRefereeList([]);
-        }
-    }, [selectEvent])
 
     const changeSelect = (event) => {
         setSelectEvent(event.target.value);
@@ -146,7 +132,7 @@ export default function TableResult() {
                     </Grid>
                 </Grid>
                 {tableResult.id > 0 && <Grid container>
-                    <TableOchki refereeList={refereeList} data={data} />
+                    <TableOchki data={data} />
                 </Grid>}
             </Grid>
         </Grid>
