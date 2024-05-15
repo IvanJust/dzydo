@@ -5,7 +5,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 
 function RefereeCol({refer}){
     return(
-        <TableCell>{refer?.sum ? refer.sum : 0}{refer?.flag ? <CircleIcon color="success" titleAccess="Супервайзер изменил баллы" sx={{height: '10px', width: '10px', ml: 0.5}} /> : ''}</TableCell>
+        <TableCell>{refer?.sum ? refer.sum : 0}{refer?.isChange ? <CircleIcon color="success" titleAccess="Супервайзер изменил баллы" sx={{height: '10px', width: '10px', ml: 0.5}} /> : ''}</TableCell>
     )
 }
 
