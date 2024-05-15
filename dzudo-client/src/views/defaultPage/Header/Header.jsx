@@ -36,11 +36,8 @@ function Header() {
             name: 'Результаты',
             nav: 'writing',
             isEvent: event?.id,
+            isLogin: true,
         }, 
-        {
-            name: 'Таблица',
-            nav: 'table',
-        }
     ];
 
     const handleOpenNavMenu = (event) => {
@@ -94,50 +91,56 @@ function Header() {
                 {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                    {isLogin && <>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon color="primary" />
-                        </IconButton>
-                        <Menu
-                        id="menu-appbar"
-                        anchorEl={anchorElNav}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
-                        open={Boolean(anchorElNav)}
-                        onClose={handleCloseNavMenu}
-                        sx={{
-                            display: { xs: 'block', md: 'none' },
-                        }}
-                        >
-                        {pages.map((page, index) => (
-                            <CompMenu  key={index} item={page} />
-                        ))}
-                        {isAdmin && 
-                            <MenuItem onClick={handleCloseNavMenu}>
-                                <Typography 
-                                    textAlign="center"
-                                    onClick={()=>goTo('admin')}
-                                >
-                                    Административное меню
-                                </Typography>
-                            </MenuItem>
-                        }
-                        </Menu>
-                    </>}
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleOpenNavMenu}
+                        color="inherit"
+                    >
+                        <MenuIcon color="primary" />
+                    </IconButton>
+                    <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorElNav}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={Boolean(anchorElNav)}
+                    onClose={handleCloseNavMenu}
+                    sx={{
+                        display: { xs: 'block', md: 'none' },
+                    }}
+                    >
+                    {isLogin && pages.map((page, index) => (
+                        <CompMenu  key={index} item={page} />
+                    ))}
+                        <MenuItem onClick={handleCloseNavMenu}>
+                            <Typography 
+                                textAlign="center"
+                                onClick={()=>goTo('table')}
+                            >
+                                Таблица
+                            </Typography>
+                        </MenuItem>
+                    {isAdmin && 
+                        <MenuItem onClick={handleCloseNavMenu}>
+                            <Typography 
+                                textAlign="center"
+                                onClick={()=>goTo('admin')}
+                            >
+                                Административное меню
+                            </Typography>
+                        </MenuItem>
+                    }
+                    </Menu>
                     <Box className="header-logo" sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, ml: 1}}>
                         <img onClick={() => goTo('')} title="Дзюдо-Ката" src={logo}/>
                     </Box>
@@ -148,21 +151,25 @@ function Header() {
                 </Box>
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}>
-                    {isLogin && <>
-                        {pages.map((page, index) => (
-                            <CompButton key={index} item={page} />
-                        ))}
-                        {isAdmin && 
-                            <Button 
-                                variant="contained" 
-                                color="warning"
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                                onClick={()=>goTo('admin')}
-                            >
-                                Административное меню
-                            </Button>
-                        }
-                    </>}
+                    {isLogin && pages.map((page, index) => (
+                        <CompButton key={index} item={page} />
+                    ))}
+                    <Button
+                        sx={{ my: 2, color: 'white', display: 'block' }} 
+                        onClick={()=>goTo('table')}
+                    >
+                        Таблица
+                    </Button>
+                    {isAdmin && 
+                        <Button 
+                            variant="contained" 
+                            color="warning"
+                            sx={{ my: 2, color: 'white', display: 'block' }}
+                            onClick={()=>goTo('admin')}
+                        >
+                            Административное меню
+                        </Button>
+                    }
                 </Box>
 
                 <Box sx={{ flexGrow: 0 }}>
