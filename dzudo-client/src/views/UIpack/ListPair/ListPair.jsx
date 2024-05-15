@@ -10,7 +10,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import fight from '../../../images/fight.gif';
 import waiting from '../../../images/1486.gif';
-import skipping from '../../../images/skipping.gif';
+import skipping from '../../../images/icons8-skip.gif';
 import SelfImprovementTwoToneIcon from '@mui/icons-material/SelfImprovementTwoTone';
 import { ShortName } from "../../../features/functions";
 import PlaceTwoToneIcon from '@mui/icons-material/PlaceTwoTone';
