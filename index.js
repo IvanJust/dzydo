@@ -156,6 +156,10 @@ socketIO.on('connection', (socket) => {
 
 });
 
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dzudo-client/build', 'index.html'));
+});
+
 
 socketIO.listen(socket_port);
 
@@ -995,11 +999,6 @@ app.post('/api/secretary/event/get', async (request, response) => {
     response.status(500).send(Error(e));
   }
 });
-
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'dzudo-client/build', 'index.html'));
-});
-
 
 const server = http.createServer(app).listen(port);
 
