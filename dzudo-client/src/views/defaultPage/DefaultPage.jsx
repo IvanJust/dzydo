@@ -25,7 +25,7 @@ function DefaultPage(){
                             <div className="content-page">
                                 {isLogin && <Outlet/>}
                                 {!isLogin && <Box mt={3} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}><Alert severity="info">Необходимо авторизоваться для дальнейших действий!</Alert></Box>}
-            <Footer/>
+                                <Footer/>
                             </div>
                        </div>
                 {/*  </div> */}
