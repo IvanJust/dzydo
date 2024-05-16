@@ -25,7 +25,7 @@ function RegistrationEvent({...props}){
                                     label="Название соревнований" 
                                     name="name"
                                     type="text"
-                                    autoFocus 
+                                    // autoFocus 
                                     variant="filled" 
                                     required
                                     fullWidth

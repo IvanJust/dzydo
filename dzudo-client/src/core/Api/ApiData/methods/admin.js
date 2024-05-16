@@ -11,6 +11,15 @@ export function setEventUserRole(event_id, user_id, role_id) {
     );
 }
 
+export function unsetEventUserRole(event_id) {
+    return client.post(
+        'event_user_role/delete',
+        {
+            'event_id': event_id,
+        }
+    )
+}
+
 export function getEventUserRole(id=0) { // хз работет или нет TODO спросить Олега
     return client.post(
         'event_user_role/get', 

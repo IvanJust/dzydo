@@ -42,7 +42,7 @@ function RegistrationUser(){
                                     id="input-with-sx" 
                                     label="Логин (необязательно)" 
                                     name="login" 
-                                    autoFocus 
+                                    // autoFocus 
                                     autoComplete="off"
                                     value={dataLoginUser['login'] || ''}
                                     // required

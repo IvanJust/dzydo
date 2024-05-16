@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Button, Card, CardActions, CardContent, CardHeader, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getRoles, getUsers, setEventUserRole } from "../../../../core/Api/ApiData/methods/admin";
+import { getRoles, getUsers, setEventUserRole, unsetEventUserRole } from "../../../../core/Api/ApiData/methods/admin";
 import { Form } from "react-router-dom";
 import { roleName } from "../../../../core/config/config";
 import { ShortName } from "../../../../features/functions";
@@ -48,8 +48,7 @@ function RowStaff({ item, event_id, data, setData }){
                     id={"role"+item.name+item.id+'_'+i}
                     options={users}
                     value={data[item.id+'_'+i]}
-                    data-name={count > 1 ? item.id+'_'+i : item.id}
-                    onChange={(event, newValue) => {data[item.id+'_'+i] = {event_id: event_id, user_id: newValue.id, role_id: item.id}; setData(data); setUsers([]); /*console.debug(data, newValue)*/}}
+                    onChange={(event, newValue) => {data[item.id+'_'+i] = newValue?.id ? {event_id: event_id, user_id: newValue.id, role_id: item.id} : {}; setData(data); setUsers([]); /*console.debug(data, newValue)*/}}
                     inputValue={inputValue[item.id+'_'+i]}
                     onInputChange={(event, newInputValue) => {
                         inputValue[item.id+'_'+i] = newInputValue;
@@ -81,17 +80,21 @@ function RegistrationStaff({event, handleClose, ...props}){
     }, []);
 
     function SendForm(){
-        let arrPromise = [];
-        for(let item in data){
-            arrPromise.push(setEventUserRole(data[item].event_id, data[item].user_id, data[item].role_id));
-        };
-        Promise.all(arrPromise).then(resp => {
-            if(resp.length == arrPromise.length){
-                toast.success('Люди успешно назначены на роли.');
-                handleClose();
+        unsetEventUserRole(event.id).then(response => {
+            if(response.data){
+                let arrPromise = [];
+                for(let item in data){
+                    arrPromise.push(setEventUserRole(data[item].event_id, data[item].user_id, data[item].role_id));
+                };
+                Promise.all(arrPromise).then(resp => {
+                    if(resp.length == arrPromise.length){
+                        toast.success('Люди успешно назначены на роли.');
+                        handleClose();
+                    }
+                }).catch(resp => {
+                    toast.error('Ошибка назначения ролей.')
+                })
             }
-        }).catch(resp => {
-            toast.error('Ошибка назначения ролей.')
         })
     }
 

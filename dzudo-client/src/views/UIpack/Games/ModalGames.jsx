@@ -11,7 +11,7 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
     const [users, setUsers] = useState([]);
     const [inputValue1, setInputValue1] = useState('');
     const [inputValue2, setInputValue2] = useState('');
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({});
 
     const handleClose = () => {
         setOpen(false);
@@ -24,7 +24,7 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
             setUsers([]);
             setInputValue1('');
             setInputValue2('');
-            setData([]);
+            setData({});
         }
     }, []);
 
@@ -48,6 +48,7 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
         setPair(data.event_id, data.tori, data.uke, data.region, data.round).then(resp => {
             if(resp){
                 toast.success('Пара создана');
+                setData({event_id: event_id})
                 getPairs(data.event_id).then(re => {
                     setPairs(re.data);
                     handleClose();
@@ -71,7 +72,7 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                         label={"Tori"}
                         id="tori"
                         options={users}
-                        value={data['tori']}
+                        value={data['tori'] || 0}
                         sx={{ my: 1 }}
                         noOptionsText='Пусто'
                         inputValue={inputValue1 || ''}
@@ -81,14 +82,14 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                                 getToriUke(inputValue1);
                             }
                         }}
-                        onChange={(event, newValue) => { data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
+                        onChange={(event, newValue) => {data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         fullWidth
                     />
                     <StandartAutocomplete 
                         label={"Uke"}
                         id="uke"
                         options={users}
-                        value={data['uke']}
+                        value={data['uke'] || 0}
                         sx={{ my: 1 }}
                         noOptionsText='Пусто'
                         inputValue={inputValue2 || ''}
@@ -98,7 +99,7 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                                 getToriUke(inputValue2);
                             }
                         }}
-                        onChange={(event, newValue) => { data['uke'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
+                        onChange={(event, newValue) => {data['uke'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
                         fullWidth
                     />
                     <TextField 
