@@ -9,20 +9,20 @@ import { useSelector } from "react-redux";
 export default function Main(){
     const eventInfo = useSelector((state) => state.user.eventInfo);
     return(
-        <Grid my={1} flexDirection={'column'}>
-            <Grid display={'flex'} justifyContent={'center'}>
-                <Typography fontSize={24}>
+        <Grid container my={1} display={'flex'} flexDirection={'column'}>
+            <Grid item display={'flex'} justifyContent={'center'} sx={{mx: {xs: 1, md: 0}}}>
+                <Typography fontSize={24} textAlign={'center'}>
                     Приветсвуем вас на сайте соревнований Дзюдо Ката
                 </Typography>
             </Grid>
-            <Grid display={'flex'} justifyContent={'center'}>
+            <Grid item display={'flex'} justifyContent={'center'}>
                 <Typography fontSize={20}>
                     {eventInfo?.name}
                 </Typography>
             </Grid>
-            <Box>
+            <Grid item display={'flex'} justifyContent={'center'}>
                 <img src={fight}/>
-            </Box>
+            </Grid>
         </Grid>
     )
 }

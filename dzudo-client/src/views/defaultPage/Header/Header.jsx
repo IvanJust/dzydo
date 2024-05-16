@@ -150,7 +150,7 @@ function Header() {
                     <img onClick={() => goTo('')} title="Дзюдо-Ката" src={logo}/>
                 </Box>
 
-                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}>
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     {isLogin && pages.map((page, index) => (
                         <CompButton key={index} item={page} />
                     ))}
