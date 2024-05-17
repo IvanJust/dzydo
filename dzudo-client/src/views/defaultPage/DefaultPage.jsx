@@ -5,7 +5,7 @@ import "./defaultPage-style.css";
 import Footer from "./Footer/Footer";
 import Alert from '@mui/material/Alert';
 import { useSelector } from "react-redux";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useContext } from "react";
 import { SocketContext } from "../../context/SocketProvider";
 
@@ -24,7 +24,7 @@ function DefaultPage(){
                         <div className="container">
                             <div className="content-page">
                                 {isLogin && <Outlet/>}
-                                {!isLogin && <Box mt={3} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}><Alert severity="info">Необходимо авторизоваться для дальнейших действий!</Alert></Box>}
+                                {!isLogin && <Box mt={3} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}><Alert severity="info"><Typography textAlign={'center'}>Необходимо авторизоваться для дальнейших действий!</Typography></Alert></Box>}
                                 <Footer/>
                             </div>
                        </div>

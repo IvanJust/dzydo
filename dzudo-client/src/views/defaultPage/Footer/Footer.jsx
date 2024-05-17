@@ -6,7 +6,7 @@ import "./footer-style.css"
 import { cyan } from '@mui/material/colors';
 
 const styleFoot = {
-    color: cyan[600],
+    color: cyan[300],
     fontFamily: 'monospace',
     fontSize: 15,
 }
