@@ -103,7 +103,7 @@ export default function ListPair({pairs, setPairs}) {
             [newPair.id]: newPair,
         };
         
-        setPairs(newBoardData);
+        setPairs(newPairs);
     };
 
     return (
