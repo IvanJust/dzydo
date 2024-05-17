@@ -2,6 +2,7 @@ import { Chip, ClickAwayListener, Grid, IconButton, Tooltip } from "@mui/materia
 import { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import React, { useState } from "react";
+import CircularProgress from '@mui/material/CircularProgress';
 import InfoIcon from '@mui/icons-material/Info';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import SportsIcon from '@mui/icons-material/Sports';
@@ -22,7 +23,6 @@ const LightTooltip = styled(({ className, ...props }) => (
 
 function RowTip({item}){
     let avatar;
-    // console.debug(item);
     if(item.idRole == 2){
         avatar = <ContactEmergencyIcon fontSize="large" titleAccess="Секретарь" />;
     }else if(item.idRole == 3){
@@ -55,28 +55,29 @@ function RowTip({item}){
 export default function InfoMenu({eventId}){
     const [open, setOpen] = useState(false);
     const [data, setData] = useState([]);
+    const [isLoad, setIsLoad] = useState(false);
   
     const handleTooltipClose = () => {
-        setData([]);
         setOpen(false);
+        setData([]);
+        setIsLoad(false);
     };
   
     const handleTooltipOpen = () => {
-        if(!open){
+        if(!open && data.length == 0){
             Promise.all([
                 getSecretaryFromEvent(eventId),
                 getSupervisorFromEvent(eventId),
                 getRefereeFromEvent(eventId),
             ]).then(responce => {
                 if(responce[0].data && responce[1].data && responce[2].data){
-                        setData(data.concat(responce[0].data.map(item=>{return {...item, idRole: 2}})).concat(responce[1].data.map(item=>{return {...item, idRole: 3}})).concat(responce[2].data.map(item=>{return {...item, idRole: 4}})));
-                
+                    setData(data.concat(responce[0].data.map(item=>{return {...item, idRole: 2}})).concat(responce[1].data.map(item=>{return {...item, idRole: 3}})).concat(responce[2].data.map(item=>{return {...item, idRole: 4}})));
+                    setIsLoad(true);
                 }
             })
         }
         setOpen(true);
     };
-    console.debug(data);
 
     return (
         <Grid item>
@@ -91,10 +92,10 @@ export default function InfoMenu({eventId}){
                 disableFocusListener
                 disableHoverListener
                 disableTouchListener
-                title={data.length > 0 && <Grid display={'flex'} flexDirection={'column'} justifyContent={'flex-start'}>{data.map(item => <RowTip item={item} />)}</Grid> || <Grid>Персонал не назначен</Grid>}
+                title={data.length > 0 && <Grid display={'flex'} flexDirection={'column'} justifyContent={'flex-start'}>{data.map(item => <RowTip item={item} />)}</Grid> || open && !isLoad &&<Grid><CircularProgress /></Grid> || open && (<Grid>Персонал не назначен</Grid>)}
                 placement="right"
               >
-                <IconButton onClick={handleTooltipOpen} size="medium" sx={{p: 0, mr: 1}} children={<InfoIcon color="info" fontSize="medium" />} />
+                <IconButton onClick={handleTooltipOpen} size="medium" children={<InfoIcon color="info" fontSize="medium" />} />
               </LightTooltip>
             </div>
           </ClickAwayListener>

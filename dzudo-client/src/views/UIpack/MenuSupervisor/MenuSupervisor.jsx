@@ -18,7 +18,7 @@ export default function MenuSupervisor(){
     const [pairs, setPairs] = useState([]);
     const [refereeList, setRefereeList] = useState([]);
 
-    console.debug("connected status", isConnected, 'referee ', refereeList);
+    // console.debug("connected status", isConnected, 'referee ', refereeList);
 
     useEffect(() => {
         

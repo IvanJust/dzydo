@@ -128,13 +128,13 @@ export default function TableSecret({refereeList}) {
 
     useEffect(() => {
         function onSaveSuper(value) { //отображение данных супера по сокету
-            console.debug("super", value)
+            // console.debug("super", value)
             const index = refereeList.findIndex((item) => item.id == value.user_id);
             if(index != -1){
                 arrGrades[index](value.evaluations);
                 refCount[index] = value.user_id;
                 setRefCount({...refCount});
-                console.debug(refCount, refereeList);
+                // console.debug(refCount, refereeList);
             }
             getVotedStaff(event.id, currentPair.id).then(resp => {
                 if(resp.data){

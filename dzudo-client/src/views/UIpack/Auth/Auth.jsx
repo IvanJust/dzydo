@@ -101,10 +101,8 @@ function Auth() {
     };
 
     const [dataLogin, setDataLogin] = useState({});
-    // console.debug(dataLogin);
 
     const handleOnChangeLoginForm = (event) => {
-        // dataLogin[event.target.name] = event.target.value;
         setDataLogin({...dataLogin, [event.target.name]: event.target.value})
     }
 
@@ -116,7 +114,6 @@ function Auth() {
     function sendform() {
         login(dataLogin.login, dataLogin.password, dataLogin.id_event)
             .then((resp) => {
-                // console.debug('user:', resp);
                 if(resp.data_token){
                     // dispatch(setUser(resp.data?.user)); // потом добавить processAccessToken и записать в слайс
                     toast.success("Вы успешно авторизованы!");
@@ -156,9 +153,7 @@ function Auth() {
                 }
             });
     }
-    // const openModal = () => {
-    //     setModalShow(true);
-    // }
+    
     const logoutAcc = () => {
         clearTokens();
         dispatch(unsetUser());

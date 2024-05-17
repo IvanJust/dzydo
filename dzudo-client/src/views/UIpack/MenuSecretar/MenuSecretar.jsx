@@ -21,7 +21,7 @@ export default function MenuSecretar() {
     const [refereeList, setRefereeList] = useState([]);
     const [data, setData] = useState([]);
 
-    console.debug("connected status", isConnected);
+    // console.debug("connected status", isConnected);
 
     useEffect(() => {
         if(event.id > 0){

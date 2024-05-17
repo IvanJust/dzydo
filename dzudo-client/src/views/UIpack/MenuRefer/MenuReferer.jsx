@@ -20,7 +20,7 @@ export default function MenuReferer() {
     const [isSaved, setIsSaved] = useState(false);
     const [gradesGiven, setGradesGiven] = useState([]);
 
-    console.debug("connected status", isConnected);
+    // console.debug("connected status", isConnected);
 
     useEffect(() => {
         
@@ -98,7 +98,7 @@ export default function MenuReferer() {
             })
         }
     }
-    console.debug("pair ", currentPair, event);
+    // console.debug("pair ", currentPair, event);
 
     return (
         <Container justifyContent='space-evenly'>

@@ -118,13 +118,13 @@ export default function TableAll({ secret, data, refereeList }) {
 
     useEffect(() => {
         function onSaveReferee(value) { //отображение данных судей по сокету
-            console.debug("referee", value)
+            // console.debug("referee", value)
             const index = refereeList.findIndex((item) => item.id == value.user_id);
             if (index != -1) {
                 arrGrades[index](value.evaluations);
                 refCount[index] = value.user_id;
                 setRefCount({ ...refCount });
-                console.debug(refCount, refereeList);
+                // console.debug(refCount, refereeList);
             }
             getVotedStaff(event.id, currentPair.id).then(resp => {
                 if (resp.data) {

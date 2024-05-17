@@ -12,8 +12,6 @@ import { SocketContext } from "../../context/SocketProvider";
 function DefaultPage(){
     const isLogin = useSelector((state) => state.user.isLogin);
     const { socketAuth, isConnected } = useContext(SocketContext);
-    // isConnected = false;
-    // console.debug(isLogin);
     return(
         <div className="page">
             <Header/>

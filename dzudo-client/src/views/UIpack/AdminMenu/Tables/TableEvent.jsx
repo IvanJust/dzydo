@@ -1,9 +1,10 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button, Dialog } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination, Grid, Typography, Button, Dialog, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getCount, getEventsForTable } from "../../../../core/Api/ApiData/methods/admin";
 import { getDateFromSQL } from "../../../../features/functions";
 import RegistrationStaff from "../Registration/RegistrationStaff";
 import InfoMenu from "../../../UIpack v2/InfoMenu/InfoMenu";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 
 export default function TableEvents(){
@@ -80,9 +81,11 @@ export default function TableEvents(){
                                 <Grid container display={"flex"} justifyContent={'space-between'} alignItems={'center'}>
                                     <Grid item>
                                         <Typography>{event.name}</Typography>
-                                        <Button size="small" color="info" variant="outlined" onClick={() => showDialog(event)}>Назначить персонал</Button>
                                     </Grid>
-                                    <InfoMenu eventId={event.id} />
+                                    <Grid item display={'flex'} flexDirection={'row'} justifyContent={'flex-end'}>
+                                        <InfoMenu eventId={event.id} />
+                                        <IconButton size="medium" onClick={() => showDialog(event)}><GroupAddIcon titleAccess="Назначить персонал" fontSize="medium" /></IconButton>
+                                    </Grid>
                                 </Grid>
                             </TableCell>
                             <TableCell>{event.place}</TableCell>

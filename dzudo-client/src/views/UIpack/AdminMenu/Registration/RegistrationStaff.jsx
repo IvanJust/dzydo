@@ -8,19 +8,7 @@ import toast, { LoaderIcon } from "react-hot-toast";
 
 function RowStaff({ item, event_id, data, setData }){
     const [inputValue, setInputValue] = useState([]);
-    const [value, setValue] = useState({});
     const [users, setUsers] = useState([]);
-    useEffect(() => {
-        if(inputValue.length > 0){
-            // getUsers(inputValue).then(resp => {
-            // console.debug(inputValue, resp);
-            //     setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.id}}));
-            // })
-        }
-        return () => {
-            setUsers([]);
-        }
-    }, [inputValue])
 
     function getAxiosUsers(text){
         getUsers(text).then(resp => {
