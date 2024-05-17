@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getCount, getEventsForTable } from "../../../../core/Api/ApiData/methods/admin";
 import { getDateFromSQL } from "../../../../features/functions";
 import RegistrationStaff from "../Registration/RegistrationStaff";
+import InfoMenu from "../../../UIpack v2/InfoMenu/InfoMenu";
 
 
 export default function TableEvents(){
@@ -75,7 +76,15 @@ export default function TableEvents(){
                             // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row" align="center">{event.id}</TableCell>
-                            <TableCell><Typography sx={{cursor:'pointer'}}>{event.name}</Typography><Button size="small" color="info" variant="outlined" onClick={() => showDialog(event)}>Назначить персонал</Button></TableCell>
+                            <TableCell>
+                                <Grid container display={"flex"} justifyContent={'space-between'} alignItems={'center'}>
+                                    <Grid item>
+                                        <Typography>{event.name}</Typography>
+                                        <Button size="small" color="info" variant="outlined" onClick={() => showDialog(event)}>Назначить персонал</Button>
+                                    </Grid>
+                                    <InfoMenu eventId={event.id} />
+                                </Grid>
+                            </TableCell>
                             <TableCell>{event.place}</TableCell>
                             <TableCell>{getDateFromSQL(event.date_begin)}</TableCell>
                             <TableCell>{getDateFromSQL(event.date_end)}</TableCell>
