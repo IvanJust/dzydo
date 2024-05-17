@@ -135,7 +135,7 @@ export default function TableProtocol() {
             });
 
             getPairs(eventId, 0).then(resp => {
-                setPairs(resp.data.filter(item => item.condition != 3) || []);
+                setPairs(resp.data.filter(item => item.condition != 3 && item.condition != 0) || []);
             });
 
             getRefereeFromEvent(eventId).then(resp => {
