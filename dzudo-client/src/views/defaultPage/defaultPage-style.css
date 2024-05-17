@@ -52,5 +52,6 @@ body{
     justify-content: space-between;
     box-shadow: 1px;
     flex-direction: column;
+    border-radius: 0 0 6px 6px;
     /* background: rgba(98, 69, 191, 0.747); */
 }
