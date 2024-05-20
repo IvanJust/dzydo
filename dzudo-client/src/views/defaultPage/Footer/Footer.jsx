@@ -13,19 +13,21 @@ const styleFoot = {
 function Footer(){
     return (
         <Grid flexDirection={'column'} sx={{backgroundColor: styleFoot.color}} p={1}>
-            <Grid display={'flex'} sx={{justifyContent: {md: 'flex-end', xs: 'center'}}} alignItems="center">
-                {/* <Grid>
+            <Grid display={'flex'} sx={{flexDirection: {md: 'row', xs: 'column'}, justifyContent: {md: 'space-between', xs: 'center'}}} alignItems="center">
+                <Grid>
                     <Typography fontFamily={styleFoot.fontFamily} fontSize={styleFoot.fontSize}>
                         KATA Score Sheets Management
                     </Typography>
-                </Grid> */}
-                <Typography fontFamily={styleFoot.fontFamily} fontSize={styleFoot.fontSize} sx={{mx:2}}>
-                    Сделано в Пензе
-                </Typography>
+                </Grid>
+                <Grid>
+                    <Typography fontFamily={styleFoot.fontFamily} fontSize={styleFoot.fontSize} sx={{mx:2}}>
+                        Сделано в Пензе
+                    </Typography>
+                </Grid>
             </Grid>
             <Grid display={'flex'} justifyContent='center'>
                 <Typography fontSize={styleFoot.fontSize}>
-                    2024-{(new Date().getFullYear())} {/* © MKO - FFBJ/EJU/IJF */}
+                    2024-{(new Date().getFullYear())} © MKO - FFBJ/EJU/IJF
                 </Typography>
             </Grid>
         </Grid>
