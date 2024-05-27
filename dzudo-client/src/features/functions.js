@@ -9,7 +9,7 @@ export function processAccessToken(accessToken){
 
 export function getDateFromSQL(date){
     date = new Date(date);
-    return `${(date.getMonth() + 1)}.${date.getDate()}.${date.getFullYear()}`;
+    return `${date.getDate()}.${(date.getMonth() + 1)}.${date.getFullYear()}`;
 }
 
 export function ShortName(item){
