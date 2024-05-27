@@ -119,7 +119,7 @@ function Auth() {
                     toast.success("Вы успешно авторизованы!");
                     getProfile(resp.data_token.sub).then((response) =>{
                         dispatch(getFIO(response.data[0]));
-                        if(dataLogin.id_event != 0){
+                        if(dataLogin.id_event != 0 && dataLogin.id_event != undefined){
                             getEvent(dataLogin.id_event).then((res) => {
                                 dispatch(setEventInfo(res.data[0]));
                             })
