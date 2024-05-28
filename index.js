@@ -38,6 +38,8 @@ const tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const hash_pass = process.env.HASH_PASS;
 
+//console.log(port, socket_port);
+
 const pool = new Pool()
 
 const socketIO = new Server({
@@ -426,6 +428,20 @@ app.post('/api/event_user_role/get', (request, response) => {
   }
 });
 
+app.post('/api/event_user_role/delete', (request, response) => {
+  const { event_id } = request.body;
+
+  try {
+
+    if(!event_id) throw 'Error';
+
+    pool.query('DELETE FROM "event_user_role" WHERE event_id = $1', [event_id]);
+
+    response.send(Successfully('The entries event_user_role was deleted successfully.'));
+  } catch (e) {
+    response.status(500).send(Error('Error delete the event_user_role.'));
+  }
+});
 
 app.post('/api/evaluation_criteria/set', (request, response) => {
   const { group_id, title, init_value } = request.body;
