@@ -9,39 +9,64 @@ import StandartAutocomplete from "../../UIpack v2/StandartAutocomlete/StandartAu
 
 export default function ModalGames({open, setOpen, setPairs, event_id}){
     const [users, setUsers] = useState([]);
+    const [users2, setUsers2] = useState([]);
     const [inputValue1, setInputValue1] = useState('');
     const [inputValue2, setInputValue2] = useState('');
-    const [data, setData] = useState({});
+    const [data, setData] = useState({event_id});
 
     const handleClose = () => {
         setOpen(false);
     }
+    useEffect(() => {
+        console.debug(users);
+    }, [users]);
 
     useEffect(() => {
-            data['event_id'] = event_id;
-            setData(data);
         return () => {
             setUsers([]);
             setInputValue1('');
             setInputValue2('');
             setData({});
         }
-    }, []);
+    }, [event_id]);
 
-    function getToriUke(input){
+    function getTori(input){
+        console.debug(input);
         if(input.length > 0){
             getUsers(input).then((resp) => {
                 setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.user_id}}));
             });
             return true;
         }else{
+            setUsers([]);
+            return false;
+        }
+    }
+    
+    function getUke(input){
+        if(input.length > 0){
+            getUsers(input).then((resp) => {
+                setUsers2(resp.data.map(item => {return {'label': ShortName(item), 'id': item.user_id}}));
+            });
+            
+            return true;
+        }else{
+            setUsers2([]);
             return false;
         }
     }
 
     const handleChange = (event) => {
-        data[event.target.name] = event.target.value;
-        setData(data)
+        setData({...data, [event.target.name]: event.target.value});
+    }
+
+    const handleChangeToriUke = (ToriUke, newValue) => {
+        setData({...data, [ToriUke]: newValue?.id ? newValue.id : 0});
+        if(ToriUke == 'tori'){
+            setUsers([]);
+        }else{
+            setUsers2([]);
+        } 
     }
 
     const submitPair = () => {
@@ -53,6 +78,10 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                     setPairs(re.data);
                     handleClose();
                 })
+            }
+        }).catch(err => {
+            if(err){
+                toast.error('Ошибка создания пары');
             }
         })
     }
@@ -72,36 +101,48 @@ export default function ModalGames({open, setOpen, setPairs, event_id}){
                         label={"Tori"}
                         id="tori"
                         options={users}
-                        value={data['tori'] || 0}
+                        getOptionLabel={option => option.label}
+                        value={data['tori']}
                         sx={{ my: 1 }}
                         noOptionsText='Пусто'
                         inputValue={inputValue1 || ''}
                         onInputChange={(event, newInputValue) => {
+                            console.debug(newInputValue);
                             setInputValue1(newInputValue);
-                            if(newInputValue.length>0){ 
-                                getToriUke(inputValue1);
+                            if(newInputValue.length>1){ 
+                                getTori(inputValue1);
                             }
                         }}
-                        onChange={(event, newValue) => {data['tori'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
+                        onChange={(event, newValue) => {
+                            // if (event?.type === "change") {
+                            //     setInputValue1(newValue.label);
+                            // }
+                            handleChangeToriUke('tori', newValue)}}
                         fullWidth
                     />
-                    <StandartAutocomplete 
+                    {/* <StandartAutocomplete 
                         label={"Uke"}
                         id="uke"
-                        options={users}
+                        options={users2}
+                        getOptionLabel={option => option.title}
                         value={data['uke'] || 0}
                         sx={{ my: 1 }}
                         noOptionsText='Пусто'
-                        inputValue={inputValue2 || ''}
+                        inputValue={inputValue2}
                         onInputChange={(event, newInputValue) => {
                             setInputValue2(newInputValue);
                             if(newInputValue.length>0){ 
-                                getToriUke(inputValue2);
+                                getUke(inputValue2);
                             }
                         }}
-                        onChange={(event, newValue) => {data['uke'] = newValue?.id ? newValue.id : 0; setData(data); setUsers([]); }}
+                        onChange={(event, newValue) => {
+                            // console.debug(event);
+                            // if (event?.type === "change") {
+                            //     setInputValue2(newValue.label);
+                            // }
+                            handleChangeToriUke('uke', newValue)}}
                         fullWidth
-                    />
+                    /> */}
                     <TextField 
                         onChange={handleChange}
                         id="input-with-sx" 
