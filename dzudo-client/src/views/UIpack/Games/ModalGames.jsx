@@ -6,13 +6,13 @@ import AutocompleteUsers from "../../UIpack v2/AutocompleteUsers/AutocompleteUse
 
 
 export default function ModalGames({ open, setOpen, setPairs, event_id }) {
-    const [data, setData] = useState({});
-
+    const [data, setData] = useState({event_id: event_id});
     const handleClose = () => {
         setOpen(false);
     }
 
     useEffect(() => {
+        setData({event_id: event_id});
         return () => {
             setData({});
         }
@@ -23,7 +23,7 @@ export default function ModalGames({ open, setOpen, setPairs, event_id }) {
     }
 
     const submitPair = () => {
-        setPair(data.event_id, data.tori, data.uke, data.region, data.round).then(resp => {
+        setPair(data.event_id, data.tori.id, data.uke.id, data.region, data.round).then(resp => {
             if (resp) {
                 toast.success('Пара создана');
                 setData({ event_id: event_id })
@@ -63,6 +63,7 @@ export default function ModalGames({ open, setOpen, setPairs, event_id }) {
                         sx={{ my: 1 }}
                     />
                     <TextField
+                        value={data.region}
                         onChange={handleChange}
                         id="input-with-sx"
                         label="Регион"
@@ -73,6 +74,7 @@ export default function ModalGames({ open, setOpen, setPairs, event_id }) {
                         fullWidth
                     />
                     <TextField
+                        value={data.round}
                         onChange={handleChange}
                         id="input-with-sx"
                         label="Раунд выступления"
