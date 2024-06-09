@@ -9,9 +9,11 @@ export default function AutocompleteUsers({onChange, value, labelTextField, ...p
 
     
     const updateUser = (input)=>{
-        getUsers(input).then((resp) => {
-            setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.user_id}}));
-        });
+        if(input.length > 1){
+            getUsers(input).then((resp) => {
+                setUsers(resp.data.map(item => {return {'label': ShortName(item), 'id': item.user_id}}));
+            });
+        }
     }
 
     return(
