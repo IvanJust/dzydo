@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getEvents } from "../../../core/Api/ApiData/methods/event";
 
 
-export default function SelectEvent({ effect, onChange, value }){
+export default function SelectEvent({ effect, onChange, value, isFull }){
     const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
     useEffect(() => {
         getEvents().then((resp) => {
@@ -15,11 +15,20 @@ export default function SelectEvent({ effect, onChange, value }){
             setEvents([]);
         }
     }, [effect]);
+
+    const onChangeInner = (event) => {
+        const eventId = event.target.value;
+        if(isFull){
+            onChange(events.find(it=>it.id == eventId));
+        }else{
+            onChange(event);
+        }
+    }
     return(
         <FormControl variant="standard" fullWidth>
             <InputLabel id="demo-simple-select-label">Мероприятие</InputLabel>
             <Select
-                onChange={onChange}
+                onChange={onChangeInner}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 name="id_event"

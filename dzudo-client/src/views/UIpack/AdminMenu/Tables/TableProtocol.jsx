@@ -1,25 +1,14 @@
-import { Grid } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import { Button, Grid } from "@mui/material";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { getEvaluationAfterSupervisor, getRefereeFromEvent } from "../../../../core/Api/ApiData/methods/admin";
 import { getEvaletionCriteria } from "../../../../core/Api/ApiData/methods/event";
 import { getPairs } from "../../../../core/Api/ApiData/methods/pairs";
 import SelectEvent from "../../../UIpack v2/SelectEvent/SelectEvent";
+import * as ExcelJS from "exceljs"
+import { getDateFromSQL, getFormatDateFromSQL } from "../../../../features/functions";
 
-function CustomToolbar() {
-    const csvOptions = {
-        fileName: 'Протокол пар',
-        delimiter: ';',
-        utf8WithBom: true,
-    }
-
-    return (
-        <GridToolbarContainer>
-            <GridToolbarExport csvOptions={csvOptions} />
-        </GridToolbarContainer>
-    )
-}
 
 export default function TableProtocol() {
     const [data, setData] = useState([]);
@@ -30,7 +19,7 @@ export default function TableProtocol() {
     const [pairs, setPairs] = useState([]);
     const [referees, setReferees] = useState([]);
 
-    const [eventId, setEventId] = useState(0);
+    const [eventFull, setEventFull] = useState({});
 
     useMemo(() => {
         const columns = [{ field: 'name', headerName: 'Техника' }];
@@ -124,21 +113,70 @@ export default function TableProtocol() {
         setColumns(columns);
     }, [data, criteria, referees, pairs])
 
-    useEffect(() => {
-            getEvaletionCriteria().then(resp => {
-                setCriteria(resp.data || []);
+    const BtnExport = useCallback(() => {
+        const exportf = async () => {
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Протоколы');
+
+            worksheet.columns = columns.map((it, index)=>{
+                return {
+                    header: it.headerName,
+                    key: it.field,
+                    width: index == 0 ? 25 : 10
+                }
             });
 
-        if(eventId > 0){
-            getEvaluationAfterSupervisor(eventId).then(resp => {
+            worksheet.duplicateRow(1, 3, true);
+
+            worksheet.getRow(3).values = [];
+
+            worksheet.getRow(1).values = [eventFull.name, , , , , eventFull.place];
+            worksheet.getRow(2).values = ['с', getFormatDateFromSQL(eventFull.date_begin), 'по', getFormatDateFromSQL(eventFull.date_end)];
+
+            worksheet.mergeCells(1, 1, 1, 5);
+            worksheet.mergeCells(1, 6, 1, 10);
+
+
+
+            rows.forEach(it => {
+                worksheet.addRow(it);
+            })
+
+            const bytes = await workbook.xlsx.writeBuffer();
+            const data = new Blob([bytes])
+
+            const url = window.URL.createObjectURL(data);
+            const a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            a.href = url;
+            a.download = "Протокол пар.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        return (
+            <div onClick={exportf}>
+                <Button variant="outlined">Экспорт в Excel</Button>
+            </div>
+        )
+    }, [eventFull, rows, columns])
+
+    useEffect(() => {
+        getEvaletionCriteria().then(resp => {
+            setCriteria(resp.data || []);
+        });
+
+        if (eventFull.id > 0) {
+            getEvaluationAfterSupervisor(eventFull.id).then(resp => {
                 setData(resp.data || [])
             });
 
-            getPairs(eventId, 0).then(resp => {
+            getPairs(eventFull.id, 0).then(resp => {
                 setPairs(resp.data.filter(item => item.condition != 3 && item.condition != 0) || []);
             });
 
-            getRefereeFromEvent(eventId).then(resp => {
+            getRefereeFromEvent(eventFull.id).then(resp => {
                 setReferees(resp.data || []);
             });
         }
@@ -148,11 +186,20 @@ export default function TableProtocol() {
             setPairs([]);
             setCriteria([]);
         }
-    }, [eventId])
+    }, [eventFull.id])
+
+
+    function CustomToolbar() {
+        return (
+            <GridToolbarContainer>
+                <BtnExport />
+            </GridToolbarContainer>
+        )
+    }
 
     return (
         <Grid>
-            <Grid item my={1}><SelectEvent value={eventId} onChange={(event) => setEventId(event.target.value)} /></Grid>
+            <Grid item my={1}><SelectEvent value={eventFull.id} onChange={(event) => setEventFull(event)} isFull={true} /></Grid>
             <DataGrid rows={rows} columns={columns} disableColumnSorting disableColumnFilter hideFooterPagination slots={{ toolbar: CustomToolbar }} noResultsOverlay='Нет данных' density="compact" />
         </Grid>
     )
