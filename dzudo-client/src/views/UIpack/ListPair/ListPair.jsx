@@ -151,7 +151,7 @@ export default function ListPair({pairs, setPairs}) {
                         </Stack>
                     {/* </DragDropContext> */}
                 </Grid>}
-                {pairs?.length == 0 && <Grid mt={1} display={'flex'}>
+                {pairs?.length == 0 && <Grid mt={1}>
                     <Alert color="info">Список пар пуст</Alert>
                 </Grid>}
             {([2, 3].includes(role_id) && pairs?.length>0) &&

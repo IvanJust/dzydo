@@ -61,7 +61,7 @@ function AuthModal({headerSendForm, handleClose, data, ...props}) {
                                         />
                                 </Box>
                                 <Box mt={1} sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                                    <SelectEvent effect={props.open} value={data['id_event'] || 0} onChange={props.onChange} />
+                                    <SelectEvent effect={props.open} value={data['id_event'] || 0} onChange={props.onChange} curr />
                                 </Box>
                             </Grid>
                         </Form>
@@ -128,12 +128,10 @@ function Auth() {
                         }
                     });
                     dispatch(setUser(resp.data_token));
-                    
                     setModalShow(false);
                 }else{
                     toast.error("Неверный логин и/или пароль");
                 }
-                
             })
             .catch((error) => {
                 // Error

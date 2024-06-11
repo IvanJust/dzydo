@@ -1,16 +1,30 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getEvents } from "../../../core/Api/ApiData/methods/event";
+import { getCurrentEvent, getEvents } from "../../../core/Api/ApiData/methods/event";
+import toast from "react-hot-toast";
 
 
-export default function SelectEvent({ effect, onChange, value }){
+export default function SelectEvent({ effect, onChange, value, curr }){
     const [events, setEvents] = useState([{id: 1, name: 'Всероссийское соревнование по дзюдо-кате № 10'}]);
     useEffect(() => {
-        getEvents().then((resp) => {
-            if(resp.data){
-                setEvents(resp.data);
-            }
-        });
+        if(!curr){
+            getEvents().then((resp) => {
+                if(resp.data){
+                    setEvents(resp.data);
+                }
+            });
+        }else{
+            getCurrentEvent().then((resp) => {
+                if(resp.data){
+                    setEvents(resp.data);
+                }
+            }).catch(err => {
+                if(err){
+                    toast.error("Ошибка получения мероприятий");
+                }
+            });
+        }
+        
         return () => {
             setEvents([]);
         }

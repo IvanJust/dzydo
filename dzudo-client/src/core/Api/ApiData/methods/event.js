@@ -100,3 +100,9 @@ export function getTable2(event_id){
         }
     )
 }
+
+export function getCurrentEvent(){
+    return client.post(
+        'current_event/get'
+    )
+}
