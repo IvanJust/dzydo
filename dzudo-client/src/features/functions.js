@@ -11,6 +11,10 @@ export function getDateFromSQL(date){
     date = new Date(date);
     return `${date.getDate()}.${(date.getMonth() + 1)}.${date.getFullYear()}`;
 }
+export function getFormatDateFromSQL(date){
+    const date2 = new Date(date);
+    return date2.toLocaleDateString();
+}
 
 export function ShortName(item){
     return `${item.lastname} ${item.firstname.substr(0, 1)}. ${item.patronymic.substr(0, 1)}.`;
