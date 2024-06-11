@@ -111,49 +111,49 @@ export default function ListPair({pairs, setPairs}) {
     };
 
     return (
-        <Grid item display={'flex'} sx={{overflow: 'auto', position: 'relative', justifyContent: {md: 'center', xs: 'flex-start'}}}>
-            {pairs?.length > 0 && <Grid display={'flex'}>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Stack direction="column" sx={{display:'inline-block'}} spacing={1} my={1}>
-                        {/* <Grid {...provided.droppableProps}> */}
-                            {/* <Stack direction="column" spacing={1} m={1}> */}
-                                {pairs?.length>0 && pairs.map((it, index) =>
-                                    <Droppable droppableId={index} key={it.id}>
-                                        {(providedPable) => (
-                                        <Grid
-                                            ref={providedPable.innerRef}
-                                            {...providedPable.droppableProps}
-                                        >
-                                            <Draggable draggableId={it.id} index={index}>
-                                            {(providedGable) => (
-                                                <Grid display='flex' alignItems='center'
-                                                    ref={providedGable.innerRef}
-                                                    {...providedGable.draggableProps}
-                                                    {...providedGable.dragHandleProps}
-                                                >
-                                                    <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'  }} icon={<SlowMotionVideoTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
-                                                    <Chip sx={{display: 'flex', height: 'auto', width: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'  }} icon={<PlaceTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
-                                                    <Chip sx={{display: 'flex', height: 'auto', width: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'   }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={ShortName(it.tori)} />} />
-                                                    <Chip sx={{display: 'flex', height: 'auto', width: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'   }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Uke' name={ShortName(it.uke)} />} />
-                                                    {it.condition == 1 && <img style={{width: '50px'}} title="Выступают" src={fight}/>}
-                                                    {it.condition == 0 && <img style={{width: '50px'}} title="В ожидании выступления" src={waiting}/>}
-                                                    {it.condition == 3 && <img style={{width: '50px'}} title="Пропущено" src={skipping}/>}
-                                                    {it.condition == 2 && <SelfImprovementTwoToneIcon sx={{width: '50px'}} fontSize={'large'} titleAccess="Выступили" />}
-                                                </Grid>
-                                            )}
-                                            </Draggable>
-                                        </Grid>
-                                        )}
-                                    </Droppable>
-                                )}
-                            {/* </Stack> */}
-                        {/* </Grid> */}
-                    </Stack>
-                </DragDropContext>
-            </Grid>}
-            {pairs?.length == 0 && <Grid mt={1} display={'flex'}>
-                <Alert color="info">Список пар пуст</Alert>
-            </Grid>}
+        <Grid display={'flex'} flexDirection={'column'}>
+                {pairs?.length > 0 && <Grid display={'flex'} justifyContent={'center'} sx={{overflow: 'auto', position: 'relative', justifyContent: {md: 'center', xs: 'flex-start'}}}>
+                    {/* <DragDropContext onDragEnd={onDragEnd}> */}
+                        <Stack direction="column" sx={{display:'inline-block'}} spacing={1} my={1}>
+                            {/* <Grid {...provided.droppableProps}> */}
+                                {/* <Stack direction="column" spacing={1} m={1}> */}
+                                    {pairs?.length>0 && pairs.map((it, index) =>
+                                        // <Droppable droppableId={index} key={it.id}>
+                                        //     {(providedPable) => (
+                                            <Grid
+                                                // ref={providedPable.innerRef}
+                                                // {...providedPable.droppableProps}
+                                            >
+                                                {/* <Draggable draggableId={it.id} index={index}>
+                                                {(providedGable) => ( */}
+                                                    <Grid display='flex' alignItems='center'
+                                                        // ref={providedGable.innerRef}
+                                                        // {...providedGable.draggableProps}
+                                                        // {...providedGable.dragHandleProps}
+                                                    >
+                                                        <Chip sx={{display: 'flex', height: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'  }} icon={<SlowMotionVideoTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Раунд' name={it.round} />} />
+                                                        <Chip sx={{display: 'flex', height: 'auto', width: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'  }} icon={<PlaceTwoToneIcon sx={{px: {xs: 0.1, md: 1}, m: 0}} />} label={<TitleChip title='Регион' name={it.region} />} />
+                                                        <Chip sx={{display: 'flex', height: 'auto', width: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'   }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Tori' name={ShortName(it.tori)} />} />
+                                                        <Chip sx={{display: 'flex', height: 'auto', width: 'auto', justifyContent: 'flex-start', mx: {xs: 0.2, md: 1}, backgroundColor: colorChip[it.condition] ??  'default'   }} icon={<FaceIcon sx={{px: 1, m: 0}} />} label={<TitleChip title='Uke' name={ShortName(it.uke)} />} />
+                                                        {it.condition == 1 && <img style={{width: '50px'}} title="Выступают" src={fight}/>}
+                                                        {it.condition == 0 && <img style={{width: '50px'}} title="В ожидании выступления" src={waiting}/>}
+                                                        {it.condition == 3 && <img style={{width: '50px'}} title="Пропущено" src={skipping}/>}
+                                                        {it.condition == 2 && <SelfImprovementTwoToneIcon sx={{width: '50px'}} fontSize={'large'} titleAccess="Выступили" />}
+                                                    </Grid>
+                                                {/* )}
+                                                </Draggable> */}
+                                            </Grid>
+                                        //     )}
+                                        // </Droppable>
+                                    )}
+                                {/* </Stack> */}
+                            {/* </Grid> */}
+                        </Stack>
+                    {/* </DragDropContext> */}
+                </Grid>}
+                {pairs?.length == 0 && <Grid mt={1} display={'flex'}>
+                    <Alert color="info">Список пар пуст</Alert>
+                </Grid>}
             {([2, 3].includes(role_id) && pairs?.length>0) &&
                 <Grid display='flex' sx={{flexDirection: {xs: 'column', md: 'row'}, justifyContent: {xs: 'center', md: 'space-between'}, spacing: {xs: 1, md: 2}}}>
                     <Button variant="outlined" color="success" onClick={nextRound} disabled={currentPair?.condition === 1}>Следующая пара <ArrowForwardIosIcon fontSize="large"/> </Button>
